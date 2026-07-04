@@ -1,12 +1,13 @@
 import type { Grade } from '../types'
-import { grade1EnglishMidterm } from './grade1-english-midterm'
-import { grade4EnglishMidterm } from './grade4-english-midterm'
+import { grade1Practices } from './grade1'
+import { grade4Practices } from './grade4'
 
 // ============================================================================
 // GRADOS DISPONIBLES
 //
-// Para agregar un grado nuevo (ej: 2do, 3ro...), creá su archivo de práctica
-// en src/data/ y sumá una entrada acá. El `id` se usa en la URL.
+// Cada grado tiene varias prácticas separadas por tema (ver src/data/grade1.ts
+// y src/data/grade4.ts). Para agregar un grado nuevo, creá su archivo de
+// prácticas y sumá una entrada acá. El `id` se usa en la URL.
 // ============================================================================
 
 export const grades: Grade[] = [
@@ -15,14 +16,14 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
-    practices: [grade1EnglishMidterm],
+    practices: grade1Practices,
   },
   {
     id: '4',
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    practices: [grade4EnglishMidterm],
+    practices: grade4Practices,
   },
 ]
 
