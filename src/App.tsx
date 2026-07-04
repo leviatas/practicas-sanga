@@ -30,7 +30,16 @@ export default function App() {
 
       <footer className="app-footer">
         <div className="container">
-          <p>Hecho con ❤️ para practicar. Sin registro, para toda la familia.</p>
+          <p>
+            Hecho con ❤️ por Edu ·{' '}
+            <a
+              href="https://dev.leviatas.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              dev.leviatas.com
+            </a>
+          </p>
         </div>
       </footer>
     </div>
