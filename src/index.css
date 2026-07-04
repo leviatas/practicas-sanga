@@ -535,6 +535,17 @@ button {
   margin-bottom: 12px;
 }
 
+/* ---- Foto del árbol de la familia ---- */
+.family-photo {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  background: #fff;
+}
+
 /* ---- Escena de preposición (SVG) ---- */
 .prep-scene {
   display: block;
