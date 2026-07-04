@@ -49,7 +49,7 @@ fi
 case "${1:-up}" in
   down)
     echo "🛑 Deteniendo Prácticas Sanga..."
-    $COMPOSE down
+    $COMPOSE --profile tunnel down
     exit 0
     ;;
   logs)
@@ -135,9 +135,23 @@ else
 fi
 echo "💾 Puerto ${PORT} guardado en ${ENV_FILE}"
 
+# --- ¿Hay token de Cloudflare Tunnel en .env? Entonces exponemos a internet ---
+TUNNEL_ON=false
+if [ -f "$ENV_FILE" ]; then
+  TOKEN_VAL="$(grep -E '^CLOUDFLARED_TOKEN=' "$ENV_FILE" 2>/dev/null | tail -n1 | cut -d= -f2- | tr -d '[:space:]' || true)"
+  if [ -n "${TOKEN_VAL:-}" ]; then
+    TUNNEL_ON=true
+  fi
+fi
+
 echo "📦 Construyendo y levantando Prácticas Sanga (puerto ${PORT})..."
 # docker compose toma PORT automáticamente desde .env
-$COMPOSE up -d --build
+if [ "$TUNNEL_ON" = true ]; then
+  echo "🌐 CLOUDFLARED_TOKEN detectado: se levanta también el túnel de Cloudflare."
+  $COMPOSE --profile tunnel up -d --build
+else
+  $COMPOSE up -d --build
+fi
 
 # --- IP de Tailscale (para probar desde otros dispositivos de la tailnet) ---
 ts_ip() {
