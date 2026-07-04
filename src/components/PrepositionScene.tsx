@@ -1,6 +1,9 @@
-// Escena SVG que ilustra una preposición (caja + pelota, y una flecha para las
-// de movimiento). Self-contained: no usa imágenes externas.
+// Escena que ilustra una preposición.
+// - Movimiento (4to grado): foto de un gato y un tronco, recortada SIN la
+//   etiqueta de texto para no revelar la respuesta (ver prepImages).
+// - Estáticas (1er grado): escena SVG (caja + pelota) self-contained.
 // La imagen muestra la relación espacial, así el alumno sabe qué preposición va.
+import { prepImages } from './prepImages'
 
 function Box() {
   return <rect className="prep-box" x={70} y={72} width={60} height={40} rx={8} />
@@ -21,6 +24,19 @@ function ArrowPath({ d }: { d: string }) {
 }
 
 export default function PrepositionScene({ name }: { name: string }) {
+  // Si hay una foto para esta preposición, la mostramos (sin texto que delate
+  // la respuesta). El alt es neutro a propósito para no revelarla.
+  const photo = prepImages[name]
+  if (photo) {
+    return (
+      <img
+        className="prep-photo"
+        src={photo}
+        alt="Un gato y un tronco: ¿qué preposición muestra?"
+      />
+    )
+  }
+
   let content: React.ReactNode
 
   switch (name) {
