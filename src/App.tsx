@@ -1,8 +1,26 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { logEvent } from './lib/usage'
+import UsageLogs from './components/UsageLogs'
 
 export default function App() {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const [logsPassword, setLogsPassword] = useState<string | null>(null)
+  const openedRef = useRef(false)
+
+  // Registra una "apertura" al cargar la app (una sola vez).
+  useEffect(() => {
+    if (openedRef.current) return
+    openedRef.current = true
+    logEvent('open')
+  }, [])
+
+  // Click en la versión → pide contraseña. La valida el backend.
+  function handleVersionClick() {
+    const pw = window.prompt('Contraseña para ver los logs de uso:')
+    if (pw) setLogsPassword(pw)
+  }
 
   return (
     <div className="app">
@@ -39,10 +57,25 @@ export default function App() {
             >
               dev.leviatas.com
             </a>{' '}
-            · <span className="app-version">v{__APP_VERSION__}</span>
+            ·{' '}
+            <button
+              type="button"
+              className="app-version app-version--btn"
+              onClick={handleVersionClick}
+              title="Logs de uso"
+            >
+              v{__APP_VERSION__}
+            </button>
           </p>
         </div>
       </footer>
+
+      {logsPassword && (
+        <UsageLogs
+          password={logsPassword}
+          onClose={() => setLogsPassword(null)}
+        />
+      )}
     </div>
   )
 }

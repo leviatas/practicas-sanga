@@ -24,6 +24,22 @@ services:
     container_name: practicas-sanga
     ports:
       - "${PORT:-8080}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Backend de logs de uso (Node + SQLite). nginx le hace proxy en /api.
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: practicas-sanga-backend:latest
+    container_name: practicas-sanga-backend
+    environment:
+      - LOGS_PASSWORD=${LOGS_PASSWORD:-Sanga70}
+      - DB_PATH=/data/usage.db
+    volumes:
+      - sanga-db:/data
     restart: unless-stopped
 
   # Túnel de Cloudflare (opcional). Solo se levanta con el profile "tunnel",
@@ -41,3 +57,7 @@ services:
     restart: unless-stopped
     profiles:
       - tunnel
+
+volumes:
+  # Persiste la base SQLite de logs entre reinicios/recreaciones.
+  sanga-db:

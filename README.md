@@ -76,6 +76,25 @@ docker compose --profile tunnel down            # bajar ambos
 
 ---
 
+## 📊 Logs de uso (backend + SQLite)
+
+La app registra el uso en un **backend propio** (Node, sin dependencias) que
+guarda cada evento con la **IP del visitante** en **SQLite**.
+
+- Eventos: apertura de la página, inicio de práctica, respuestas (con acierto)
+  y prácticas completadas.
+- Para verlos: **click en la versión** del footer y poné la **contraseña**
+  (variable `LOGS_PASSWORD`, default `Sanga70`; la valida el backend).
+- El panel muestra resumen, actividad **por IP (PC)**, por práctica y reciente.
+
+Arquitectura: `nginx` sirve la app y hace `proxy_pass` de `/api` al servicio
+`backend` (pasando la IP real, también detrás de Cloudflare). La base SQLite
+persiste en el volumen `sanga-db`.
+
+> Es logging básico de uso; no guarda datos personales más allá de la IP.
+
+---
+
 ## 🧑‍💻 Desarrollo
 
 ### Opción A — con Docker (no necesitás Node instalado)

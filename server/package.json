@@ -1,0 +1,10 @@
+{
+  "name": "practicas-sanga-backend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend de logs de uso (Node + SQLite, sin dependencias).",
+  "scripts": {
+    "start": "node --experimental-sqlite src/index.js"
+  }
+}

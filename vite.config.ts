@@ -17,6 +17,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    // En desarrollo, /api va al backend de logs (Node) en :3000.
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
   },
   preview: {
     host: true,
