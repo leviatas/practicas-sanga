@@ -1,8 +1,23 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
-import type { Practice } from '../types'
+import type { Practice, Question } from '../types'
 import NotFoundPage from './NotFoundPage'
+
+// Baraja un array (Fisher-Yates) devolviendo una copia nueva.
+function shuffle<T>(items: readonly T[]): T[] {
+  const arr = items.slice()
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
+// Devuelve las preguntas con las opciones en orden aleatorio.
+function withShuffledOptions(questions: Question[]): Question[] {
+  return questions.map((q) => ({ ...q, options: shuffle(q.options) }))
+}
 
 export default function PracticePage() {
   const { gradeId, practiceId } = useParams()
@@ -29,7 +44,10 @@ export default function PracticePage() {
 }
 
 function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
-  const questions = practice.questions
+  // Opciones barajadas al iniciar; se vuelven a barajar en cada intento.
+  const [questions, setQuestions] = useState(() =>
+    withShuffledOptions(practice.questions),
+  )
   const total = questions.length
 
   const [current, setCurrent] = useState(0)
@@ -64,6 +82,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
   }
 
   function handleRestart() {
+    setQuestions(withShuffledOptions(practice.questions))
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
