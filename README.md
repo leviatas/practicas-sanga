@@ -20,6 +20,10 @@ Con Docker instalado, un solo comando construye y despliega todo:
 ./prod.sh
 ```
 
+Al ejecutarlo, `prod.sh` primero hace **`git pull`** para traer los últimos
+cambios (se puede saltar con `NO_PULL=1 ./prod.sh`; si no hay conexión, avisa
+y sigue con la versión actual).
+
 `prod.sh` **no pregunta** el puerto: usa el que esté guardado en **`.env`**
 (o `8080` por defecto) y, si ese puerto está ocupado por otro proceso,
 **busca automáticamente el próximo libre**. El puerto elegido queda guardado

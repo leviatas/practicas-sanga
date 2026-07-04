@@ -3,6 +3,7 @@
 # prod.sh — Build y deploy de producción con Docker Compose.
 #
 # Hace todo de una sola vez, SIN preguntar el puerto:
+#   0. Actualiza el repo (git pull; se puede saltar con NO_PULL=1).
 #   1. Verifica que Docker esté disponible.
 #   2. Resuelve el puerto automáticamente:
 #        - usa la variable PORT del entorno si se pasó, o
@@ -63,6 +64,14 @@ case "${1:-up}" in
     exit 1
     ;;
 esac
+
+# --- Traer los últimos cambios del repo (best-effort; se puede saltar con NO_PULL=1) ---
+if [ "${NO_PULL:-}" != "1" ] && [ -d .git ] && command -v git >/dev/null 2>&1; then
+  echo "⬇️  Actualizando el repo (git pull)..."
+  if ! git pull --ff-only; then
+    echo "  ⚠️  No se pudo actualizar (¿sin conexión o cambios locales?). Sigo con la versión actual." >&2
+  fi
+fi
 
 valid_port() {
   [[ "${1:-}" =~ ^[0-9]+$ ]] && [ "$1" -ge 1 ] && [ "$1" -le 65535 ]
