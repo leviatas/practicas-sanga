@@ -38,7 +38,8 @@ export default function App() {
               rel="noopener noreferrer"
             >
               dev.leviatas.com
-            </a>
+            </a>{' '}
+            · <span className="app-version">v{__APP_VERSION__}</span>
           </p>
         </div>
       </footer>

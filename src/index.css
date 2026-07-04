@@ -136,6 +136,12 @@ button {
   margin: 0;
 }
 
+.app-version {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
 /* ---- Intro / títulos ---- */
 .page-intro {
   text-align: center;
