@@ -555,6 +555,17 @@ button {
   box-shadow: var(--shadow);
 }
 
+/* ---- Foto de objeto de la escuela (1er grado) ---- */
+.school-photo {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
 .prep-box {
   fill: #94a3b8; /* slate-400: se ve en claro y oscuro */
   stroke: var(--text-muted);

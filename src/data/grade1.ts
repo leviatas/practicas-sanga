@@ -83,6 +83,34 @@ export const grade1Practices: Practice[] = [
     ],
   },
 
+  // -------------------------------------------- School objects (imágenes) ----
+  // Reconocimiento de vocabulario: se muestra la foto del objeto (recortada sin
+  // la etiqueta) y el alumno elige su nombre en inglés.
+  {
+    id: 'objetos-imagenes',
+    title: 'Objetos de la escuela (con fotos)',
+    description: 'Mirá la foto y elegí el nombre del objeto en inglés.',
+    emoji: '✏️',
+    questions: [
+      { id: 'oi1', image: 'pen', prompt: 'What is this?',
+        options: [{ text: 'a pen', correct: true }, { text: 'a pencil' }, { text: 'a crayon' }] },
+      { id: 'oi2', image: 'pencil', prompt: 'What is this?',
+        options: [{ text: 'a pencil', correct: true }, { text: 'a pen' }, { text: 'a ruler' }] },
+      { id: 'oi3', image: 'sharpener', prompt: 'What is this?',
+        options: [{ text: 'a sharpener', correct: true }, { text: 'a rubber' }, { text: 'a pencil case' }] },
+      { id: 'oi4', image: 'rubber', prompt: 'What is this?',
+        options: [{ text: 'a rubber', correct: true }, { text: 'a sharpener' }, { text: 'a ruler' }] },
+      { id: 'oi5', image: 'ruler', prompt: 'What is this?',
+        options: [{ text: 'a ruler', correct: true }, { text: 'a pencil case' }, { text: 'a rubber' }] },
+      { id: 'oi6', image: 'crayon', prompt: 'What is this?',
+        options: [{ text: 'a crayon', correct: true }, { text: 'a pencil' }, { text: 'a pen' }] },
+      { id: 'oi7', image: 'pencil-case', prompt: 'What is this?',
+        options: [{ text: 'a pencil case', correct: true }, { text: 'a computer' }, { text: 'a sharpener' }] },
+      { id: 'oi8', image: 'computer', prompt: 'What is this?',
+        options: [{ text: 'a computer', correct: true }, { text: 'a pencil case' }, { text: 'a ruler' }] },
+    ],
+  },
+
   // --------------------------------------------------------------- Family ----
   {
     id: 'familia',

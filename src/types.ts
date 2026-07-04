@@ -19,6 +19,8 @@ export interface Question {
   map?: string
   /** Apoyo visual con una escena de preposición (SVG). Ej: 'on', 'into'. */
   scene?: string
+  /** Apoyo visual con una foto de un objeto de la escuela. Ej: 'pen', 'ruler'. */
+  image?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**
