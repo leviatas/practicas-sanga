@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
+import CityMap from '../components/CityMap'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -202,6 +203,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
       </p>
 
       <div className="quiz-card">
+        {question.map === 'city' && <CityMap />}
         {question.emoji && (
           <div className="quiz-card__emoji" aria-hidden="true">
             {question.emoji}
