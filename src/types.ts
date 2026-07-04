@@ -23,8 +23,9 @@ export interface Question {
    * Tipo de ejercicio:
    *  - 'choice' (por defecto): elegir una opción.
    *  - 'drag': arrastrar fichas a los huecos de un párrafo y validar.
+   *  - 'classify': arrastrar palabras a su categoría y validar.
    */
-  kind?: 'choice' | 'drag'
+  kind?: 'choice' | 'drag' | 'classify'
   /** Opciones de respuesta (para kind 'choice'). */
   options?: Option[]
   /**
@@ -36,6 +37,10 @@ export interface Question {
   blanks?: string[]
   /** Para kind 'drag': todas las fichas disponibles para arrastrar. */
   bank?: string[]
+  /** Para kind 'classify': las categorías (columnas) donde clasificar. */
+  categories?: string[]
+  /** Para kind 'classify': cada palabra y a qué categoría pertenece. */
+  items?: { text: string; category: string }[]
 }
 
 export interface Practice {

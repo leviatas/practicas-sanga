@@ -5,6 +5,7 @@ import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
+import ClassifyDrag from '../components/ClassifyDrag'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -201,6 +202,10 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
   const roundProgress = Math.round(
     ((current + (answered ? 1 : 0)) / round.length) * 100,
   )
+  const isChoice = question.kind == null || question.kind === 'choice'
+  // En 1er grado los ejercicios van en MAYÚSCULAS.
+  const upper = gradeId === '1'
+  const T = (s: string) => (upper ? s.toUpperCase() : s)
 
   return (
     <div className="quiz">
@@ -230,10 +235,18 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
             {question.emoji}
           </div>
         )}
-        <h1 className="quiz-card__prompt">{question.prompt}</h1>
+        <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
 
         {question.kind === 'drag' ? (
           <DragCloze
+            key={question.id}
+            question={question}
+            locked={answered}
+            correct={dragCorrect}
+            onValidate={handleDragValidate}
+          />
+        ) : question.kind === 'classify' ? (
+          <ClassifyDrag
             key={question.id}
             question={question}
             locked={answered}
@@ -257,7 +270,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
                     disabled={answered}
                     aria-pressed={isSelected}
                   >
-                    <span className="quiz-option__text">{option.text}</span>
+                    <span className="quiz-option__text">{T(option.text)}</span>
                     {showState && (
                       <span className="quiz-option__mark" aria-hidden="true">
                         {option.correct ? '✓' : '✗'}
@@ -270,7 +283,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
           </ul>
         )}
 
-        {answered && question.kind !== 'drag' && (
+        {answered && isChoice && (
           <div
             className={`quiz-feedback ${
               question.options?.[selected!]?.correct ? 'is-correct' : 'is-wrong'

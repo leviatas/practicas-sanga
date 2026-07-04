@@ -540,6 +540,49 @@ button {
   margin: 12px 0 0;
 }
 
+/* ---- Clasificar en columnas (drag & drop) ---- */
+.classify-bins {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.classify-bin {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  min-height: 96px;
+  background: var(--bg);
+}
+
+.classify-bin.is-over {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.classify-bin__title {
+  display: block;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.classify-bin__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* El banco (pool) de palabras a clasificar reutiliza .drag-bank */
+.classify-bins + .drag-bank,
+.classify-bin + .drag-bank {
+  margin-top: 0;
+}
+
 .quiz-option {
   width: 100%;
   display: flex;
