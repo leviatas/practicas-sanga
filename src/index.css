@@ -334,6 +334,24 @@ button {
   margin: 0 auto;
 }
 
+.quiz-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.quiz-mastery {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.quiz-reset {
+  flex-shrink: 0;
+}
+
 .quiz-progress {
   height: 10px;
   background: var(--border);

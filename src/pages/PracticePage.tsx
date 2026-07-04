@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
+import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -17,6 +18,11 @@ function shuffle<T>(items: readonly T[]): T[] {
 // Baraja el orden de las preguntas y, dentro de cada una, el de las opciones.
 function withShuffledQuiz(questions: Question[]): Question[] {
   return shuffle(questions).map((q) => ({ ...q, options: shuffle(q.options) }))
+}
+
+// Preguntas todavía no dominadas (las que faltan o se respondieron mal).
+function pendingQuestions(questions: Question[], mastered: Set<string>): Question[] {
+  return questions.filter((q) => !mastered.has(q.id))
 }
 
 export default function PracticePage() {
@@ -44,36 +50,50 @@ export default function PracticePage() {
 }
 
 function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
-  // Preguntas y opciones barajadas al iniciar; se rebarajan en cada intento.
-  const [questions, setQuestions] = useState(() =>
-    withShuffledQuiz(practice.questions),
-  )
-  const total = questions.length
+  const practiceId = practice.id
+  const allQuestions = practice.questions
+  const total = allQuestions.length
 
+  // Preguntas ya dominadas (persistidas en el navegador).
+  const [mastered, setMastered] = useState(() =>
+    loadMastered(gradeId, practiceId),
+  )
+  // Ronda actual: solo las pendientes, con orden y opciones barajados.
+  const [round, setRound] = useState(() =>
+    withShuffledQuiz(pendingQuestions(allQuestions, loadMastered(gradeId, practiceId))),
+  )
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [answered, setAnswered] = useState(false)
-  const [correctCount, setCorrectCount] = useState(0)
-  const [finished, setFinished] = useState(false)
+  // 'playing' = respondiendo; 'roundEnd' = terminó la ronda.
+  const [phase, setPhase] = useState<'playing' | 'roundEnd'>('playing')
 
-  const question = questions[current]
-  const progress = useMemo(
-    () => Math.round(((current + (answered ? 1 : 0)) / total) * 100),
-    [current, answered, total],
-  )
+  const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
+  const pendingCount = total - masteredCount
+  const allDone = pendingCount === 0
+
+  function persist(next: Set<string>) {
+    saveMastered(gradeId, practiceId, next)
+  }
 
   function handleSelect(index: number) {
     if (answered) return
     setSelected(index)
     setAnswered(true)
-    if (question.options[index].correct) {
-      setCorrectCount((c) => c + 1)
+    const q = round[current]
+    if (q.options[index].correct) {
+      setMastered((prev) => {
+        const next = new Set(prev)
+        next.add(q.id)
+        persist(next)
+        return next
+      })
     }
   }
 
   function handleNext() {
-    if (current + 1 >= total) {
-      setFinished(true)
+    if (current + 1 >= round.length) {
+      setPhase('roundEnd')
       return
     }
     setCurrent((c) => c + 1)
@@ -81,55 +101,104 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
     setAnswered(false)
   }
 
-  function handleRestart() {
-    setQuestions(withShuffledQuiz(practice.questions))
+  // Empieza otra ronda con lo que todavía falta dominar.
+  function startNextRound() {
+    setRound(withShuffledQuiz(pendingQuestions(allQuestions, mastered)))
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
-    setCorrectCount(0)
-    setFinished(false)
+    setPhase('playing')
   }
 
-  if (finished) {
-    const pct = Math.round((correctCount / total) * 100)
-    const emoji = pct === 100 ? '🏆' : pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '💪'
-    const message =
-      pct === 100
-        ? '¡Perfecto! Respondiste todo bien.'
-        : pct >= 70
-          ? '¡Muy bien! Casi todo correcto.'
-          : pct >= 50
-            ? '¡Bien! Seguí practicando.'
-            : '¡A seguir practicando! Vas a mejorar.'
+  function handleReset() {
+    const ok = window.confirm(
+      '¿Reiniciar el progreso de esta práctica? Se borran las preguntas ya dominadas.',
+    )
+    if (!ok) return
+    resetMastered(gradeId, practiceId)
+    const cleared = new Set<string>()
+    setMastered(cleared)
+    setRound(withShuffledQuiz(allQuestions))
+    setCurrent(0)
+    setSelected(null)
+    setAnswered(false)
+    setPhase('playing')
+  }
 
+  // ---- Pantalla de fin de ronda / completado ----
+  if (phase === 'roundEnd' || round.length === 0) {
+    if (allDone) {
+      return (
+        <div className="quiz-result" role="status">
+          <span className="quiz-result__emoji" aria-hidden="true">
+            🏆
+          </span>
+          <h1 className="quiz-result__title">¡Completaste toda la práctica!</h1>
+          <p className="quiz-result__score">
+            Dominaste las <strong>{total}</strong> preguntas. 🎉
+          </p>
+          <div className="quiz-result__actions">
+            <button className="btn btn--primary" onClick={handleReset}>
+              🔁 Reiniciar y practicar de nuevo
+            </button>
+            <Link className="btn btn--ghost" to={`/grado/${gradeId}`}>
+              ← Otras prácticas
+            </Link>
+          </div>
+        </div>
+      )
+    }
+
+    // Terminó la ronda pero quedan preguntas por dominar (las que fallaste).
     return (
       <div className="quiz-result" role="status">
         <span className="quiz-result__emoji" aria-hidden="true">
-          {emoji}
+          💪
         </span>
-        <h1 className="quiz-result__title">{message}</h1>
+        <h1 className="quiz-result__title">¡Vas muy bien!</h1>
         <p className="quiz-result__score">
-          Acertaste <strong>{correctCount}</strong> de <strong>{total}</strong>
+          Dominadas: <strong>{masteredCount}</strong> de <strong>{total}</strong>.
+          <br />
+          Te {pendingCount === 1 ? 'queda' : 'quedan'}{' '}
+          <strong>{pendingCount}</strong> por practicar.
         </p>
         <div className="quiz-result__actions">
-          <button className="btn btn--primary" onClick={handleRestart}>
-            🔁 Volver a intentar
+          <button className="btn btn--primary" onClick={startNextRound}>
+            Seguir con las que faltan →
           </button>
-          <Link className="btn btn--ghost" to={`/grado/${gradeId}`}>
-            ← Otras prácticas
-          </Link>
+          <button className="btn btn--ghost" onClick={handleReset}>
+            ↺ Reiniciar progreso
+          </button>
         </div>
       </div>
     )
   }
 
+  // ---- Pantalla de pregunta ----
+  const question = round[current]
+  const roundProgress = Math.round(
+    ((current + (answered ? 1 : 0)) / round.length) * 100,
+  )
+
   return (
     <div className="quiz">
+      <div className="quiz-topbar">
+        <span className="quiz-mastery">
+          Dominadas: {masteredCount}/{total}
+        </span>
+        <button
+          className="btn btn--ghost btn--small quiz-reset"
+          onClick={handleReset}
+        >
+          ↺ Reiniciar
+        </button>
+      </div>
+
       <div className="quiz-progress" aria-hidden="true">
-        <div className="quiz-progress__bar" style={{ width: `${progress}%` }} />
+        <div className="quiz-progress__bar" style={{ width: `${roundProgress}%` }} />
       </div>
       <p className="quiz-counter">
-        Pregunta {current + 1} de {total}
+        Pregunta {current + 1} de {round.length} (pendientes de esta ronda)
       </p>
 
       <div className="quiz-card">
@@ -177,8 +246,8 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
           >
             <p className="quiz-feedback__title">
               {question.options[selected!].correct
-                ? '¡Correcto! 🎉'
-                : 'Ups, no era esa 🙊'}
+                ? '¡Correcto! Queda dominada 🎉'
+                : 'Ups, no era esa. La repasás en la próxima ronda 🙊'}
             </p>
             {question.explanation && (
               <p className="quiz-feedback__explanation">{question.explanation}</p>
@@ -192,7 +261,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
             onClick={handleNext}
             disabled={!answered}
           >
-            {current + 1 >= total ? 'Ver resultado 🏁' : 'Siguiente →'}
+            {current + 1 >= round.length ? 'Terminar ronda 🏁' : 'Siguiente →'}
           </button>
         </div>
       </div>
