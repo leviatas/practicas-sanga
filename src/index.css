@@ -396,6 +396,41 @@ button {
   margin-bottom: 12px;
 }
 
+/* ---- Escena de preposición (SVG) ---- */
+.prep-scene {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin: 0 auto 12px;
+}
+
+.prep-box {
+  fill: #94a3b8; /* slate-400: se ve en claro y oscuro */
+  stroke: var(--text-muted);
+  stroke-width: 2;
+}
+
+.prep-river {
+  fill: #38bdf8; /* celeste (un río / una línea) */
+}
+
+.prep-ball {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.prep-arrow {
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.prep-arrowhead {
+  fill: var(--accent);
+}
+
 /* ---- Mapa de direcciones (SVG) ---- */
 .city-map {
   display: block;
