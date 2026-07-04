@@ -390,6 +390,56 @@ button {
   margin-bottom: 12px;
 }
 
+/* ---- Mapa de direcciones (SVG) ---- */
+.city-map {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin: 0 auto 16px;
+}
+
+.city-map__road rect {
+  fill: #94a3b8; /* slate-400: se ve bien en claro y oscuro */
+}
+
+.city-map__lane line {
+  stroke: #fde047; /* amarillo */
+  stroke-width: 2;
+}
+
+.city-map__bldg {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.city-map__emoji {
+  font-size: 16px;
+}
+
+.city-map__label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.city-map__compass text {
+  font-size: 12px;
+  font-weight: 800;
+  fill: var(--text-muted);
+}
+
+.city-map__start {
+  fill: var(--accent);
+}
+
+.city-map__start-label {
+  font-size: 12px;
+  font-weight: 800;
+  fill: var(--accent);
+}
+
 .quiz-card__prompt {
   font-size: clamp(1.2rem, 4.5vw, 1.5rem);
   text-align: center;

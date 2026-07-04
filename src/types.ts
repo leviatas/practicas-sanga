@@ -15,6 +15,8 @@ export interface Question {
   prompt: string
   /** Emoji o texto grande de apoyo visual (opcional, ideal para los más chicos). */
   emoji?: string
+  /** Apoyo visual con un mapa dibujado (SVG). Ej: 'city' para las direcciones. */
+  map?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /** Opciones de respuesta (mínimo 2). */
