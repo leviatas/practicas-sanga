@@ -1,12 +1,10 @@
-name: Deploy (self-hosted)
+name: Deploy
 
-# Cada vez que se sube algo a main, se despliega en el servidor propio.
 on:
   push:
     branches: [main]
-  workflow_dispatch: {}   # permite lanzarlo a mano desde la pestaña Actions
+  workflow_dispatch:
 
-# Evita despliegues solapados: si llega otro push, espera a que termine el actual.
 concurrency:
   group: deploy-main
   cancel-in-progress: false
@@ -14,16 +12,15 @@ concurrency:
 jobs:
   deploy:
     runs-on: self-hosted
+    timeout-minutes: 40 # los builds pueden ser lentos
     steps:
       - name: Deploy con prod.sh
-        shell: bash
         run: |
-          set -euo pipefail
-          DIR="$HOME/proyectos/sanga/practicas-sanga"
-          if [ ! -d "$DIR/.git" ]; then
-            echo "❌ No existe el repo en $DIR. Cloná el proyecto ahí primero." >&2
+          DEPLOY_DIR="${{ vars.DEPLOY_DIR }}"
+          DEPLOY_DIR="${DEPLOY_DIR:-$HOME/proyectos/sanga/practicas-sanga}"
+          if [ ! -d "$DEPLOY_DIR/.git" ]; then
+            echo "::error::No existe un repo git en $DEPLOY_DIR. Configurá la variable DEPLOY_DIR en GitHub (Settings → Secrets and variables → Actions → Variables)."
             exit 1
           fi
-          cd "$DIR"
-          # prod.sh hace git pull, elige el puerto, buildea y levanta (y el túnel si hay token).
+          cd "$DEPLOY_DIR"
           ./prod.sh
