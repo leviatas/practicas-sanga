@@ -17,6 +17,8 @@ export interface Question {
   emoji?: string
   /** Apoyo visual con un mapa dibujado (SVG). Ej: 'city' o 'city2'. */
   map?: string
+  /** Apoyo visual con una escena de preposición (SVG). Ej: 'on', 'into'. */
+  scene?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**

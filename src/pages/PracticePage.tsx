@@ -6,6 +6,7 @@ import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
+import PrepositionScene from '../components/PrepositionScene'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -230,6 +231,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
 
       <div className="quiz-card">
         {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
+        {question.scene && <PrepositionScene name={question.scene} />}
         {question.emoji && (
           <div className="quiz-card__emoji" aria-hidden="true">
             {question.emoji}
