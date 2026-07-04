@@ -42,6 +42,36 @@ docker compose down               # detener
 
 ---
 
+## 🌐 Exponer a internet (Cloudflare Tunnel)
+
+Podés publicar la app a internet con un túnel de Cloudflare, sin abrir puertos
+en el router.
+
+1. En **Cloudflare Zero Trust → Networks → Tunnels**, creá un túnel y copiá su
+   **token** (la cadena larga que aparece tras `--token`).
+2. En el panel del túnel, agregá un **public hostname** (ej. `practicas.tudominio.com`)
+   apuntando al servicio interno **`http://web:80`**.
+3. Poné el token en `.env`:
+
+   ```bash
+   echo "CLOUDFLARED_TOKEN=pegá-acá-tu-token" >> .env
+   ./prod.sh
+   ```
+
+`prod.sh` detecta el token y levanta también el servicio `cloudflared`
+(profile `tunnel`). Sin token, solo corre la web local.
+
+Manual con Compose:
+
+```bash
+docker compose --profile tunnel up -d --build   # web + túnel
+docker compose --profile tunnel down            # bajar ambos
+```
+
+> El archivo `.env.example` documenta las variables (`PORT`, `CLOUDFLARED_TOKEN`).
+
+---
+
 ## 🧑‍💻 Desarrollo
 
 ### Opción A — con Docker (no necesitás Node instalado)

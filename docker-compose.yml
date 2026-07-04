@@ -2,13 +2,17 @@
 # Docker Compose — Prácticas Sanga
 #
 # Producción (build + deploy):
-#   ./prod.sh                 # pregunta el puerto y lo guarda en .env
+#   ./prod.sh                 # elige el puerto y lo guarda en .env
 #   docker compose up -d --build
 #   → disponible en http://localhost:<PORT>
 #
 # El puerto del host se toma de la variable PORT, que ./prod.sh escribe en el
 # archivo .env (ignorado por git). Si no hay .env, usa 8080 por defecto.
 # También podés forzarlo puntualmente:  PORT=3000 docker compose up -d --build
+#
+# Exponer a internet (Cloudflare Tunnel):
+#   Poné CLOUDFLARED_TOKEN=... en .env y ./prod.sh levanta también el túnel.
+#   Manualmente:  docker compose --profile tunnel up -d --build
 # ============================================================================
 
 services:
@@ -21,3 +25,19 @@ services:
     ports:
       - "${PORT:-8080}:80"
     restart: unless-stopped
+
+  # Túnel de Cloudflare (opcional). Solo se levanta con el profile "tunnel",
+  # que ./prod.sh activa automáticamente si hay CLOUDFLARED_TOKEN en .env.
+  # En el panel de Cloudflare (Zero Trust > Networks > Tunnels) configurá el
+  # public hostname apuntando al servicio interno:  http://web:80
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: practicas-sanga-tunnel
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TOKEN:-}
+    depends_on:
+      - web
+    restart: unless-stopped
+    profiles:
+      - tunnel
