@@ -15,12 +15,27 @@ export interface Question {
   prompt: string
   /** Emoji o texto grande de apoyo visual (opcional, ideal para los más chicos). */
   emoji?: string
-  /** Apoyo visual con un mapa dibujado (SVG). Ej: 'city' para las direcciones. */
+  /** Apoyo visual con un mapa dibujado (SVG). Ej: 'city' o 'city2'. */
   map?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
-  /** Opciones de respuesta (mínimo 2). */
-  options: Option[]
+  /**
+   * Tipo de ejercicio:
+   *  - 'choice' (por defecto): elegir una opción.
+   *  - 'drag': arrastrar fichas a los huecos de un párrafo y validar.
+   */
+  kind?: 'choice' | 'drag'
+  /** Opciones de respuesta (para kind 'choice'). */
+  options?: Option[]
+  /**
+   * Para kind 'drag': el párrafo partido en trozos de texto. Los huecos van
+   * ENTRE los trozos, así que hay `segments.length - 1` huecos.
+   */
+  segments?: string[]
+  /** Para kind 'drag': la ficha correcta de cada hueco (largo = huecos). */
+  blanks?: string[]
+  /** Para kind 'drag': todas las fichas disponibles para arrastrar. */
+  bank?: string[]
 }
 
 export interface Practice {

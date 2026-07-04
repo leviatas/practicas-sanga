@@ -4,6 +4,7 @@ import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
 import CityMap from '../components/CityMap'
+import DragCloze from '../components/DragCloze'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -16,9 +17,14 @@ function shuffle<T>(items: readonly T[]): T[] {
   return arr
 }
 
-// Baraja el orden de las preguntas y, dentro de cada una, el de las opciones.
+// Baraja el orden de las preguntas y, dentro de cada una, el de las opciones
+// (o el banco de fichas, en los ejercicios de arrastrar).
 function withShuffledQuiz(questions: Question[]): Question[] {
-  return shuffle(questions).map((q) => ({ ...q, options: shuffle(q.options) }))
+  return shuffle(questions).map((q) => ({
+    ...q,
+    options: q.options ? shuffle(q.options) : q.options,
+    bank: q.bank ? shuffle(q.bank) : q.bank,
+  }))
 }
 
 // Preguntas todavía no dominadas (las que faltan o se respondieron mal).
@@ -66,6 +72,8 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [answered, setAnswered] = useState(false)
+  // Resultado del ejercicio de arrastrar (kind 'drag') tras validar.
+  const [dragCorrect, setDragCorrect] = useState(false)
   // 'playing' = respondiendo; 'roundEnd' = terminó la ronda.
   const [phase, setPhase] = useState<'playing' | 'roundEnd'>('playing')
 
@@ -77,19 +85,29 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
     saveMastered(gradeId, practiceId, next)
   }
 
+  function markMastered(id: string) {
+    setMastered((prev) => {
+      const next = new Set(prev)
+      next.add(id)
+      persist(next)
+      return next
+    })
+  }
+
   function handleSelect(index: number) {
     if (answered) return
     setSelected(index)
     setAnswered(true)
     const q = round[current]
-    if (q.options[index].correct) {
-      setMastered((prev) => {
-        const next = new Set(prev)
-        next.add(q.id)
-        persist(next)
-        return next
-      })
-    }
+    if (q.options?.[index]?.correct) markMastered(q.id)
+  }
+
+  // Validación del ejercicio de arrastrar.
+  function handleDragValidate(isCorrect: boolean) {
+    if (answered) return
+    setAnswered(true)
+    setDragCorrect(isCorrect)
+    if (isCorrect) markMastered(round[current].id)
   }
 
   function handleNext() {
@@ -100,6 +118,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
     setCurrent((c) => c + 1)
     setSelected(null)
     setAnswered(false)
+    setDragCorrect(false)
   }
 
   // Empieza otra ronda con lo que todavía falta dominar.
@@ -108,6 +127,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
+    setDragCorrect(false)
     setPhase('playing')
   }
 
@@ -123,6 +143,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
+    setDragCorrect(false)
     setPhase('playing')
   }
 
@@ -203,7 +224,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
       </p>
 
       <div className="quiz-card">
-        {question.map === 'city' && <CityMap />}
+        {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
         {question.emoji && (
           <div className="quiz-card__emoji" aria-hidden="true">
             {question.emoji}
@@ -211,43 +232,53 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
         )}
         <h1 className="quiz-card__prompt">{question.prompt}</h1>
 
-        <ul className="quiz-options" role="list">
-          {question.options.map((option, index) => {
-            const isSelected = selected === index
-            const showState = answered && (isSelected || option.correct)
-            let stateClass = ''
-            if (answered && option.correct) stateClass = 'is-correct'
-            else if (isSelected) stateClass = 'is-wrong'
+        {question.kind === 'drag' ? (
+          <DragCloze
+            key={question.id}
+            question={question}
+            locked={answered}
+            correct={dragCorrect}
+            onValidate={handleDragValidate}
+          />
+        ) : (
+          <ul className="quiz-options" role="list">
+            {(question.options ?? []).map((option, index) => {
+              const isSelected = selected === index
+              const showState = answered && (isSelected || option.correct)
+              let stateClass = ''
+              if (answered && option.correct) stateClass = 'is-correct'
+              else if (isSelected) stateClass = 'is-wrong'
 
-            return (
-              <li key={index}>
-                <button
-                  className={`quiz-option ${stateClass}`}
-                  onClick={() => handleSelect(index)}
-                  disabled={answered}
-                  aria-pressed={isSelected}
-                >
-                  <span className="quiz-option__text">{option.text}</span>
-                  {showState && (
-                    <span className="quiz-option__mark" aria-hidden="true">
-                      {option.correct ? '✓' : '✗'}
-                    </span>
-                  )}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+              return (
+                <li key={index}>
+                  <button
+                    className={`quiz-option ${stateClass}`}
+                    onClick={() => handleSelect(index)}
+                    disabled={answered}
+                    aria-pressed={isSelected}
+                  >
+                    <span className="quiz-option__text">{option.text}</span>
+                    {showState && (
+                      <span className="quiz-option__mark" aria-hidden="true">
+                        {option.correct ? '✓' : '✗'}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        )}
 
-        {answered && (
+        {answered && question.kind !== 'drag' && (
           <div
             className={`quiz-feedback ${
-              question.options[selected!].correct ? 'is-correct' : 'is-wrong'
+              question.options?.[selected!]?.correct ? 'is-correct' : 'is-wrong'
             }`}
             role="status"
           >
             <p className="quiz-feedback__title">
-              {question.options[selected!].correct
+              {question.options?.[selected!]?.correct
                 ? '¡Correcto! Queda dominada 🎉'
                 : 'Ups, no era esa. La repasás en la próxima ronda 🙊'}
             </p>
@@ -257,15 +288,13 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
           </div>
         )}
 
-        <div className="quiz-actions">
-          <button
-            className="btn btn--primary"
-            onClick={handleNext}
-            disabled={!answered}
-          >
-            {current + 1 >= round.length ? 'Terminar ronda 🏁' : 'Siguiente →'}
-          </button>
-        </div>
+        {answered && (
+          <div className="quiz-actions">
+            <button className="btn btn--primary" onClick={handleNext}>
+              {current + 1 >= round.length ? 'Terminar ronda 🏁' : 'Siguiente →'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

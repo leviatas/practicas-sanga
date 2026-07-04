@@ -101,7 +101,7 @@ export const grade4Practices: Practice[] = [
   {
     id: 'vocab-animales',
     title: 'Vocabulario: animales',
-    description: 'Read the English definition and choose the animal. (Unit 6)',
+    description: 'Read the English definition and choose the animal. (Unit 4)',
     emoji: '🐸',
     questions: [
       { id: 'an1', prompt: 'A small creature that later turns into a butterfly.',
@@ -271,6 +271,28 @@ export const grade4Practices: Practice[] = [
       { id: 'd6', map: 'city',
         prompt: 'You want to reach the park. Complete: Go ___ on.',
         options: [{ text: 'straight', correct: true }, { text: 'past' }, { text: 'back' }] },
+
+      // --- Arrastrar y soltar sobre el mapa grande (city2), y validar ---
+      { id: 'd7', map: 'city2', kind: 'drag',
+        prompt: 'Drag the directions to the supermarket, then tap "Validar".',
+        segments: ['Go straight on to the first crossroads. ', '. The supermarket is ', '.'],
+        blanks: ['Turn right', 'on the right'],
+        bank: ['Turn right', 'on the right', 'Turn left', 'on the left'] },
+      { id: 'd8', map: 'city2', kind: 'drag',
+        prompt: 'Drag the directions to the school, then tap "Validar".',
+        segments: ['Go straight on to the first crossroads. ', '. The school is ', '.'],
+        blanks: ['Turn left', 'on the left'],
+        bank: ['Turn left', 'on the left', 'Turn right', 'on the right'] },
+      { id: 'd9', map: 'city2', kind: 'drag',
+        prompt: 'Drag the directions to the cinema, then tap "Validar".',
+        segments: ['Go straight on to the second crossroads. ', '. The cinema is ', '.'],
+        blanks: ['Turn right', 'on the right'],
+        bank: ['Turn right', 'on the right', 'Turn left', 'on the left'] },
+      { id: 'd10', map: 'city2', kind: 'drag',
+        prompt: 'Drag the directions to the park, then tap "Validar".',
+        segments: ['To get to the park, ', ' the café and ', ' to the end of the road.'],
+        blanks: ['go past', 'go straight on'],
+        bank: ['go past', 'go straight on', 'turn left', 'turn right'] },
     ],
   },
 
