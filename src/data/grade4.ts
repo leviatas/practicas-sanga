@@ -29,7 +29,7 @@ export const grade4Practices: Practice[] = [
       { id: 'j5', prompt: 'This person flies planes.',
         options: [{ text: 'a pilot', correct: true }, { text: 'a mechanic' }, { text: 'a teacher' }] },
       { id: 'j6', prompt: 'This person cooks food in a restaurant.',
-        options: [{ text: 'a cook', correct: true }, { text: 'a firefighter' }, { text: 'a farmer' }] },
+        options: [{ text: 'a chef', correct: true }, { text: 'a firefighter' }, { text: 'a farmer' }] },
     ],
   },
 
