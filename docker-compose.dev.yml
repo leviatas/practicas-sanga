@@ -1,0 +1,20 @@
+# ============================================================================
+# Docker Compose — modo desarrollo (hot reload con Vite)
+#
+#   docker compose -f docker-compose.dev.yml up
+#   → disponible en http://localhost:5173 con recarga automática
+# ============================================================================
+
+services:
+  dev:
+    image: node:22-alpine
+    container_name: practicas-sanga-dev
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true

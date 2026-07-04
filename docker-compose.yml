@@ -1,0 +1,21 @@
+# ============================================================================
+# Docker Compose — Prácticas Sanga
+#
+# Producción (build + deploy):
+#   docker compose up -d --build
+#   → disponible en http://localhost:8080
+#
+# El puerto del host se puede cambiar con la variable PORT:
+#   PORT=3000 docker compose up -d --build
+# ============================================================================
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: practicas-sanga:latest
+    container_name: practicas-sanga
+    ports:
+      - "${PORT:-8080}:80"
+    restart: unless-stopped

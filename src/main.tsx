@@ -1,0 +1,28 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import './index.css'
+import App from './App'
+import HomePage from './pages/HomePage'
+import GradePage from './pages/GradePage'
+import PracticePage from './pages/PracticePage'
+import NotFoundPage from './pages/NotFoundPage'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'grado/:gradeId', element: <GradePage /> },
+      { path: 'grado/:gradeId/practica/:practiceId', element: <PracticePage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+])
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+)
