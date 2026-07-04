@@ -20,17 +20,19 @@ Con Docker instalado, un solo comando construye y despliega todo:
 ./prod.sh
 ```
 
-Queda disponible en **http://localhost:8080**.
+`prod.sh` te **pregunta en qué puerto** publicar la app (default `8080`),
+valida que no esté en uso y guarda el elegido en un archivo **`.env`**
+(ignorado por git). Docker Compose lee ese puerto desde `.env`.
 
 Otros comandos:
 
 ```bash
-PORT=3000 ./prod.sh   # usar otro puerto
+PORT=3000 ./prod.sh   # usar 3000 sin preguntar (también lo guarda en .env)
 ./prod.sh logs        # ver logs en vivo
 ./prod.sh down        # detener y eliminar el contenedor
 ```
 
-Equivalente manual con Compose:
+Equivalente manual con Compose (usa el puerto del `.env`):
 
 ```bash
 docker compose up -d --build      # build + deploy

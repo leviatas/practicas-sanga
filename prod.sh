@@ -4,14 +4,16 @@
 #
 # Hace todo de una sola vez:
 #   1. Verifica que Docker esté disponible.
-#   2. Verifica que el puerto elegido NO esté en uso.
-#   3. Construye la imagen (Vite build dentro del contenedor).
-#   4. Levanta el contenedor de producción (nginx) en segundo plano.
-#   5. Muestra la URL local y la de Tailscale con el puerto elegido.
+#   2. Elige el puerto: te lo pregunta al ejecutar (o toma la variable PORT),
+#      lo valida (que sea válido y NO esté en uso) y lo guarda en .env.
+#   3. Docker Compose lee ese puerto desde .env.
+#   4. Construye la imagen (Vite build dentro del contenedor).
+#   5. Levanta el contenedor de producción (nginx) en segundo plano.
+#   6. Muestra la URL local y la de Tailscale con el puerto elegido.
 #
 # Uso:
-#   ./prod.sh            # build + deploy (puerto 8080)
-#   PORT=3000 ./prod.sh  # build + deploy en otro puerto
+#   ./prod.sh            # pregunta el puerto (default 8080 o el guardado en .env)
+#   PORT=3000 ./prod.sh  # usa 3000 sin preguntar y lo guarda en .env
 #   ./prod.sh down       # detener y eliminar el contenedor
 #   ./prod.sh logs       # ver logs en vivo
 # ============================================================================
@@ -19,8 +21,11 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-PORT="${PORT:-8080}"
 CONTAINER_NAME="practicas-sanga"
+ENV_FILE=".env"
+DEFAULT_PORT=8080
+# Puerto pedido explícitamente por variable de entorno (si la hubiera)
+REQUESTED_PORT="${PORT:-}"
 
 # --- Elegir el comando de compose (v2 "docker compose" o v1 "docker-compose") ---
 if docker compose version >/dev/null 2>&1; then
@@ -71,20 +76,67 @@ port_in_use() {
   fi
 }
 
-if port_in_use "$PORT"; then
-  # Si el que lo usa es NUESTRO propio contenedor, está OK (compose lo recrea).
-  if docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null \
-       | grep -q "${CONTAINER_NAME}.*:${PORT}->"; then
-    echo "ℹ️  El puerto ${PORT} lo usa el contenedor actual; se va a recrear."
-  else
-    echo "❌ El puerto ${PORT} ya está en uso por otro proceso." >&2
-    echo "   Elegí otro puerto, por ejemplo:  PORT=8090 ./prod.sh" >&2
-    exit 1
+# ¿El puerto lo usa NUESTRO propio contenedor? (entonces se puede recrear)
+used_by_us() {
+  docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null \
+    | grep -q "${CONTAINER_NAME}.*:${1}->"
+}
+
+valid_port() {
+  [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -ge 1 ] && [ "$1" -le 65535 ]
+}
+
+# --- Determinar el default sugerido (el guardado en .env, si existe) ---
+if [ -f "$ENV_FILE" ]; then
+  SAVED_PORT="$(grep -E '^PORT=' "$ENV_FILE" 2>/dev/null | tail -n1 | cut -d= -f2 | tr -d '[:space:]' || true)"
+  if valid_port "${SAVED_PORT:-}"; then
+    DEFAULT_PORT="$SAVED_PORT"
   fi
 fi
 
+# --- Elegir el puerto ---
+choose_port() {
+  local candidate
+  while true; do
+    if [ -n "$REQUESTED_PORT" ]; then
+      candidate="$REQUESTED_PORT"
+      REQUESTED_PORT=""   # solo se usa una vez; si falla, pasamos a preguntar
+    elif [ -t 0 ]; then
+      read -r -p "¿En qué puerto querés publicar la app? [${DEFAULT_PORT}]: " candidate
+      candidate="${candidate:-$DEFAULT_PORT}"
+    else
+      candidate="$DEFAULT_PORT"   # sin terminal interactiva: usamos el default
+    fi
+
+    if ! valid_port "$candidate"; then
+      echo "  ⚠️  Puerto inválido: '${candidate}'. Poné un número entre 1 y 65535." >&2
+      [ -t 0 ] && continue || exit 1
+    fi
+
+    if port_in_use "$candidate" && ! used_by_us "$candidate"; then
+      echo "  ⚠️  El puerto ${candidate} ya está en uso por otro proceso. Elegí otro." >&2
+      [ -t 0 ] && continue || exit 1
+    fi
+
+    PORT="$candidate"
+    return 0
+  done
+}
+
+choose_port
+
+# --- Guardar el puerto en .env (lo lee docker compose) ---
+touch "$ENV_FILE"
+if grep -qE '^PORT=' "$ENV_FILE"; then
+  sed -i -E "s|^PORT=.*|PORT=${PORT}|" "$ENV_FILE"
+else
+  printf 'PORT=%s\n' "$PORT" >> "$ENV_FILE"
+fi
+echo "💾 Puerto ${PORT} guardado en ${ENV_FILE}"
+
 echo "📦 Construyendo y levantando Prácticas Sanga (puerto ${PORT})..."
-PORT="$PORT" $COMPOSE up -d --build
+# docker compose toma PORT automáticamente desde .env
+$COMPOSE up -d --build
 
 # --- IP de Tailscale (para probar desde otros dispositivos de la tailnet) ---
 ts_ip() {

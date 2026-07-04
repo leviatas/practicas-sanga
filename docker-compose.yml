@@ -2,11 +2,13 @@
 # Docker Compose — Prácticas Sanga
 #
 # Producción (build + deploy):
+#   ./prod.sh                 # pregunta el puerto y lo guarda en .env
 #   docker compose up -d --build
-#   → disponible en http://localhost:8080
+#   → disponible en http://localhost:<PORT>
 #
-# El puerto del host se puede cambiar con la variable PORT:
-#   PORT=3000 docker compose up -d --build
+# El puerto del host se toma de la variable PORT, que ./prod.sh escribe en el
+# archivo .env (ignorado por git). Si no hay .env, usa 8080 por defecto.
+# También podés forzarlo puntualmente:  PORT=3000 docker compose up -d --build
 # ============================================================================
 
 services:
