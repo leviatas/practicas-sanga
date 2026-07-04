@@ -9,6 +9,7 @@ import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
+import { familyImages } from '../components/familyImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -294,6 +295,13 @@ function Quiz({
             className="school-photo"
             src={schoolImages[question.image]}
             alt="¿Qué objeto de la escuela es?"
+          />
+        )}
+        {question.image && familyImages[question.image] && (
+          <img
+            className="family-photo"
+            src={familyImages[question.image]}
+            alt="Árbol genealógico de la familia de Alison"
           />
         )}
         {question.emoji && (
