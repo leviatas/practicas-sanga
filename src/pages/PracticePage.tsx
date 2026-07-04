@@ -8,6 +8,7 @@ import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import PrepositionScene from '../components/PrepositionScene'
+import { schoolImages } from '../components/schoolImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -288,6 +289,13 @@ function Quiz({
       <div className="quiz-card">
         {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
         {question.scene && <PrepositionScene name={question.scene} />}
+        {question.image && schoolImages[question.image] && (
+          <img
+            className="school-photo"
+            src={schoolImages[question.image]}
+            alt="¿Qué objeto de la escuela es?"
+          />
+        )}
         {question.emoji && (
           <div className="quiz-card__emoji" aria-hidden="true">
             {question.emoji}
