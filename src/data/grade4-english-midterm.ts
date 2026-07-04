@@ -18,7 +18,7 @@ export const grade4EnglishMidterm: Practice = {
   id: 'ingles-midterm',
   title: 'Midterm de Inglés',
   description:
-    'Practicá el examen de mitad de año: pasado (regular e irregular), preguntas con did, verbos + ing, preposiciones de movimiento, could/must, direcciones y comparativos.',
+    'Practicá el examen de mitad de año: pasado (regular e irregular), preguntas con did, verbos + ing, preposiciones de movimiento, could/must, direcciones, comparativos y vocabulario (Unidades 1–4).',
   emoji: '📝',
   questions: [
     // ---- Past simple: regular & irregular verbs ----
@@ -264,6 +264,134 @@ export const grade4EnglishMidterm: Practice = {
         { text: 'most high' },
       ],
       explanation: 'Superlativo de adjetivos cortos: the + adjetivo + -est.',
+    },
+
+    // ---- Vocabulary · Unit 1: Holiday news (hobbies & interests) ----
+    {
+      id: 'q23',
+      prompt: '¿Cómo se dice "sacar fotos / la fotografía" en inglés?',
+      emoji: '📷',
+      options: [
+        { text: 'Photography', correct: true },
+        { text: 'Technology' },
+        { text: 'Science' },
+      ],
+    },
+    {
+      id: 'q24',
+      prompt: 'Which word means "a free-time activity you enjoy"?',
+      emoji: '🎨',
+      options: [
+        { text: 'a hobby', correct: true },
+        { text: 'a holiday' },
+        { text: 'a story' },
+      ],
+    },
+    {
+      id: 'q25',
+      prompt: '¿Cómo se dice "sano / saludable" en inglés?',
+      emoji: '🍎',
+      options: [
+        { text: 'healthy', correct: true },
+        { text: 'tired' },
+        { text: 'busy' },
+      ],
+    },
+
+    // ---- Vocabulary · Unit 2: Different lives (places to live) ----
+    {
+      id: 'q26',
+      prompt: '¿Cómo se dice "pueblo" en inglés?',
+      emoji: '🏘️',
+      options: [
+        { text: 'village', correct: true },
+        { text: 'city' },
+        { text: 'country' },
+      ],
+    },
+    {
+      id: 'q27',
+      prompt: 'Which is a very dry place with a lot of sand?',
+      emoji: '🏜️',
+      options: [
+        { text: 'a desert', correct: true },
+        { text: 'a river' },
+        { text: 'a forest' },
+      ],
+    },
+    {
+      id: 'q28',
+      prompt: '¿Cómo se dice "vecino/a" en inglés?',
+      emoji: '🧑‍🤝‍🧑',
+      options: [
+        { text: 'neighbour', correct: true },
+        { text: 'stranger' },
+        { text: 'teacher' },
+      ],
+    },
+
+    // ---- Vocabulary · Unit 3: Super cycling (bikes & sport) ----
+    {
+      id: 'q29',
+      prompt: '¿Cómo se dice "casco" en inglés?',
+      emoji: '⛑️',
+      options: [
+        { text: 'helmet', correct: true },
+        { text: 'wheel' },
+        { text: 'glove' },
+      ],
+    },
+    {
+      id: 'q30',
+      prompt: 'Which part of a bike do you turn with your hands?',
+      emoji: '🚲',
+      options: [
+        { text: 'the handlebars', correct: true },
+        { text: 'the pedals' },
+        { text: 'the wheels' },
+      ],
+    },
+    {
+      id: 'q31',
+      prompt: '¿Cómo se dice "carrera / competencia" en inglés?',
+      emoji: '🏁',
+      options: [
+        { text: 'a race', correct: true },
+        { text: 'a team' },
+        { text: 'a prize' },
+      ],
+    },
+
+    // ---- Vocabulary · Unit 4: People at work (jobs) ----
+    {
+      id: 'q32',
+      prompt: '¿Qué trabajo apaga incendios? / Who puts out fires?',
+      emoji: '🧑‍🚒',
+      options: [
+        { text: 'a firefighter', correct: true },
+        { text: 'a farmer' },
+        { text: 'a pilot' },
+      ],
+    },
+    {
+      id: 'q33',
+      prompt: '¿Cómo se dice "veterinario/a" en inglés?',
+      emoji: '🐶',
+      options: [
+        { text: 'a vet', correct: true },
+        { text: 'a nurse' },
+        { text: 'a cook' },
+      ],
+    },
+    {
+      id: 'q34',
+      prompt: 'Who fixes cars and machines?',
+      emoji: '🔧',
+      options: [
+        { text: 'a mechanic', correct: true },
+        { text: 'a dentist' },
+        { text: 'a waiter' },
+      ],
     },
   ],
 }
