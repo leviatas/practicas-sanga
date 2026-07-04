@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { grades } from '../data/grades'
+import { grades, gradePractices } from '../data/grades'
 
 export default function HomePage() {
   return (
@@ -12,24 +12,26 @@ export default function HomePage() {
       </div>
 
       <ul className="card-grid" role="list">
-        {grades.map((grade) => (
-          <li key={grade.id}>
-            <Link
-              to={`/grado/${grade.id}`}
-              className="grade-card"
-              style={{ ['--accent' as string]: grade.color }}
-            >
-              <span className="grade-card__emoji" aria-hidden="true">
-                {grade.emoji}
-              </span>
-              <span className="grade-card__name">{grade.name}</span>
-              <span className="grade-card__meta">
-                {grade.practices.length}{' '}
-                {grade.practices.length === 1 ? 'práctica' : 'prácticas'}
-              </span>
-            </Link>
-          </li>
-        ))}
+        {grades.map((grade) => {
+          const count = gradePractices(grade).length
+          return (
+            <li key={grade.id}>
+              <Link
+                to={`/grado/${grade.id}`}
+                className="grade-card"
+                style={{ ['--accent' as string]: grade.color }}
+              >
+                <span className="grade-card__emoji" aria-hidden="true">
+                  {grade.emoji}
+                </span>
+                <span className="grade-card__name">{grade.name}</span>
+                <span className="grade-card__meta">
+                  {count} {count === 1 ? 'práctica' : 'prácticas'}
+                </span>
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

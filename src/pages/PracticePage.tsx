@@ -35,12 +35,18 @@ function pendingQuestions(questions: Question[], mastered: Set<string>): Questio
 }
 
 export default function PracticePage() {
-  const { gradeId, practiceId } = useParams()
-  const result = getPractice(gradeId ?? '', practiceId ?? '')
+  const { gradeId, subjectId, termId, practiceId } = useParams()
+  const result = getPractice(
+    gradeId ?? '',
+    subjectId ?? '',
+    termId ?? '',
+    practiceId ?? '',
+  )
 
   if (!result) return <NotFoundPage />
 
-  const { grade, practice } = result
+  const { grade, subject, term, practice } = result
+  const termPath = `/grado/${grade.id}/${subject.id}/${term.id}`
 
   return (
     <section style={{ ['--accent' as string]: grade.color }}>
@@ -49,16 +55,33 @@ export default function PracticePage() {
         <span aria-hidden="true">›</span>
         <Link to={`/grado/${grade.id}`}>{grade.name}</Link>
         <span aria-hidden="true">›</span>
+        <Link to={`/grado/${grade.id}/${subject.id}`}>{subject.name}</Link>
+        <span aria-hidden="true">›</span>
+        <Link to={termPath}>{term.name}</Link>
+        <span aria-hidden="true">›</span>
         <span aria-current="page">{practice.title}</span>
       </nav>
 
       {/* key fuerza reiniciar el estado si cambia la práctica */}
-      <Quiz key={practice.id} practice={practice} gradeId={grade.id} />
+      <Quiz
+        key={practice.id}
+        practice={practice}
+        gradeId={grade.id}
+        termPath={termPath}
+      />
     </section>
   )
 }
 
-function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
+function Quiz({
+  practice,
+  gradeId,
+  termPath,
+}: {
+  practice: Practice
+  gradeId: string
+  termPath: string
+}) {
   const practiceId = practice.id
   const allQuestions = practice.questions
   const total = allQuestions.length
@@ -165,7 +188,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
             <button className="btn btn--primary" onClick={handleReset}>
               🔁 Reiniciar y practicar de nuevo
             </button>
-            <Link className="btn btn--ghost" to={`/grado/${gradeId}`}>
+            <Link className="btn btn--ghost" to={termPath}>
               ← Otras prácticas
             </Link>
           </div>

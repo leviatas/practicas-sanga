@@ -58,6 +58,32 @@ export interface Practice {
   questions: Question[]
 }
 
+export interface Term {
+  /** Identificador único dentro de la materia (se usa en la URL). Ej: '1st-midterms'. */
+  id: string
+  /** Nombre visible, ej: "1st Midterms". */
+  name: string
+  /** Emoji representativo. */
+  emoji: string
+  /** Descripción corta (opcional). */
+  description?: string
+  /** Prácticas de este período. */
+  practices: Practice[]
+}
+
+export interface Subject {
+  /** Identificador único dentro del grado (se usa en la URL). Ej: 'english'. */
+  id: string
+  /** Nombre visible, ej: "English". */
+  name: string
+  /** Emoji representativo. */
+  emoji: string
+  /** Descripción corta (opcional). */
+  description?: string
+  /** Períodos/exámenes de la materia (ej: 1st Midterms). */
+  terms: Term[]
+}
+
 export interface Grade {
   /** Identificador único (se usa en la URL). */
   id: string
@@ -67,6 +93,6 @@ export interface Grade {
   emoji: string
   /** Color de acento (cualquier valor CSS válido). */
   color: string
-  /** Prácticas disponibles en este grado. */
-  practices: Practice[]
+  /** Materias del grado (ej: English). Cada una tiene sus períodos y prácticas. */
+  subjects: Subject[]
 }

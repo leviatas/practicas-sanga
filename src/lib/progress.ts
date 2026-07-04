@@ -47,3 +47,8 @@ export function resetMastered(gradeId: string, practiceId: string): void {
     // Ignoramos.
   }
 }
+
+/** Borra el progreso de varias prácticas (ej: todas las de un período). */
+export function resetManyMastered(gradeId: string, practiceIds: string[]): void {
+  practiceIds.forEach((id) => resetMastered(gradeId, id))
+}
