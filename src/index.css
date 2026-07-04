@@ -455,6 +455,91 @@ button {
   gap: 12px;
 }
 
+/* ---- Ejercicio de arrastrar y soltar (drag & drop) ---- */
+.drag-paragraph {
+  font-size: 1.15rem;
+  line-height: 2.2;
+  text-align: left;
+  margin: 4px 0 18px;
+}
+
+.drag-blank {
+  display: inline-block;
+  min-width: 96px;
+  min-height: 40px;
+  padding: 2px 6px;
+  margin: 0 2px;
+  vertical-align: middle;
+  border-bottom: 3px dashed var(--accent);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.drag-blank.is-over {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.drag-blank.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.drag-blank.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+.drag-blank__ph {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.drag-chip {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: grab;
+  touch-action: none; /* evita que el touch haga scroll al arrastrar */
+  user-select: none;
+}
+
+.drag-chip.is-dragging {
+  opacity: 0.35;
+}
+
+.drag-chip.is-overlay {
+  cursor: grabbing;
+  box-shadow: var(--shadow);
+  transform: scale(1.05);
+}
+
+.drag-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 14px;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  margin-bottom: 8px;
+}
+
+.drag-bank__empty {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.drag-hint {
+  text-align: center;
+  font-weight: 700;
+  margin: 12px 0 0;
+}
+
 .quiz-option {
   width: 100%;
   display: flex;
