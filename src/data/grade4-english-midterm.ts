@@ -2,129 +2,268 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // MIDTERM DE INGLÉS - 4to GRADO
+// Basado en el temario de mitad de año (Academy Stars 4, Units 1 a 4).
 //
-// ⚠️  CONTENIDO DE EJEMPLO / PLACEHOLDER  ⚠️
-// Estas preguntas son de muestra (nivel típico de 4to grado) para que la app
-// funcione de punta a punta. REEMPLAZALAS por el temario real de 4to grado
-// cuando lo tengas. La estructura es idéntica a la de 1er grado.
+// Temas (Use of English): verbos regulares e irregulares, preguntas en pasado
+// (DID / Wh words), love/like/enjoy/don't mind/don't like + ing, preposiciones
+// de movimiento, verb + to + infinitive, could/couldn't (habilidades en el
+// pasado), must/mustn't (obligación/prohibición), giving directions y
+// comparativos/superlativos.
+//
+// Para agregar o editar preguntas, copiá un bloque y cambiá el texto.
+// La opción correcta se marca con `correct: true`.
 // ============================================================================
 
 export const grade4EnglishMidterm: Practice = {
   id: 'ingles-midterm',
   title: 'Midterm de Inglés',
   description:
-    'Práctica del examen de mitad de año. (Contenido de ejemplo: reemplazar por el temario real de 4to grado.)',
+    'Practicá el examen de mitad de año: pasado (regular e irregular), preguntas con did, verbos + ing, preposiciones de movimiento, could/must, direcciones y comparativos.',
   emoji: '📝',
   questions: [
-    // ---- Verb "to be" ----
+    // ---- Past simple: regular & irregular verbs ----
     {
       id: 'q1',
-      prompt: 'Complete: They ___ my friends.',
-      emoji: '👫',
+      prompt: 'Complete: Yesterday I ___ to the park. (play)',
+      emoji: '🏞️',
       options: [
-        { text: 'are', correct: true },
-        { text: 'is' },
-        { text: 'am' },
+        { text: 'played', correct: true },
+        { text: 'play' },
+        { text: 'plaied' },
       ],
+      explanation: 'Verbos regulares: agregamos -ed. play → played.',
     },
     {
       id: 'q2',
-      prompt: 'Complete: She ___ a teacher.',
-      emoji: '👩‍🏫',
+      prompt: 'Complete: She ___ a delicious cake last weekend. (make)',
+      emoji: '🎂',
       options: [
-        { text: 'is', correct: true },
-        { text: 'are' },
-        { text: 'am' },
+        { text: 'made', correct: true },
+        { text: 'maked' },
+        { text: 'making' },
       ],
+      explanation: 'make es irregular: make → made.',
     },
-
-    // ---- Present simple ----
     {
       id: 'q3',
-      prompt: 'Complete: He ___ football every day.',
-      emoji: '⚽',
+      prompt: 'What is the past of "go"?',
+      emoji: '🚶',
       options: [
-        { text: 'plays', correct: true },
-        { text: 'play' },
-        { text: 'playing' },
+        { text: 'went', correct: true },
+        { text: 'goed' },
+        { text: 'gone' },
       ],
-      explanation: 'Con he/she/it agregamos -s al verbo en present simple.',
     },
     {
       id: 'q4',
-      prompt: 'Choose the correct question: ___ you like pizza?',
-      emoji: '🍕',
+      prompt: 'Complete: They ___ their homework yesterday. (do)',
+      emoji: '📚',
       options: [
-        { text: 'Do', correct: true },
-        { text: 'Does' },
-        { text: 'Are' },
+        { text: 'did', correct: true },
+        { text: 'done' },
+        { text: 'doed' },
       ],
     },
 
-    // ---- Plurals ----
+    // ---- Questions in the past (DID / Wh words) ----
     {
       id: 'q5',
-      prompt: 'What is the plural of "child"?',
-      emoji: '🧒',
+      prompt: 'Choose the correct question: ___ you visit your grandma?',
+      emoji: '❓',
       options: [
-        { text: 'children', correct: true },
-        { text: 'childs' },
-        { text: 'childes' },
+        { text: 'Did', correct: true },
+        { text: 'Do' },
+        { text: 'Does' },
       ],
     },
     {
       id: 'q6',
-      prompt: 'What is the plural of "box"?',
-      emoji: '📦',
+      prompt: 'Complete: ___ did you go on holiday? — To the beach.',
+      emoji: '🏖️',
       options: [
-        { text: 'boxes', correct: true },
-        { text: 'boxs' },
-        { text: 'box' },
+        { text: 'Where', correct: true },
+        { text: 'When' },
+        { text: 'Who' },
       ],
     },
-
-    // ---- There is / There are ----
     {
       id: 'q7',
-      prompt: 'Complete: ___ three apples on the table.',
-      emoji: '🍎',
+      prompt: 'Complete the answer: Did she watch TV? — No, she ___.',
+      emoji: '📺',
       options: [
-        { text: 'There are', correct: true },
-        { text: 'There is' },
-        { text: 'It is' },
+        { text: "didn't", correct: true },
+        { text: "doesn't" },
+        { text: "wasn't" },
       ],
     },
 
-    // ---- Vocabulary ----
+    // ---- Love / like / enjoy / don't mind / don't like + ing ----
     {
       id: 'q8',
-      prompt: '¿Cómo se dice "cocina" (habitación) en inglés?',
-      emoji: '🍳',
+      prompt: 'Complete: I love ___ football with my friends.',
+      emoji: '⚽',
       options: [
-        { text: 'Kitchen', correct: true },
-        { text: 'Bedroom' },
-        { text: 'Bathroom' },
+        { text: 'playing', correct: true },
+        { text: 'play' },
+        { text: 'to play' },
       ],
+      explanation: 'Después de love/like/enjoy/don’t mind usamos verbo + ing.',
     },
     {
       id: 'q9',
-      prompt: 'What day comes after Monday?',
-      emoji: '📅',
+      prompt: 'Complete: She enjoys ___ books before bed.',
+      emoji: '📖',
       options: [
-        { text: 'Tuesday', correct: true },
-        { text: 'Sunday' },
-        { text: 'Friday' },
+        { text: 'reading', correct: true },
+        { text: 'read' },
+        { text: 'reads' },
+      ],
+    },
+
+    // ---- Verb + to + infinitive ----
+    {
+      id: 'q10',
+      prompt: 'Complete: He wanted ___ a doctor.',
+      emoji: '🩺',
+      options: [
+        { text: 'to be', correct: true },
+        { text: 'being' },
+        { text: 'be' },
+      ],
+      explanation: 'want/decide/learn van seguidos de to + infinitivo.',
+    },
+    {
+      id: 'q11',
+      prompt: 'Complete: They decided ___ a new language.',
+      emoji: '🗣️',
+      options: [
+        { text: 'to learn', correct: true },
+        { text: 'learning' },
+        { text: 'learn' },
+      ],
+    },
+
+    // ---- Prepositions of movement ----
+    {
+      id: 'q12',
+      prompt: 'Complete: The cat jumped ___ the box. / El gato saltó adentro de la caja.',
+      emoji: '📦',
+      options: [
+        { text: 'into', correct: true },
+        { text: 'out of' },
+        { text: 'off' },
       ],
     },
     {
-      id: 'q10',
-      prompt: 'What time is it? (3:00)',
-      emoji: '🕒',
+      id: 'q13',
+      prompt: 'Complete: We walked ___ the bridge. / Caminamos a través del puente.',
+      emoji: '🌉',
       options: [
-        { text: "It's three o'clock", correct: true },
-        { text: "It's two o'clock" },
-        { text: "It's half past three" },
+        { text: 'across', correct: true },
+        { text: 'up' },
+        { text: 'round' },
       ],
+    },
+    {
+      id: 'q14',
+      prompt: '¿Cómo se dice "a través de (un túnel)" en inglés?',
+      emoji: '🚇',
+      options: [
+        { text: 'through', correct: true },
+        { text: 'over' },
+        { text: 'down' },
+      ],
+    },
+
+    // ---- Could / couldn't (abilities in the past) ----
+    {
+      id: 'q15',
+      prompt: 'Complete: When I was two, I ___ swim. / No sabía nadar.',
+      emoji: '🏊',
+      options: [
+        { text: "couldn't", correct: true },
+        { text: 'could' },
+        { text: "didn't" },
+      ],
+      explanation: 'could/couldn’t = habilidades en el pasado (podía / no podía).',
+    },
+    {
+      id: 'q16',
+      prompt: 'Complete: My grandpa ___ ride a horse when he was young.',
+      emoji: '🐴',
+      options: [
+        { text: 'could', correct: true },
+        { text: 'can' },
+        { text: 'couldn’t' },
+      ],
+    },
+
+    // ---- Must / mustn't (obligation / prohibition) ----
+    {
+      id: 'q17',
+      prompt: 'Complete: You ___ wear a helmet when you ride a bike. / Es obligatorio.',
+      emoji: '🚴',
+      options: [
+        { text: 'must', correct: true },
+        { text: "mustn't" },
+        { text: 'could' },
+      ],
+    },
+    {
+      id: 'q18',
+      prompt: 'Complete: You ___ run near the pool. / Está prohibido.',
+      emoji: '🚫',
+      options: [
+        { text: "mustn't", correct: true },
+        { text: 'must' },
+        { text: 'can' },
+      ],
+    },
+
+    // ---- Giving directions ----
+    {
+      id: 'q19',
+      prompt: '¿Cómo se dice "doblá a la izquierda" en inglés?',
+      emoji: '⬅️',
+      options: [
+        { text: 'Turn left', correct: true },
+        { text: 'Turn right' },
+        { text: 'Go straight on' },
+      ],
+    },
+    {
+      id: 'q20',
+      prompt: 'The bank? Go straight on and it’s ___ the right.',
+      emoji: '🏦',
+      options: [
+        { text: 'on', correct: true },
+        { text: 'in' },
+        { text: 'at' },
+      ],
+    },
+
+    // ---- Comparatives & superlatives ----
+    {
+      id: 'q21',
+      prompt: 'Complete: An elephant is ___ than a mouse. (big)',
+      emoji: '🐘',
+      options: [
+        { text: 'bigger', correct: true },
+        { text: 'biggest' },
+        { text: 'more big' },
+      ],
+      explanation: 'Comparativo de adjetivos cortos: adjetivo + -er (+ than).',
+    },
+    {
+      id: 'q22',
+      prompt: 'Complete: Mount Everest is the ___ mountain in the world. (high)',
+      emoji: '🏔️',
+      options: [
+        { text: 'highest', correct: true },
+        { text: 'higher' },
+        { text: 'most high' },
+      ],
+      explanation: 'Superlativo de adjetivos cortos: the + adjetivo + -est.',
     },
   ],
 }

@@ -69,7 +69,7 @@ tocar la lógica de la app).
 - **`src/data/grades.ts`** → lista de grados disponibles.
 - **`src/data/grade1-english-midterm.ts`** → preguntas de 1er grado (contenido real).
 - **`src/data/grade4-english-midterm.ts`** → preguntas de 4to grado
-  (⚠️ **contenido de ejemplo**: reemplazar por el temario real).
+  (contenido real: Academy Stars 4, Units 1 a 4).
 
 ### Agregar una pregunta
 
