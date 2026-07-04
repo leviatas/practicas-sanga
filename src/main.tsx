@@ -5,6 +5,8 @@ import './index.css'
 import App from './App'
 import HomePage from './pages/HomePage'
 import GradePage from './pages/GradePage'
+import SubjectPage from './pages/SubjectPage'
+import TermPage from './pages/TermPage'
 import PracticePage from './pages/PracticePage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -14,8 +16,14 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
+      // Grado → Materia → Período → Práctica
       { path: 'grado/:gradeId', element: <GradePage /> },
-      { path: 'grado/:gradeId/practica/:practiceId', element: <PracticePage /> },
+      { path: 'grado/:gradeId/:subjectId', element: <SubjectPage /> },
+      { path: 'grado/:gradeId/:subjectId/:termId', element: <TermPage /> },
+      {
+        path: 'grado/:gradeId/:subjectId/:termId/:practiceId',
+        element: <PracticePage />,
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

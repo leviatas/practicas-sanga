@@ -1,50 +1,54 @@
 import { Link, useParams } from 'react-router-dom'
-import { getGrade } from '../data/grades'
+import { getSubject } from '../data/grades'
 import NotFoundPage from './NotFoundPage'
 
-// Dentro de un grado el alumno elige primero la MATERIA (ej: English).
-export default function GradePage() {
-  const { gradeId } = useParams()
-  const grade = getGrade(gradeId ?? '')
+// Dentro de una materia el alumno elige el PERÍODO (ej: 1st Midterms).
+export default function SubjectPage() {
+  const { gradeId, subjectId } = useParams()
+  const found = getSubject(gradeId ?? '', subjectId ?? '')
 
-  if (!grade) return <NotFoundPage />
+  if (!found) return <NotFoundPage />
+
+  const { grade, subject } = found
 
   return (
     <section style={{ ['--accent' as string]: grade.color }}>
       <nav className="breadcrumb" aria-label="Migas de pan">
         <Link to="/">Inicio</Link>
         <span aria-hidden="true">›</span>
-        <span aria-current="page">{grade.name}</span>
+        <Link to={`/grado/${grade.id}`}>{grade.name}</Link>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">{subject.name}</span>
       </nav>
 
       <div className="page-intro">
         <h1 className="page-title">
-          <span aria-hidden="true">{grade.emoji}</span> {grade.name}
+          <span aria-hidden="true">{subject.emoji}</span> {subject.name}
         </h1>
-        <p className="page-subtitle">Elegí una materia.</p>
+        <p className="page-subtitle">Elegí un período.</p>
       </div>
 
       <ul className="practice-list" role="list">
-        {grade.subjects.map((subject) => {
-          const terms = subject.terms.length
+        {subject.terms.map((term) => {
+          const count = term.practices.length
           return (
-            <li key={subject.id}>
+            <li key={term.id}>
               <Link
-                to={`/grado/${grade.id}/${subject.id}`}
+                to={`/grado/${grade.id}/${subject.id}/${term.id}`}
                 className="practice-card"
               >
                 <span className="practice-card__emoji" aria-hidden="true">
-                  {subject.emoji}
+                  {term.emoji}
                 </span>
                 <span className="practice-card__body">
-                  <span className="practice-card__title">{subject.name}</span>
-                  {subject.description && (
+                  <span className="practice-card__title">{term.name}</span>
+                  {term.description && (
                     <span className="practice-card__desc">
-                      {subject.description}
+                      {term.description}
                     </span>
                   )}
                   <span className="practice-card__meta">
-                    {terms} {terms === 1 ? 'período' : 'períodos'}
+                    {count} {count === 1 ? 'práctica' : 'prácticas'}
                   </span>
                 </span>
                 <span className="practice-card__arrow" aria-hidden="true">
