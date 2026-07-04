@@ -142,6 +142,138 @@ button {
   white-space: nowrap;
 }
 
+.app-version--btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ---- Panel de logs de uso ---- */
+.logs-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 20, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.logs-panel {
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 680px;
+  padding: clamp(16px, 4vw, 24px);
+}
+
+.logs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logs-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.logs-note {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 4px 0 14px;
+}
+
+.logs-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.logs-tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logs-tile strong {
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.logs-tile span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.logs-last {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 8px 0 4px;
+}
+
+.logs-panel h3 {
+  font-size: 1rem;
+  margin: 16px 0 6px;
+}
+
+.logs-tablewrap {
+  overflow-x: auto;
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.logs-table th,
+.logs-table td {
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.logs-table th {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  font-weight: 700;
+}
+
+.logs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.logs-error {
+  color: var(--wrong);
+  font-weight: 700;
+  margin: 8px 0;
+}
+
 /* ---- Intro / títulos ---- */
 .page-intro {
   text-align: center;

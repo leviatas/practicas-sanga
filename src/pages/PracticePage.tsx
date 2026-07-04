@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
+import { logEvent } from '../lib/usage'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
@@ -106,8 +107,37 @@ function Quiz({
   const pendingCount = total - masteredCount
   const allDone = pendingCount === 0
 
+  // Registra el inicio de la práctica (una vez por montaje).
+  useEffect(() => {
+    logEvent('practice_start', {
+      grade: gradeId,
+      practice: practiceId,
+      title: practice.title,
+    })
+  }, [gradeId, practiceId, practice.title])
+
+  // Registra cuando se completa toda la práctica.
+  useEffect(() => {
+    if (allDone) {
+      logEvent('complete', {
+        grade: gradeId,
+        practice: practiceId,
+        title: practice.title,
+      })
+    }
+  }, [allDone, gradeId, practiceId, practice.title])
+
   function persist(next: Set<string>) {
     saveMastered(gradeId, practiceId, next)
+  }
+
+  function logAnswer(correct: boolean) {
+    logEvent('answer', {
+      grade: gradeId,
+      practice: practiceId,
+      title: practice.title,
+      correct,
+    })
   }
 
   function markMastered(id: string) {
@@ -124,7 +154,9 @@ function Quiz({
     setSelected(index)
     setAnswered(true)
     const q = round[current]
-    if (q.options?.[index]?.correct) markMastered(q.id)
+    const correct = !!q.options?.[index]?.correct
+    logAnswer(correct)
+    if (correct) markMastered(q.id)
   }
 
   // Validación del ejercicio de arrastrar.
@@ -132,6 +164,7 @@ function Quiz({
     if (answered) return
     setAnswered(true)
     setDragCorrect(isCorrect)
+    logAnswer(isCorrect)
     if (isCorrect) markMastered(round[current].id)
   }
 
