@@ -14,9 +14,9 @@ function shuffle<T>(items: readonly T[]): T[] {
   return arr
 }
 
-// Devuelve las preguntas con las opciones en orden aleatorio.
-function withShuffledOptions(questions: Question[]): Question[] {
-  return questions.map((q) => ({ ...q, options: shuffle(q.options) }))
+// Baraja el orden de las preguntas y, dentro de cada una, el de las opciones.
+function withShuffledQuiz(questions: Question[]): Question[] {
+  return shuffle(questions).map((q) => ({ ...q, options: shuffle(q.options) }))
 }
 
 export default function PracticePage() {
@@ -44,9 +44,9 @@ export default function PracticePage() {
 }
 
 function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
-  // Opciones barajadas al iniciar; se vuelven a barajar en cada intento.
+  // Preguntas y opciones barajadas al iniciar; se rebarajan en cada intento.
   const [questions, setQuestions] = useState(() =>
-    withShuffledOptions(practice.questions),
+    withShuffledQuiz(practice.questions),
   )
   const total = questions.length
 
@@ -82,7 +82,7 @@ function Quiz({ practice, gradeId }: { practice: Practice; gradeId: string }) {
   }
 
   function handleRestart() {
-    setQuestions(withShuffledOptions(practice.questions))
+    setQuestions(withShuffledQuiz(practice.questions))
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
