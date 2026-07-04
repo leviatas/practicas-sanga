@@ -60,13 +60,12 @@ export const grade1Practices: Practice[] = [
   },
 
   // ----------------------------------------------------- School objects ----
-  // Práctica única: primero reconocimiento con FOTOS (recortadas sin la
-  // etiqueta, para no revelar la respuesta) y después pistas de texto para los
-  // objetos que no tienen foto (scissors, glue, schoolbag, marker).
+  // Reconocimiento con FOTOS (recortadas sin la etiqueta, para no revelar la
+  // respuesta). Solo objetos que tienen foto.
   {
     id: 'objetos',
     title: 'Objetos de la escuela',
-    description: 'Mirá la foto (o leé la pista) y elegí el objeto en inglés.',
+    description: 'Mirá la foto y elegí el objeto en inglés.',
     emoji: '🎒',
     questions: [
       { id: 'oi1', image: 'pen', prompt: 'What is this?',
@@ -85,12 +84,6 @@ export const grade1Practices: Practice[] = [
         options: [{ text: 'a pencil case', correct: true }, { text: 'a computer' }, { text: 'a sharpener' }] },
       { id: 'oi8', image: 'computer', prompt: 'What is this?',
         options: [{ text: 'a computer', correct: true }, { text: 'a pencil case' }, { text: 'a ruler' }] },
-      { id: 'o2', prompt: 'You use this to cut paper.',
-        options: [{ text: 'scissors', correct: true }, { text: 'a rubber' }, { text: 'a sharpener' }] },
-      { id: 'o4', prompt: 'You carry your books in this.',
-        options: [{ text: 'a schoolbag', correct: true }, { text: 'a pencil case' }, { text: 'a marker' }] },
-      { id: 'o7', prompt: 'You use this to make paper stick together.',
-        options: [{ text: 'glue', correct: true }, { text: 'a marker' }, { text: 'a sharpener' }] },
     ],
   },
 
