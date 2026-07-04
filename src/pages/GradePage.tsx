@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { getGrade } from '../data/grades'
+import { loadMastered } from '../lib/progress'
 import NotFoundPage from './NotFoundPage'
 
 export default function GradePage() {
@@ -24,28 +25,42 @@ export default function GradePage() {
       </div>
 
       <ul className="practice-list" role="list">
-        {grade.practices.map((practice) => (
-          <li key={practice.id}>
-            <Link
-              to={`/grado/${grade.id}/practica/${practice.id}`}
-              className="practice-card"
-            >
-              <span className="practice-card__emoji" aria-hidden="true">
-                {practice.emoji}
-              </span>
-              <span className="practice-card__body">
-                <span className="practice-card__title">{practice.title}</span>
-                <span className="practice-card__desc">{practice.description}</span>
-                <span className="practice-card__meta">
-                  {practice.questions.length} preguntas
+        {grade.practices.map((practice) => {
+          const total = practice.questions.length
+          const done = practice.questions.filter((q) =>
+            loadMastered(grade.id, practice.id).has(q.id),
+          ).length
+          const complete = done === total && total > 0
+
+          return (
+            <li key={practice.id}>
+              <Link
+                to={`/grado/${grade.id}/practica/${practice.id}`}
+                className="practice-card"
+              >
+                <span className="practice-card__emoji" aria-hidden="true">
+                  {practice.emoji}
                 </span>
-              </span>
-              <span className="practice-card__arrow" aria-hidden="true">
-                →
-              </span>
-            </Link>
-          </li>
-        ))}
+                <span className="practice-card__body">
+                  <span className="practice-card__title">{practice.title}</span>
+                  <span className="practice-card__desc">
+                    {practice.description}
+                  </span>
+                  <span className="practice-card__meta">
+                    {complete
+                      ? '✅ ¡Completada!'
+                      : done > 0
+                        ? `Dominadas: ${done}/${total}`
+                        : `${total} preguntas`}
+                  </span>
+                </span>
+                <span className="practice-card__arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
