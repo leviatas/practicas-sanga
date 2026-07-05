@@ -78,6 +78,10 @@ export default function DragCloze({
   const blanks = question.blanks ?? []
   const bank = question.bank ?? []
 
+  // Ejercicio de "armar la palabra": todos los huecos son de una sola letra.
+  // En ese caso queremos las cajas en una única línea (compactas).
+  const isLetters = blanks.length > 1 && blanks.every((b) => b.length === 1)
+
   // Ficha asignada a cada hueco (o null).
   const [assign, setAssign] = useState<(string | null)[]>(() =>
     blanks.map(() => null),
@@ -133,7 +137,7 @@ export default function DragCloze({
       {question.map === 'city2' && <CityMapBig />}
       {question.map === 'city' && <CityMap />}
 
-      <p className="drag-paragraph">
+      <p className={`drag-paragraph${isLetters ? ' drag-paragraph--letters' : ''}`}>
         {segments.map((seg, i) => (
           <span key={i}>
             {seg}
