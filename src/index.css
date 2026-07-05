@@ -688,6 +688,31 @@ button {
   text-align: center;
 }
 
+/* Modo "armar la palabra": todas las cajas de letras en una sola línea. */
+.drag-paragraph--letters {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+.drag-paragraph--letters > span {
+  display: inline-flex;
+}
+
+.drag-paragraph--letters .drag-blank {
+  min-width: 2.4rem;
+  margin: 0;
+}
+
+.drag-paragraph--letters .drag-chip {
+  min-width: 2.2rem;
+  padding: 8px 6px;
+}
+
 .drag-blank.is-over {
   background: color-mix(in srgb, var(--accent) 18%, transparent);
 }
