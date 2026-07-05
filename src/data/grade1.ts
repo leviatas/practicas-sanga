@@ -160,8 +160,6 @@ export const grade1Practices: Practice[] = [
         options: [{ text: 'young', correct: true }, { text: 'old' }] },
       { id: 'a11', prompt: 'A giraffe is very...', emoji: '🦒',
         options: [{ text: 'tall', correct: true }, { text: 'short' }] },
-      { id: 'a12', prompt: 'A mouse is very...', emoji: '🐭',
-        options: [{ text: 'short', correct: true }, { text: 'tall' }] },
     ],
   },
 ]
