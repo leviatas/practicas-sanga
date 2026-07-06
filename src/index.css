@@ -473,12 +473,12 @@ button {
 }
 
 /* ===========================================================================
-   Pantalla de ejercicio sin scroll de página (.app--exercise)
-   En la ruta de práctica la app ocupa exactamente el alto del viewport. Dentro
-   de la tarjeta, SOLO el área del ejercicio hace scroll si hace falta; el
-   feedback (mensaje al responder) y el botón "Siguiente" quedan SIEMPRE
-   visibles. Adaptativo: en desktop, donde sobra alto, nada scrollea y el botón
-   queda pegado al contenido.
+   Pantalla de ejercicio SIN scroll (.app--exercise)
+   La app ocupa exactamente el alto del viewport y no scrollea. Para que todo
+   entre (consigna, imagen, opciones, feedback y botón) se ESCALA el contenido
+   con la variable --fit (1 = tamaño normal; <1 achica letra, cuadros e imagen).
+   Un hook en PracticePage mide y ajusta --fit según la pantalla, así que es
+   adaptativo a mobile y desktop. En pantallas grandes --fit queda en 1.
    =========================================================================== */
 .app--exercise {
   height: 100dvh;
@@ -487,8 +487,26 @@ button {
 
 .app--exercise .app-main {
   min-height: 0;
-  overflow-y: auto; /* red de seguridad (p. ej. pantalla de resultado) */
-  padding: clamp(12px, 3vw, 20px) 0 12px;
+  overflow: hidden;
+  padding: clamp(8px, 2.5vw, 16px) 0;
+}
+
+/* En el ejercicio recuperamos alto: header más compacto, footer oculto y
+   (en pantallas bajas) sin breadcrumb. Así la tarjeta tiene más lugar y no hay
+   que achicar tanto el contenido. */
+.app--exercise .app-header {
+  padding-top: max(6px, env(safe-area-inset-top));
+  padding-bottom: 6px;
+}
+
+.app--exercise .app-footer {
+  display: none;
+}
+
+@media (max-height: 760px) {
+  .app--exercise .breadcrumb {
+    display: none;
+  }
 }
 
 .app--exercise .app-main > .container {
@@ -509,6 +527,7 @@ button {
 }
 
 .app--exercise .quiz {
+  --fit: 1;
   flex: 1;
   min-height: 0;
   display: flex;
@@ -522,41 +541,117 @@ button {
   flex-shrink: 0;
 }
 
+.app--exercise .quiz-topbar {
+  margin-bottom: calc(8px * var(--fit));
+}
+
+.app--exercise .quiz-progress {
+  margin-bottom: calc(6px * var(--fit));
+}
+
 .app--exercise .quiz-counter {
-  margin-bottom: 12px;
+  font-size: 0.82rem;
+  margin-bottom: calc(8px * var(--fit));
 }
 
 .app--exercise .quiz-card {
-  flex: 0 1 auto; /* alto natural, pero puede achicarse si no entra */
+  flex: 1;
   min-height: 0;
+  /* Con --fit el contenido entra. En casos extremos (ej. celular horizontal),
+     si ni al mínimo entra, la tarjeta scrollea por dentro (nunca la página). */
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: clamp(16px, 4vw, 24px);
+  padding: 0;
 }
 
-/* Área desplazable: emoji/consigna/opciones/fichas del ejercicio. */
+/* Envuelve todo el contenido de la tarjeta. Se mide su alto natural (no se
+   encoge) para calcular --fit. La padding va acá (y escala con --fit).
+   `margin: auto 0` centra el contenido cuando sobra alto y, cuando no entra,
+   lo deja pegado arriba y totalmente scrolleable (sin recortar el botón). */
+.app--exercise .quiz-card__fit {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: auto 0;
+  padding: calc(clamp(16px, 4vw, 28px) * var(--fit));
+}
+
 .quiz-card__scroll {
   min-width: 0;
 }
 
-.app--exercise .quiz-card__scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
+/* --- Escalado del contenido con --fit --- */
+.app--exercise .quiz-card__emoji {
+  font-size: calc(clamp(2.4rem, 11vw, 4rem) * var(--fit));
+  margin-bottom: calc(12px * var(--fit));
 }
 
-/* Feedback y acciones nunca se achican: siempre a la vista, sin scroll. */
+.app--exercise .quiz-card__prompt {
+  font-size: calc(clamp(1.15rem, 4.4vw, 1.5rem) * var(--fit));
+  margin: 0 0 calc(20px * var(--fit));
+}
+
+.app--exercise .quiz-options {
+  gap: calc(12px * var(--fit));
+}
+
+.app--exercise .quiz-option {
+  min-height: calc(56px * var(--fit));
+  padding: calc(15px * var(--fit)) calc(18px * var(--fit));
+  font-size: calc(1.1rem * var(--fit));
+}
+
+/* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
+.app--exercise .school-photo,
+.app--exercise .family-photo,
+.app--exercise .prep-photo,
+.app--exercise .prep-scene,
+.app--exercise .city-map {
+  max-height: calc(30dvh * var(--fit));
+  width: auto;
+  margin-bottom: calc(10px * var(--fit));
+}
+
+/* Ejercicios de arrastrar / clasificar. */
+.app--exercise .drag-paragraph {
+  font-size: calc(1.15rem * var(--fit));
+  line-height: calc(2.2 * var(--fit));
+  margin: calc(4px * var(--fit)) 0 calc(16px * var(--fit));
+}
+.app--exercise .drag-chip {
+  font-size: calc(1rem * var(--fit));
+  padding: calc(8px * var(--fit)) calc(14px * var(--fit));
+}
+.app--exercise .drag-bank {
+  gap: calc(10px * var(--fit));
+  padding: calc(14px * var(--fit));
+}
+.app--exercise .classify-bin {
+  min-height: calc(96px * var(--fit));
+}
+
+/* Feedback y botón: también escalan, y nunca se achican por flex. */
 .app--exercise .quiz-feedback,
 .app--exercise .quiz-actions {
   flex-shrink: 0;
 }
-
 .app--exercise .quiz-feedback {
-  margin-top: 12px;
+  margin-top: calc(14px * var(--fit));
+  padding: calc(13px * var(--fit)) calc(16px * var(--fit));
 }
-
+.app--exercise .quiz-feedback__title {
+  font-size: calc(1rem * var(--fit));
+}
+.app--exercise .quiz-feedback__explanation {
+  font-size: calc(0.92rem * var(--fit));
+}
 .app--exercise .quiz-actions {
-  margin-top: 12px;
+  margin-top: calc(16px * var(--fit));
+}
+.app--exercise .quiz-actions .btn {
+  min-height: calc(48px * var(--fit));
+  padding: calc(14px * var(--fit)) 22px;
+  font-size: calc(1.05rem * var(--fit));
 }
 
 /* Barra de acciones del período (botón "Reiniciar todas"). */

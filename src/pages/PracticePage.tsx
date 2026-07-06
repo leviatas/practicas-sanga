@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
@@ -105,6 +105,10 @@ function Quiz({
   // 'playing' = respondiendo; 'roundEnd' = terminó la ronda.
   const [phase, setPhase] = useState<'playing' | 'roundEnd'>('playing')
 
+  // Refs para ajustar el tamaño del contenido (--fit) y que todo entre sin scroll.
+  const cardRef = useRef<HTMLDivElement>(null)
+  const fitRef = useRef<HTMLDivElement>(null)
+
   const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
   const pendingCount = total - masteredCount
   const allDone = pendingCount === 0
@@ -128,6 +132,44 @@ function Quiz({
       })
     }
   }, [allDone, gradeId, practiceId, practice.title])
+
+  // Ajusta --fit para que el contenido de la tarjeta entre sin scroll.
+  // Mide el alto natural del contenido vs el alto disponible y, si no entra,
+  // achica proporcionalmente (letra, cuadros e imagen). Adaptativo a la
+  // pantalla; en desktop, donde sobra alto, --fit queda en 1.
+  useLayoutEffect(() => {
+    const card = cardRef.current
+    const inner = fitRef.current
+    const quiz = card?.closest('.quiz') as HTMLElement | null
+    if (!card || !inner || !quiz) return
+
+    function fit() {
+      quiz!.style.setProperty('--fit', '1')
+      const avail = card!.clientHeight
+      if (!avail) return
+      // Itera achicando hasta que entre (o hasta el piso de legibilidad).
+      const MIN = 0.45
+      let k = 1
+      for (let i = 0; i < 6; i++) {
+        const content = inner!.offsetHeight
+        if (content <= avail) break
+        k = Math.max(MIN, k * (avail / content) * 0.98)
+        quiz!.style.setProperty('--fit', String(k))
+        if (k <= MIN) break
+      }
+    }
+
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(card)
+    window.addEventListener('resize', fit)
+    window.addEventListener('orientationchange', fit)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', fit)
+      window.removeEventListener('orientationchange', fit)
+    }
+  }, [current, answered, dragCorrect, round, phase])
 
   function persist(next: Set<string>) {
     saveMastered(gradeId, practiceId, next)
@@ -284,10 +326,11 @@ function Quiz({
         <div className="quiz-progress__bar" style={{ width: `${roundProgress}%` }} />
       </div>
       <p className="quiz-counter">
-        Pregunta {current + 1} de {round.length} (pendientes de esta ronda)
+        Pregunta {current + 1} de {round.length}
       </p>
 
-      <div className="quiz-card">
+      <div className="quiz-card" ref={cardRef}>
+       <div className="quiz-card__fit" ref={fitRef}>
         <div className="quiz-card__scroll">
           {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
           {question.scene && <PrepositionScene name={question.scene} />}
@@ -384,6 +427,7 @@ function Quiz({
             </button>
           </div>
         )}
+       </div>
       </div>
     </div>
   )
