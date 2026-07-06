@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { getTerm } from '../data/grades'
 import { loadMastered, resetManyMastered } from '../lib/progress'
 import NotFoundPage from './NotFoundPage'
@@ -8,16 +8,45 @@ import NotFoundPage from './NotFoundPage'
 // un botón para reiniciar el progreso de TODAS a la vez.
 export default function TermPage() {
   const { gradeId, subjectId, termId } = useParams()
+  const location = useLocation()
   const found = getTerm(gradeId ?? '', subjectId ?? '', termId ?? '')
 
   // Se usa para forzar el re-render tras reiniciar el progreso (así se
   // actualizan los contadores "Dominadas x/y").
   const [, setVersion] = useState(0)
 
+  // Al llegar desde una práctica ("Otras prácticas" o el breadcrumb del
+  // período) saltamos a la primera práctica sin completar y la resaltamos, así
+  // no hay que scrollear a buscarla.
+  const jumpToNext = (location.state as { jumpToNext?: boolean } | null)?.jumpToNext
+  const nextRef = useRef<HTMLLIElement>(null)
+  const [highlight, setHighlight] = useState(false)
+
+  // Al montar (viniendo con jumpToNext), llevar a la vista la práctica sin
+  // completar y resaltarla un instante.
+  useEffect(() => {
+    if (!jumpToNext) return
+    const el = nextRef.current
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setHighlight(true)
+    const t = setTimeout(() => setHighlight(false), 2200)
+    return () => clearTimeout(t)
+  }, [jumpToNext])
+
   if (!found) return <NotFoundPage />
 
   const { grade, subject, term } = found
   const practices = term.practices
+
+  // Estado de completado de cada práctica (una sola lectura por práctica).
+  const completion = practices.map((p) => {
+    const mastered = loadMastered(grade.id, p.id)
+    const total = p.questions.length
+    const done = p.questions.filter((q) => mastered.has(q.id)).length
+    return { total, done, complete: done === total && total > 0 }
+  })
+  const firstIncompleteIndex = completion.findIndex((c) => !c.complete)
 
   function handleResetAll() {
     const ok = window.confirm(
@@ -60,18 +89,17 @@ export default function TermPage() {
       </div>
 
       <ul className="practice-list" role="list">
-        {practices.map((practice) => {
-          const total = practice.questions.length
-          const done = practice.questions.filter((q) =>
-            loadMastered(grade.id, practice.id).has(q.id),
-          ).length
-          const complete = done === total && total > 0
+        {practices.map((practice, index) => {
+          const { total, done, complete } = completion[index]
+          const isNext = index === firstIncompleteIndex
 
           return (
-            <li key={practice.id}>
+            <li key={practice.id} ref={isNext ? nextRef : undefined}>
               <Link
                 to={`/grado/${grade.id}/${subject.id}/${term.id}/${practice.id}`}
-                className="practice-card"
+                className={`practice-card${
+                  isNext && highlight ? ' is-next' : ''
+                }`}
               >
                 <span className="practice-card__emoji" aria-hidden="true">
                   {practice.emoji}
