@@ -472,6 +472,93 @@ button {
   margin: 0 auto;
 }
 
+/* ===========================================================================
+   Pantalla de ejercicio sin scroll de página (.app--exercise)
+   En la ruta de práctica la app ocupa exactamente el alto del viewport. Dentro
+   de la tarjeta, SOLO el área del ejercicio hace scroll si hace falta; el
+   feedback (mensaje al responder) y el botón "Siguiente" quedan SIEMPRE
+   visibles. Adaptativo: en desktop, donde sobra alto, nada scrollea y el botón
+   queda pegado al contenido.
+   =========================================================================== */
+.app--exercise {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.app--exercise .app-main {
+  min-height: 0;
+  overflow-y: auto; /* red de seguridad (p. ej. pantalla de resultado) */
+  padding: clamp(12px, 3vw, 20px) 0 12px;
+}
+
+.app--exercise .app-main > .container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.practice-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.app--exercise .practice-view {
+  flex: 1;
+}
+
+.app--exercise .quiz {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* La cabecera del quiz (progreso, contador) no se achica. */
+.app--exercise .quiz-topbar,
+.app--exercise .quiz-progress,
+.app--exercise .quiz-counter {
+  flex-shrink: 0;
+}
+
+.app--exercise .quiz-counter {
+  margin-bottom: 12px;
+}
+
+.app--exercise .quiz-card {
+  flex: 0 1 auto; /* alto natural, pero puede achicarse si no entra */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 4vw, 24px);
+}
+
+/* Área desplazable: emoji/consigna/opciones/fichas del ejercicio. */
+.quiz-card__scroll {
+  min-width: 0;
+}
+
+.app--exercise .quiz-card__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Feedback y acciones nunca se achican: siempre a la vista, sin scroll. */
+.app--exercise .quiz-feedback,
+.app--exercise .quiz-actions {
+  flex-shrink: 0;
+}
+
+.app--exercise .quiz-feedback {
+  margin-top: 12px;
+}
+
+.app--exercise .quiz-actions {
+  margin-top: 12px;
+}
+
 /* Barra de acciones del período (botón "Reiniciar todas"). */
 .term-toolbar {
   display: flex;

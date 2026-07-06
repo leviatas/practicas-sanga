@@ -52,7 +52,7 @@ export default function PracticePage() {
   const termPath = `/grado/${grade.id}/${subject.id}/${term.id}`
 
   return (
-    <section style={{ ['--accent' as string]: grade.color }}>
+    <section className="practice-view" style={{ ['--accent' as string]: grade.color }}>
       <nav className="breadcrumb" aria-label="Migas de pan">
         <Link to="/">Inicio</Link>
         <span aria-hidden="true">›</span>
@@ -288,74 +288,76 @@ function Quiz({
       </p>
 
       <div className="quiz-card">
-        {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
-        {question.scene && <PrepositionScene name={question.scene} />}
-        {question.image && schoolImages[question.image] && (
-          <img
-            className="school-photo"
-            src={schoolImages[question.image]}
-            alt="¿Qué objeto de la escuela es?"
-          />
-        )}
-        {question.image && familyImages[question.image] && (
-          <img
-            className="family-photo"
-            src={familyImages[question.image]}
-            alt="Árbol genealógico de la familia de Alison"
-          />
-        )}
-        {question.emoji && (
-          <div className="quiz-card__emoji" aria-hidden="true">
-            {question.emoji}
-          </div>
-        )}
-        <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+        <div className="quiz-card__scroll">
+          {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
+          {question.scene && <PrepositionScene name={question.scene} />}
+          {question.image && schoolImages[question.image] && (
+            <img
+              className="school-photo"
+              src={schoolImages[question.image]}
+              alt="¿Qué objeto de la escuela es?"
+            />
+          )}
+          {question.image && familyImages[question.image] && (
+            <img
+              className="family-photo"
+              src={familyImages[question.image]}
+              alt="Árbol genealógico de la familia de Alison"
+            />
+          )}
+          {question.emoji && (
+            <div className="quiz-card__emoji" aria-hidden="true">
+              {question.emoji}
+            </div>
+          )}
+          <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
 
-        {question.kind === 'drag' ? (
-          <DragCloze
-            key={question.id}
-            question={question}
-            locked={answered}
-            correct={dragCorrect}
-            onValidate={handleDragValidate}
-          />
-        ) : question.kind === 'classify' ? (
-          <ClassifyDrag
-            key={question.id}
-            question={question}
-            locked={answered}
-            correct={dragCorrect}
-            onValidate={handleDragValidate}
-          />
-        ) : (
-          <ul className="quiz-options" role="list">
-            {(question.options ?? []).map((option, index) => {
-              const isSelected = selected === index
-              const showState = answered && (isSelected || option.correct)
-              let stateClass = ''
-              if (answered && option.correct) stateClass = 'is-correct'
-              else if (isSelected) stateClass = 'is-wrong'
+          {question.kind === 'drag' ? (
+            <DragCloze
+              key={question.id}
+              question={question}
+              locked={answered}
+              correct={dragCorrect}
+              onValidate={handleDragValidate}
+            />
+          ) : question.kind === 'classify' ? (
+            <ClassifyDrag
+              key={question.id}
+              question={question}
+              locked={answered}
+              correct={dragCorrect}
+              onValidate={handleDragValidate}
+            />
+          ) : (
+            <ul className="quiz-options" role="list">
+              {(question.options ?? []).map((option, index) => {
+                const isSelected = selected === index
+                const showState = answered && (isSelected || option.correct)
+                let stateClass = ''
+                if (answered && option.correct) stateClass = 'is-correct'
+                else if (isSelected) stateClass = 'is-wrong'
 
-              return (
-                <li key={index}>
-                  <button
-                    className={`quiz-option ${stateClass}`}
-                    onClick={() => handleSelect(index)}
-                    disabled={answered}
-                    aria-pressed={isSelected}
-                  >
-                    <span className="quiz-option__text">{T(option.text)}</span>
-                    {showState && (
-                      <span className="quiz-option__mark" aria-hidden="true">
-                        {option.correct ? '✓' : '✗'}
-                      </span>
-                    )}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        )}
+                return (
+                  <li key={index}>
+                    <button
+                      className={`quiz-option ${stateClass}`}
+                      onClick={() => handleSelect(index)}
+                      disabled={answered}
+                      aria-pressed={isSelected}
+                    >
+                      <span className="quiz-option__text">{T(option.text)}</span>
+                      {showState && (
+                        <span className="quiz-option__mark" aria-hidden="true">
+                          {option.correct ? '✓' : '✗'}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
 
         {answered && isChoice && (
           <div
