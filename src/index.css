@@ -430,6 +430,27 @@ button {
   border-color: var(--accent);
 }
 
+/* Resalte temporal de la próxima práctica sin completar (al volver de una
+   práctica). Llama la atención sin ser molesto. */
+.practice-card.is-next {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent),
+    var(--shadow);
+  animation: practice-next-pulse 1s ease-in-out 2;
+}
+
+@keyframes practice-next-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent),
+      var(--shadow);
+  }
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 22%, transparent),
+      var(--shadow);
+  }
+}
+
 .practice-card__emoji {
   font-size: 2.2rem;
   line-height: 1;

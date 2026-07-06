@@ -60,7 +60,9 @@ export default function PracticePage() {
         <span aria-hidden="true">›</span>
         <Link to={`/grado/${grade.id}/${subject.id}`}>{subject.name}</Link>
         <span aria-hidden="true">›</span>
-        <Link to={termPath}>{term.name}</Link>
+        <Link to={termPath} state={{ jumpToNext: true }}>
+          {term.name}
+        </Link>
         <span aria-hidden="true">›</span>
         <span aria-current="page">{practice.title}</span>
       </nav>
@@ -265,7 +267,11 @@ function Quiz({
             <button className="btn btn--primary" onClick={handleReset}>
               🔁 Reiniciar y practicar de nuevo
             </button>
-            <Link className="btn btn--ghost" to={termPath}>
+            <Link
+              className="btn btn--ghost"
+              to={termPath}
+              state={{ jumpToNext: true }}
+            >
               ← Otras prácticas
             </Link>
           </div>
