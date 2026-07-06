@@ -18,10 +18,24 @@ import CityMapBig from './CityMapBig'
 
 // Ejercicio de "arrastrar y soltar": el alumno arrastra las fichas a los huecos
 // del párrafo y toca "Validar". Funciona con mouse y con touch (móvil).
+//
+// Cada ficha se identifica por su ÍNDICE en el banco (no por su texto), así
+// pueden existir fichas con el mismo texto (ej: dos letras "e" al armar una
+// palabra). La validación compara el TEXTO de la ficha con lo esperado en cada
+// hueco, por lo que una letra repetida es correcta en cualquiera de sus
+// posiciones válidas.
 
-function Chip({ text, disabled }: { text: string; disabled?: boolean }) {
+function Chip({
+  id,
+  text,
+  disabled,
+}: {
+  id: string
+  text: string
+  disabled?: boolean
+}) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `chip:${text}`,
+    id,
     disabled,
   })
   return (
@@ -39,12 +53,14 @@ function Chip({ text, disabled }: { text: string; disabled?: boolean }) {
 
 function Blank({
   index,
-  chip,
+  chipId,
+  chipText,
   state,
   disabled,
 }: {
   index: number
-  chip: string | null
+  chipId: number | null
+  chipText: string | null
   state: '' | 'is-correct' | 'is-wrong'
   disabled: boolean
 }) {
@@ -54,8 +70,8 @@ function Blank({
       ref={setNodeRef}
       className={`drag-blank ${state} ${isOver ? 'is-over' : ''}`}
     >
-      {chip ? (
-        <Chip text={chip} disabled={disabled} />
+      {chipId !== null && chipText !== null ? (
+        <Chip id={`chip:${chipId}`} text={chipText} disabled={disabled} />
       ) : (
         <span className="drag-blank__ph">⬚</span>
       )}
@@ -78,53 +94,66 @@ export default function DragCloze({
   const blanks = question.blanks ?? []
   const bank = question.bank ?? []
 
+  // Fichas del banco con identidad propia (índice), aunque el texto se repita.
+  const tiles = bank.map((text, id) => ({ id, text }))
+
   // Ejercicio de "armar la palabra": todos los huecos son de una sola letra.
   // En ese caso queremos las cajas en una única línea (compactas).
   const isLetters = blanks.length > 1 && blanks.every((b) => b.length === 1)
 
-  // Ficha asignada a cada hueco (o null).
-  const [assign, setAssign] = useState<(string | null)[]>(() =>
+  // Índice de la ficha asignada a cada hueco (o null).
+  const [assign, setAssign] = useState<(number | null)[]>(() =>
     blanks.map(() => null),
   )
-  const [activeChip, setActiveChip] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<number | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor),
   )
 
-  const placedTexts = assign.filter((t): t is string => t !== null)
-  const bankChips = bank.filter((t) => !placedTexts.includes(t))
-  const allFilled = assign.every((t) => t !== null)
+  const placedIds = assign.filter((v): v is number => v !== null)
+  const bankTiles = tiles.filter((t) => !placedIds.includes(t.id))
+  const allFilled = assign.every((v) => v !== null)
 
-  function chipTextFromId(id: string) {
-    return id.startsWith('chip:') ? id.slice(5) : null
+  function tileIdFromDndId(id: string): number | null {
+    if (!id.startsWith('chip:')) return null
+    const n = Number(id.slice(5))
+    return Number.isNaN(n) ? null : n
+  }
+
+  function textOf(tileId: number | null): string | null {
+    return tileId === null ? null : (tiles[tileId]?.text ?? null)
   }
 
   function handleDragStart(e: DragStartEvent) {
-    setActiveChip(chipTextFromId(String(e.active.id)))
+    setActiveId(tileIdFromDndId(String(e.active.id)))
   }
 
   function handleDragEnd(e: DragEndEvent) {
-    setActiveChip(null)
+    setActiveId(null)
     if (locked) return
-    const text = chipTextFromId(String(e.active.id))
-    if (!text) return
+    const tileId = tileIdFromDndId(String(e.active.id))
+    if (tileId === null) return
     const overId = e.over ? String(e.over.id) : null
 
     setAssign((prev) => {
-      const next = prev.map((t) => (t === text ? null : t)) // sacar de su hueco
+      const next = prev.map((v) => (v === tileId ? null : v)) // sacar de su hueco
       if (overId && overId.startsWith('blank:')) {
         const idx = Number(overId.slice(6))
-        next[idx] = text // (si estaba ocupado, el anterior vuelve al banco)
+        next[idx] = tileId // (si estaba ocupado, el anterior vuelve al banco)
       }
       return next
     })
   }
 
+  function isRight(i: number): boolean {
+    return assign[i] !== null && textOf(assign[i]) === blanks[i]
+  }
+
   function stateFor(i: number): '' | 'is-correct' | 'is-wrong' {
     if (!locked) return ''
-    return assign[i] === blanks[i] ? 'is-correct' : 'is-wrong'
+    return isRight(i) ? 'is-correct' : 'is-wrong'
   }
 
   return (
@@ -144,7 +173,8 @@ export default function DragCloze({
             {i < blanks.length && (
               <Blank
                 index={i}
-                chip={assign[i]}
+                chipId={assign[i]}
+                chipText={textOf(assign[i])}
                 state={stateFor(i)}
                 disabled={locked}
               />
@@ -156,12 +186,14 @@ export default function DragCloze({
       {!locked && (
         <>
           <div className="drag-bank" aria-label="Opciones para arrastrar">
-            {bankChips.length === 0 ? (
+            {bankTiles.length === 0 ? (
               <span className="drag-bank__empty">
                 Arrastrá las fichas a los huecos ⬚
               </span>
             ) : (
-              bankChips.map((t) => <Chip key={t} text={t} />)
+              bankTiles.map((t) => (
+                <Chip key={t.id} id={`chip:${t.id}`} text={t.text} />
+              ))
             )}
           </div>
           <div className="quiz-actions">
@@ -169,7 +201,7 @@ export default function DragCloze({
               type="button"
               className="btn btn--primary"
               disabled={!allFilled}
-              onClick={() => onValidate(assign.every((t, i) => t === blanks[i]))}
+              onClick={() => onValidate(blanks.every((_, i) => isRight(i)))}
             >
               Validar ✅
             </button>
@@ -178,8 +210,8 @@ export default function DragCloze({
       )}
 
       <DragOverlay>
-        {activeChip ? (
-          <span className="drag-chip is-overlay">{activeChip}</span>
+        {activeId !== null ? (
+          <span className="drag-chip is-overlay">{textOf(activeId)}</span>
         ) : null}
       </DragOverlay>
 
@@ -187,7 +219,7 @@ export default function DragCloze({
         <p className="drag-hint">
           {correct
             ? '¡Correcto! Quedó dominada 🎉'
-            : 'Revisá el mapa: fijate las que quedaron en rojo 🙊'}
+            : 'Revisá las que quedaron en rojo 🙊'}
         </p>
       )}
     </DndContext>
