@@ -6,6 +6,10 @@ import UsageLogs from './components/UsageLogs'
 export default function App() {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  // Pantalla de ejercicio: /grado/:grade/:subject/:term/:practice (5 segmentos).
+  // Ahí fijamos el alto al viewport para evitar el scroll de página.
+  const segments = location.pathname.split('/').filter(Boolean)
+  const isExercise = segments[0] === 'grado' && segments.length === 5
   const [logsPassword, setLogsPassword] = useState<string | null>(null)
   const openedRef = useRef(false)
 
@@ -23,7 +27,7 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app${isExercise ? ' app--exercise' : ''}`}>
       <header className="app-header">
         <div className="container app-header__inner">
           <Link to="/" className="brand" aria-label="Ir al inicio">
