@@ -3,18 +3,28 @@
 // Cada evento queda guardado en el servidor con la IP del visitante.
 // ============================================================================
 
+// En dev no hay backend (y no queremos ensuciar las estadísticas), así que no
+// registramos nada. Si en producción un envío falla (backend caído), dejamos de
+// intentar para no llenar la consola con un error en cada evento.
+let loggingDisabled = import.meta.env.DEV
+
 export function logEvent(type: string, data: Record<string, unknown> = {}) {
+  if (loggingDisabled) return
   try {
     fetch('/api/event', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, ...data }),
       keepalive: true,
-    }).catch(() => {
-      // Sin conexión con el backend: no rompemos la app.
     })
+      .then((res) => {
+        if (!res.ok) loggingDisabled = true // sin backend: no seguir intentando
+      })
+      .catch(() => {
+        loggingDisabled = true
+      })
   } catch {
-    // Ignoramos.
+    loggingDisabled = true
   }
 }
 
