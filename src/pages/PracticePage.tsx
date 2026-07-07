@@ -112,6 +112,21 @@ function Quiz({
   const cardRef = useRef<HTMLDivElement>(null)
   const fitRef = useRef<HTMLDivElement>(null)
 
+  // Avance a prueba de reentradas: evita que el auto-avance (tap) + toques
+  // rápidos hagan pasar de largo la última pregunta (round[current] undefined).
+  const currentRef = useRef(0)
+  currentRef.current = current
+  const advancingRef = useRef(false)
+  const autoNextRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  // Al cambiar de pregunta o de fase, se habilita el próximo avance.
+  useEffect(() => {
+    advancingRef.current = false
+  }, [current, phase])
+
+  // Cancela cualquier auto-avance pendiente al desmontar.
+  useEffect(() => () => clearTimeout(autoNextRef.current), [])
+
   const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
   const pendingCount = total - masteredCount
   const allDone = pendingCount === 0
@@ -223,15 +238,23 @@ function Quiz({
     setDragCorrect(true)
     logAnswer(true)
     markMastered(round[current].id)
-    window.setTimeout(handleNext, 1600)
+    clearTimeout(autoNextRef.current)
+    autoNextRef.current = setTimeout(handleNext, 1600)
   }
 
   function handleNext() {
-    if (current + 1 >= round.length) {
+    // Un solo avance por pregunta: evita que el auto-avance y los toques
+    // rápidos se acumulen y pasen de largo (round[current] undefined → crash).
+    if (advancingRef.current) return
+    advancingRef.current = true
+    clearTimeout(autoNextRef.current)
+    autoNextRef.current = undefined
+
+    if (currentRef.current + 1 >= round.length) {
       setPhase('roundEnd')
       return
     }
-    setCurrent((c) => c + 1)
+    setCurrent(currentRef.current + 1)
     setSelected(null)
     setAnswered(false)
     setDragCorrect(false)
@@ -239,6 +262,8 @@ function Quiz({
 
   // Empieza otra ronda con lo que todavía falta dominar.
   function startNextRound() {
+    clearTimeout(autoNextRef.current)
+    autoNextRef.current = undefined
     setRound(withShuffledQuiz(pendingQuestions(allQuestions, mastered)))
     setCurrent(0)
     setSelected(null)
@@ -252,6 +277,8 @@ function Quiz({
       '¿Reiniciar el progreso de esta práctica? Se borran las preguntas ya dominadas.',
     )
     if (!ok) return
+    clearTimeout(autoNextRef.current)
+    autoNextRef.current = undefined
     resetMastered(gradeId, practiceId)
     const cleared = new Set<string>()
     setMastered(cleared)
