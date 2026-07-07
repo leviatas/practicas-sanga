@@ -6,6 +6,8 @@ export interface Option {
   text: string
   /** Marcá con `true` la(s) opción(es) correcta(s). */
   correct?: boolean
+  /** Emoji grande para actividades visuales (kind 'tap', ideal para jardín). */
+  emoji?: string
 }
 
 export interface Question {
@@ -28,8 +30,10 @@ export interface Question {
    *  - 'choice' (por defecto): elegir una opción.
    *  - 'drag': arrastrar fichas a los huecos de un párrafo y validar.
    *  - 'classify': arrastrar palabras a su categoría y validar.
+   *  - 'tap': tocar el dibujo/emoji correcto (jardín); reintenta sin penalizar,
+   *    festeja al acertar y avanza solo.
    */
-  kind?: 'choice' | 'drag' | 'classify'
+  kind?: 'choice' | 'drag' | 'classify' | 'tap'
   /** Opciones de respuesta (para kind 'choice'). */
   options?: Option[]
   /**
