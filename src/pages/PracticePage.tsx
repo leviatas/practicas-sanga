@@ -7,6 +7,7 @@ import { logEvent } from '../lib/usage'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
+import TapGrid from '../components/TapGrid'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -214,6 +215,17 @@ function Quiz({
     if (isCorrect) markMastered(round[current].id)
   }
 
+  // Actividad de jardín ('tap'): solo llega cuando el chico acierta. Festeja,
+  // marca dominada y avanza solo tras un ratito.
+  function handleTapCorrect() {
+    if (answered) return
+    setAnswered(true)
+    setDragCorrect(true)
+    logAnswer(true)
+    markMastered(round[current].id)
+    window.setTimeout(handleNext, 1600)
+  }
+
   function handleNext() {
     if (current + 1 >= round.length) {
       setPhase('roundEnd')
@@ -377,6 +389,13 @@ function Quiz({
               correct={dragCorrect}
               onValidate={handleDragValidate}
             />
+          ) : question.kind === 'tap' ? (
+            <TapGrid
+              key={question.id}
+              question={question}
+              locked={answered}
+              onCorrect={handleTapCorrect}
+            />
           ) : (
             <ul className="quiz-options" role="list">
               {(question.options ?? []).map((option, index) => {
@@ -426,10 +445,20 @@ function Quiz({
           </div>
         )}
 
+        {answered && question.kind === 'tap' && (
+          <div className="quiz-feedback is-correct tap-cheer" role="status">
+            <p className="quiz-feedback__title">¡Muy bien! 🎉</p>
+          </div>
+        )}
+
         {answered && (
           <div className="quiz-actions">
             <button className="btn btn--primary" onClick={handleNext}>
-              {current + 1 >= round.length ? 'Terminar ronda 🏁' : 'Siguiente →'}
+              {current + 1 >= round.length
+                ? 'Terminar ronda 🏁'
+                : question.kind === 'tap'
+                  ? 'Seguir →'
+                  : 'Siguiente →'}
             </button>
           </div>
         )}

@@ -1,6 +1,7 @@
 import type { Grade, Practice, Subject } from '../types'
 import { grade1Practices } from './grade1'
 import { grade4Practices } from './grade4'
+import { jardinPractices } from './jardin'
 
 // ============================================================================
 // GRADOS DISPONIBLES
@@ -35,7 +36,35 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
   ]
 }
 
+// Jardín: materia "3 años" con un período de actividades para los más chicos.
+function tresAnios(practices: Practice[]): Subject[] {
+  return [
+    {
+      id: '3-anios',
+      name: '3 años',
+      emoji: '🧸',
+      description: 'Juegos con dibujos: colores, animales, contar y más.',
+      terms: [
+        {
+          id: 'actividades',
+          name: 'Actividades',
+          emoji: '🎈',
+          description: 'Actividades para jugar y aprender.',
+          practices,
+        },
+      ],
+    },
+  ]
+}
+
 export const grades: Grade[] = [
+  {
+    id: 'jardin',
+    name: 'Jardín',
+    emoji: '🧸',
+    color: '#ec4899', // rosa alegre
+    subjects: tresAnios(jardinPractices),
+  },
   {
     id: '1',
     name: '1er Grado',
