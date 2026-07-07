@@ -35,6 +35,7 @@ export interface LogsByIp {
   answers: number
   correct: number
   last: number
+  name: string | null
 }
 
 export interface LogsByPractice {
@@ -53,6 +54,7 @@ export interface RecentEvent {
   title: string | null
   practice: string | null
   correct: number | null
+  name: string | null
 }
 
 export interface LogsResponse {

@@ -79,6 +79,19 @@ export default function TermPage() {
         <p className="page-subtitle">Elegí una práctica para empezar.</p>
       </div>
 
+      {firstIncompleteIndex === -1 && (
+        <div className="section-complete" role="status">
+          <span className="section-complete__emoji" aria-hidden="true">🏆</span>
+          <div>
+            <strong>¡Sección completada!</strong>
+            <span>
+              Dominaste las {practices.length}{' '}
+              {practices.length === 1 ? 'práctica' : 'prácticas'}. ¡Genial! 🎉
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="term-toolbar">
         <button
           className="btn btn--ghost btn--small"

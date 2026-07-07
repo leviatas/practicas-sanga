@@ -402,6 +402,85 @@ button {
   color: var(--text-muted);
 }
 
+/* ---- Tarjeta del nombre del niño (pantalla de grado) ---- */
+.name-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.name-form label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.name-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.name-input {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.name-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.name-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 1.15rem;
+}
+
+/* ---- Cartel de sección completada ---- */
+.section-complete {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--correct-bg);
+  border: 2px solid var(--correct);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  animation: tap-pop 0.4s cubic-bezier(0.2, 1.4, 0.5, 1) both;
+}
+
+.section-complete__emoji {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.section-complete strong {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.section-complete span {
+  color: var(--text-muted);
+}
+
+.section-complete strong + span {
+  display: block;
+  color: var(--text);
+}
+
 /* ---- Lista de prácticas ---- */
 .practice-list {
   list-style: none;
