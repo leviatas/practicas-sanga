@@ -28,9 +28,32 @@ function shuffle<T>(items: readonly T[]): T[] {
 function withShuffledQuiz(questions: Question[]): Question[] {
   return shuffle(questions).map((q) => ({
     ...q,
-    options: q.options ? shuffle(q.options) : q.options,
+    // keepOrder: mantener el orden dado (ej: números 1..10 al contar).
+    options: q.options && !q.keepOrder ? shuffle(q.options) : q.options,
     bank: q.bank ? shuffle(q.bank) : q.bank,
   }))
+}
+
+// Lee un texto en voz alta (Web Speech API). Quita emojis para que la voz no
+// diga "círculo rojo" y demás. Se usa solo para la consigna (no las opciones),
+// así no revela la respuesta.
+function speak(text: string) {
+  try {
+    const synth = window.speechSynthesis
+    if (!synth) return
+    const clean = text
+      .replace(/[\p{Extended_Pictographic}️‍]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    if (!clean) return
+    synth.cancel()
+    const u = new SpeechSynthesisUtterance(clean)
+    u.lang = 'es-AR'
+    u.rate = 0.9
+    synth.speak(u)
+  } catch {
+    // Sin soporte de voz: no rompemos nada.
+  }
 }
 
 // Preguntas todavía no dominadas (las que faltan o se respondieron mal).
@@ -126,6 +149,16 @@ function Quiz({
 
   // Cancela cualquier auto-avance pendiente al desmontar.
   useEffect(() => () => clearTimeout(autoNextRef.current), [])
+
+  // En jardín, leer la consigna en voz alta al cambiar de pregunta (best-effort:
+  // algunos navegadores móviles recién lo permiten tras el primer toque; para
+  // eso está también el botón 🔊).
+  useEffect(() => {
+    if (gradeId !== 'jardin' || phase !== 'playing') return
+    const q = round[current]
+    if (q) speak(q.prompt)
+    return () => window.speechSynthesis?.cancel()
+  }, [current, phase, round, gradeId])
 
   const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
   const pendingCount = total - masteredCount
@@ -399,6 +432,17 @@ function Quiz({
             </div>
           )}
           <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+
+          {gradeId === 'jardin' && (
+            <button
+              type="button"
+              className="speak-btn"
+              onClick={() => speak(question.prompt)}
+              aria-label="Escuchar la consigna"
+            >
+              🔊 Escuchar
+            </button>
+          )}
 
           {question.kind === 'drag' ? (
             <DragCloze

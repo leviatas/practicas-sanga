@@ -1,4 +1,12 @@
-import type { Practice } from '../types'
+import type { Option, Practice } from '../types'
+
+// Opciones de números 1..10 SIEMPRE en orden; marca como correcta la cantidad.
+function nums1to10(correct: number): Option[] {
+  return Array.from({ length: 10 }, (_, i) => ({
+    text: String(i + 1),
+    correct: i + 1 === correct,
+  }))
+}
 
 // ============================================================================
 // JARDÍN — materia "3 años"
@@ -101,36 +109,18 @@ export const jardinPractices: Practice[] = [
     description: 'Contá y tocá el número. 🔢',
     emoji: '🔢',
     questions: [
-      { id: 'cn1', kind: 'tap', emoji: '🍎', prompt: '¿Cuántas manzanas hay?',
-        options: [
-          { text: '1', correct: true },
-          { text: '2' },
-          { text: '3' },
-        ] },
-      { id: 'cn2', kind: 'tap', emoji: '🐤🐤', prompt: '¿Cuántos pollitos hay?',
-        options: [
-          { text: '2', correct: true },
-          { text: '1' },
-          { text: '3' },
-        ] },
-      { id: 'cn3', kind: 'tap', emoji: '⭐⭐⭐', prompt: '¿Cuántas estrellas hay?',
-        options: [
-          { text: '3', correct: true },
-          { text: '2' },
-          { text: '4' },
-        ] },
-      { id: 'cn4', kind: 'tap', emoji: '🐟🐟', prompt: '¿Cuántos pececitos hay?',
-        options: [
-          { text: '2', correct: true },
-          { text: '3' },
-          { text: '4' },
-        ] },
-      { id: 'cn5', kind: 'tap', emoji: '🎈🎈🎈🎈', prompt: '¿Cuántos globos hay?',
-        options: [
-          { text: '4', correct: true },
-          { text: '3' },
-          { text: '5' },
-        ] },
+      { id: 'cn1', kind: 'tap', keepOrder: true, emoji: '🍎',
+        prompt: '¿Cuántas manzanas hay?', options: nums1to10(1) },
+      { id: 'cn2', kind: 'tap', keepOrder: true, emoji: '🐤🐤',
+        prompt: '¿Cuántos pollitos hay?', options: nums1to10(2) },
+      { id: 'cn3', kind: 'tap', keepOrder: true, emoji: '⭐⭐⭐',
+        prompt: '¿Cuántas estrellas hay?', options: nums1to10(3) },
+      { id: 'cn4', kind: 'tap', keepOrder: true, emoji: '🐟🐟🐟🐟',
+        prompt: '¿Cuántos pececitos hay?', options: nums1to10(4) },
+      { id: 'cn5', kind: 'tap', keepOrder: true, emoji: '🎈🎈🎈🎈🎈',
+        prompt: '¿Cuántos globos hay?', options: nums1to10(5) },
+      { id: 'cn6', kind: 'tap', keepOrder: true, emoji: '🌸🌸🌸🌸🌸🌸',
+        prompt: '¿Cuántas flores hay?', options: nums1to10(6) },
     ],
   },
 
