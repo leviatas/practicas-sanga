@@ -1,7 +1,7 @@
 {
   "name": "practicas-sanga",
   "private": true,
-  "version": "1.14.2",
+  "version": "1.15.0",
   "type": "module",
   "description": "App de prácticas de exámenes por grado (sin login). React + Vite + TypeScript.",
   "scripts": {

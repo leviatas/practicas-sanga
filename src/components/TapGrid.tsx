@@ -21,6 +21,10 @@ export default function TapGrid({
   const [wrongIdx, setWrongIdx] = useState<number | null>(null)
   const [rightIdx, setRightIdx] = useState<number | null>(null)
 
+  // Si todas las opciones son números (ej: contar 1..10), grilla compacta.
+  const numbersOnly =
+    options.length > 0 && options.every((o) => !o.emoji && /^\d+$/.test(o.text))
+
   function handleTap(index: number) {
     if (locked || rightIdx !== null) return
     const opt = options[index]
@@ -38,7 +42,7 @@ export default function TapGrid({
   }
 
   return (
-    <div className="tap-grid" role="list">
+    <div className={`tap-grid${numbersOnly ? ' tap-grid--numbers' : ''}`} role="list">
       {options.map((option, index) => {
         const isRight = rightIdx === index
         const isWrong = wrongIdx === index

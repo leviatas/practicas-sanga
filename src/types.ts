@@ -37,6 +37,11 @@ export interface Question {
   /** Opciones de respuesta (para kind 'choice'). */
   options?: Option[]
   /**
+   * Si es `true`, las opciones NO se barajan (se muestran en el orden dado).
+   * Útil para contar: los números 1..10 siempre en orden.
+   */
+  keepOrder?: boolean
+  /**
    * Para kind 'drag': el párrafo partido en trozos de texto. Los huecos van
    * ENTRE los trozos, así que hay `segments.length - 1` huecos.
    */
