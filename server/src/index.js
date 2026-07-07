@@ -37,13 +37,20 @@ db.exec(`
     grade    TEXT,
     practice TEXT,
     title    TEXT,
-    correct  INTEGER
+    correct  INTEGER,
+    name     TEXT
   );
   CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);
 `)
+// Para bases ya existentes (creadas antes de la columna 'name'): agregarla.
+try {
+  db.exec(`ALTER TABLE events ADD COLUMN name TEXT`)
+} catch {
+  // la columna ya existe
+}
 const insertEvent = db.prepare(
-  `INSERT INTO events (ts, ip, ua, type, grade, practice, title, correct)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  `INSERT INTO events (ts, ip, ua, type, grade, practice, title, correct, name)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 )
 
 // --- Helpers ---
@@ -105,7 +112,10 @@ function buildSummary() {
               SUM(CASE WHEN type='open' THEN 1 ELSE 0 END) opens,
               SUM(CASE WHEN type='answer' THEN 1 ELSE 0 END) answers,
               SUM(CASE WHEN type='answer' AND correct=1 THEN 1 ELSE 0 END) correct,
-              MAX(ts) last
+              MAX(ts) last,
+              (SELECT e2.name FROM events e2
+                 WHERE e2.ip = events.ip AND e2.name IS NOT NULL
+                 ORDER BY e2.ts DESC LIMIT 1) name
        FROM events GROUP BY ip ORDER BY last DESC LIMIT 200`,
     )
     .all()
@@ -155,6 +165,7 @@ const server = createServer(async (req, res) => {
       body.practice ? String(body.practice).slice(0, 80) : null,
       body.title ? String(body.title).slice(0, 120) : null,
       body.correct === true ? 1 : body.correct === false ? 0 : null,
+      body.name ? String(body.name).slice(0, 40) : null,
     )
     return send(res, 204, null)
   }
@@ -163,7 +174,7 @@ const server = createServer(async (req, res) => {
     const pw = req.headers['x-logs-password'] || url.searchParams.get('password')
     if (pw !== LOGS_PASSWORD) return send(res, 401, { error: 'unauthorized' })
     const recent = db
-      .prepare(`SELECT ts, ip, type, grade, title, practice, correct
+      .prepare(`SELECT ts, ip, type, grade, title, practice, correct, name
                 FROM events ORDER BY ts DESC LIMIT 200`)
       .all()
     return send(res, 200, { summary: buildSummary(), recent })

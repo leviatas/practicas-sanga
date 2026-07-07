@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
+import { loadName } from '../lib/profile'
 import { logEvent } from '../lib/usage'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
@@ -59,6 +60,16 @@ function speak(text: string) {
 // Preguntas todavía no dominadas (las que faltan o se respondieron mal).
 function pendingQuestions(questions: Question[], mastered: Set<string>): Question[] {
   return questions.filter((q) => !mastered.has(q.id))
+}
+
+// Mensaje de incentivo al acertar. Usa el nombre del niño si lo hay, y es
+// estable por pregunta (no cambia entre renders) usando el id como semilla.
+const PRAISES = ['¡Muy bien', '¡Genial', '¡Excelente', '¡Bravo', '¡Buenísimo', '¡Perfecto']
+function praise(name: string, seed: string): string {
+  let h = 0
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0
+  const p = PRAISES[h % PRAISES.length]
+  return name ? `${p}, ${name}! 🎉` : `${p}! 🎉`
 }
 
 export default function PracticePage() {
@@ -131,6 +142,9 @@ function Quiz({
   // 'playing' = respondiendo; 'roundEnd' = terminó la ronda.
   const [phase, setPhase] = useState<'playing' | 'roundEnd'>('playing')
 
+  // Nombre del niño (si lo cargaron en la pantalla del grado).
+  const [childName] = useState(() => loadName(gradeId))
+
   // Refs para ajustar el tamaño del contenido (--fit) y que todo entre sin scroll.
   const cardRef = useRef<HTMLDivElement>(null)
   const fitRef = useRef<HTMLDivElement>(null)
@@ -170,8 +184,9 @@ function Quiz({
       grade: gradeId,
       practice: practiceId,
       title: practice.title,
+      name: childName || undefined,
     })
-  }, [gradeId, practiceId, practice.title])
+  }, [gradeId, practiceId, practice.title, childName])
 
   // Registra cuando se completa toda la práctica.
   useEffect(() => {
@@ -180,9 +195,10 @@ function Quiz({
         grade: gradeId,
         practice: practiceId,
         title: practice.title,
+        name: childName || undefined,
       })
     }
-  }, [allDone, gradeId, practiceId, practice.title])
+  }, [allDone, gradeId, practiceId, practice.title, childName])
 
   // Ajusta --fit para que el contenido de la tarjeta entre sin scroll.
   // Mide el alto natural del contenido vs el alto disponible y, si no entra,
@@ -232,6 +248,7 @@ function Quiz({
       practice: practiceId,
       title: practice.title,
       correct,
+      name: childName || undefined,
     })
   }
 
@@ -507,8 +524,8 @@ function Quiz({
           >
             <p className="quiz-feedback__title">
               {question.options?.[selected!]?.correct
-                ? '¡Correcto! Queda dominada 🎉'
-                : 'Ups, no era esa. La repasás en la próxima ronda 🙊'}
+                ? praise(childName, question.id)
+                : `Ups${childName ? `, ${childName}` : ''}, no era esa. La repasás en la próxima ronda 🙊`}
             </p>
             {question.explanation && (
               <p className="quiz-feedback__explanation">{question.explanation}</p>
@@ -518,7 +535,7 @@ function Quiz({
 
         {answered && question.kind === 'tap' && (
           <div className="quiz-feedback is-correct tap-cheer" role="status">
-            <p className="quiz-feedback__title">¡Muy bien! 🎉</p>
+            <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
           </div>
         )}
 

@@ -64,14 +64,15 @@ export default function UsageLogs({
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
+                  <tr><th>Nombre</th><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
                 </thead>
                 <tbody>
                   {s.byIp.length === 0 ? (
-                    <tr><td colSpan={5}>Sin datos todavía.</td></tr>
+                    <tr><td colSpan={6}>Sin datos todavía.</td></tr>
                   ) : (
                     s.byIp.map((r) => (
                       <tr key={r.ip}>
+                        <td>{r.name || '—'}</td>
                         <td>{r.ip || '(desconocida)'}</td>
                         <td>{r.opens}</td>
                         <td>{r.answers}</td>
@@ -112,12 +113,13 @@ export default function UsageLogs({
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>Fecha</th><th>IP</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
+                  <tr><th>Fecha</th><th>Nombre</th><th>IP</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
                 </thead>
                 <tbody>
                   {data!.recent.map((e, i) => (
                     <tr key={i}>
                       <td>{fmt(e.ts)}</td>
+                      <td>{e.name || '—'}</td>
                       <td>{e.ip || '—'}</td>
                       <td>{e.type}</td>
                       <td>{e.title ?? e.practice ?? ''}</td>
