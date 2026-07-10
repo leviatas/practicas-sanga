@@ -1,6 +1,7 @@
 import type { Grade, Practice, Subject } from '../types'
 import { grade1Practices } from './grade1'
 import { grade4Practices } from './grade4'
+import { grade4OralPractices } from './grade4Oral'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -30,6 +31,35 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
           emoji: '📝',
           description: 'Todas las prácticas para el primer parcial.',
           practices,
+        },
+      ],
+    },
+  ]
+}
+
+// 4to: materia "English" con dos períodos: "1st Midterms" (elegir/arrastrar) y
+// "Midterms oral" (tocá hablar: decís la palabra en inglés y la app valida).
+function englishGrade4(): Subject[] {
+  return [
+    {
+      id: 'english',
+      name: 'English',
+      emoji: '📖',
+      description: 'Vocabulario y gramática de inglés.',
+      terms: [
+        {
+          id: '1st-midterms',
+          name: '1st Midterms',
+          emoji: '📝',
+          description: 'Todas las prácticas para el primer parcial.',
+          practices: grade4Practices,
+        },
+        {
+          id: 'midterms-oral',
+          name: 'Midterms oral',
+          emoji: '🎤',
+          description: 'Tocá hablar: decí la palabra en inglés y la app te valida.',
+          practices: grade4OralPractices,
         },
       ],
     },
@@ -77,7 +107,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    subjects: englishFirstMidterms(grade4Practices),
+    subjects: englishGrade4(),
   },
 ]
 

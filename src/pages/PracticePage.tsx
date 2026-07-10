@@ -9,6 +9,7 @@ import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import TapGrid from '../components/TapGrid'
+import SpeakCheck from '../components/SpeakCheck'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -483,6 +484,14 @@ function Quiz({
               question={question}
               locked={answered}
               onCorrect={handleTapCorrect}
+            />
+          ) : question.kind === 'speak' ? (
+            <SpeakCheck
+              key={question.id}
+              question={question}
+              locked={answered}
+              correct={dragCorrect}
+              onValidate={handleDragValidate}
             />
           ) : (
             <ul className="quiz-options" role="list">

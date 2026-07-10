@@ -1282,6 +1282,105 @@ button {
   transform: scale(0.96);
 }
 
+/* ---- Ejercicio ORAL (kind 'speak'): hablar y validar por voz ---- */
+.speak {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(10px * var(--fit, 1));
+}
+
+.speak-mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  padding: calc(16px * var(--fit, 1)) calc(20px * var(--fit, 1));
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: calc(1.15rem * var(--fit, 1));
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+
+.speak-mic:hover {
+  filter: brightness(1.05);
+}
+
+.speak-mic:active {
+  transform: scale(0.97);
+}
+
+.speak-mic:disabled {
+  cursor: default;
+}
+
+.speak-mic__icon {
+  font-size: calc(1.4rem * var(--fit, 1));
+  line-height: 1;
+}
+
+.speak-mic.is-listening {
+  animation: speak-pulse 1s ease-in-out infinite;
+}
+
+@keyframes speak-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 calc(14px * var(--fit, 1))
+      color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+}
+
+.speak-hear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: calc(6px * var(--fit, 1)) calc(14px * var(--fit, 1));
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: calc(0.95rem * var(--fit, 1));
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.speak-hear:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.speak-heard {
+  text-align: center;
+  font-weight: 700;
+  margin: 0;
+}
+
+.speak-heard--error {
+  color: #b91c1c;
+}
+
+.speak-answer {
+  text-align: center;
+  font-weight: 700;
+  margin: 0;
+}
+
+.speak-unsupported {
+  text-align: center;
+  margin: 0;
+  color: var(--muted, #6b7280);
+}
+
 .tap-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
