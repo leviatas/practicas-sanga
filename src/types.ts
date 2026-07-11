@@ -32,8 +32,10 @@ export interface Question {
    *  - 'classify': arrastrar palabras a su categoría y validar.
    *  - 'tap': tocar el dibujo/emoji correcto (jardín); reintenta sin penalizar,
    *    festeja al acertar y avanza solo.
+   *  - 'speak': el alumno DICE la respuesta en voz alta y la app valida con
+   *    reconocimiento de voz (Web Speech API). Reintenta sin penalizar.
    */
-  kind?: 'choice' | 'drag' | 'classify' | 'tap'
+  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak'
   /** Opciones de respuesta (para kind 'choice'). */
   options?: Option[]
   /**
@@ -54,6 +56,17 @@ export interface Question {
   categories?: string[]
   /** Para kind 'classify': cada palabra y a qué categoría pertenece. */
   items?: { text: string; category: string }[]
+  /**
+   * Para kind 'speak': lo que el alumno tiene que decir en voz alta (ej: la
+   * palabra o frase correcta). Se compara con lo que reconoce el micrófono.
+   */
+  answer?: string
+  /**
+   * Para kind 'speak': variantes adicionales que también se dan por buenas
+   * (útil porque el reconocedor confunde homófonos, ej: "chef" ↔ "shef").
+   * No hace falta incluir `answer`: ya se acepta por defecto.
+   */
+  accept?: string[]
 }
 
 export interface Practice {
