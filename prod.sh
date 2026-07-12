@@ -11,6 +11,9 @@
 #        - usa 8080 por defecto;
 #      y si ese puerto está ocupado por otro proceso, busca el próximo libre.
 #   3. Guarda el puerto elegido en .env (lo lee Docker Compose).
+#   3b. Si la clave de telemetría (LOGS_PASSWORD) falta o es la insegura por
+#       defecto (Sanga70), genera una compleja, la guarda en .env y la muestra
+#       en consola para poder usarla.
 #   4. Construye la imagen (Vite build dentro del contenedor).
 #   5. Levanta el contenedor de producción (nginx) en segundo plano.
 #   6. Muestra la URL local y la de Tailscale con el puerto elegido.
@@ -75,6 +78,50 @@ fi
 
 valid_port() {
   [[ "${1:-}" =~ ^[0-9]+$ ]] && [ "$1" -ge 1 ] && [ "$1" -le 65535 ]
+}
+
+# Genera una contraseña alfanumérica larga (24 caracteres). Alfanumérica a
+# propósito: evita problemas al guardarla en .env o al pasarla por sed/compose.
+gen_password() {
+  if command -v openssl >/dev/null 2>&1; then
+    openssl rand -base64 48 | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c 24
+  else
+    LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24
+  fi
+}
+
+# Si la clave de telemetría (LOGS_PASSWORD) falta o es la insegura por defecto
+# (Sanga70, que está publicada en el repo), la rota por una nueva y la deja en
+# .env. Guarda la clave generada en GENERATED_LOGS_PW para avisarla al final.
+GENERATED_LOGS_PW=""
+ensure_logs_password() {
+  touch "$ENV_FILE"
+  local current
+  current="$(grep -E '^LOGS_PASSWORD=' "$ENV_FILE" 2>/dev/null | tail -n1 | cut -d= -f2- | tr -d '[:space:]' || true)"
+  # Ya hay una clave propia (y no es la insegura): no la tocamos.
+  if [ -n "$current" ] && [ "$current" != "Sanga70" ]; then
+    return 0
+  fi
+
+  local newpw
+  newpw="$(gen_password)"
+  if [ -z "$newpw" ]; then
+    echo "  ⚠️  No pude generar una clave nueva; sigo con la actual." >&2
+    return 0
+  fi
+
+  if grep -qE '^LOGS_PASSWORD=' "$ENV_FILE"; then
+    sed -i -E "s|^LOGS_PASSWORD=.*|LOGS_PASSWORD=${newpw}|" "$ENV_FILE"
+  else
+    printf 'LOGS_PASSWORD=%s\n' "$newpw" >> "$ENV_FILE"
+  fi
+  GENERATED_LOGS_PW="$newpw"
+
+  if [ -z "$current" ]; then
+    echo "🔐 No había LOGS_PASSWORD: generé una clave nueva y la guardé en ${ENV_FILE}."
+  else
+    echo "🔐 LOGS_PASSWORD era la insegura por defecto (Sanga70): la roté por una nueva en ${ENV_FILE}."
+  fi
 }
 
 # --- ¿Está el puerto en uso? ---
@@ -144,6 +191,9 @@ else
 fi
 echo "💾 Puerto ${PORT} guardado en ${ENV_FILE}"
 
+# --- Rotar la clave de telemetría si falta o es la insegura por defecto ---
+ensure_logs_password
+
 # --- ¿Hay token de Cloudflare Tunnel en .env? Entonces exponemos a internet ---
 TUNNEL_ON=false
 if [ -f "$ENV_FILE" ]; then
@@ -179,6 +229,17 @@ if [ -n "${TS_IP}" ]; then
 else
   echo "   Tailscale:  (no detectado — instalá y activá tailscale con 'tailscale up'"
   echo "               para acceder desde otros dispositivos de tu tailnet)"
+fi
+echo ""
+if [ -n "${GENERATED_LOGS_PW}" ]; then
+  echo ""
+  echo "   ┌─────────────────────────────────────────────────────────────┐"
+  echo "   │ 🔐 Clave nueva de telemetría (guardada en .env):            │"
+  echo "   │                                                             │"
+  printf '   │    %-57s│\n' "${GENERATED_LOGS_PW}"
+  echo "   │                                                             │"
+  echo "   │ Anotala: la usás para entrar a ver los logs de uso.         │"
+  echo "   └─────────────────────────────────────────────────────────────┘"
 fi
 echo ""
 echo "   Ver logs:   ./prod.sh logs"
