@@ -73,6 +73,11 @@ export default function GradePage() {
                 </button>
               )}
             </div>
+            <p className="name-form__hint">
+              El nombre es opcional y lo debería cargar un adulto. Mirá cómo
+              cuidamos tus datos en{' '}
+              <Link to="/privacidad">Privacidad</Link>.
+            </p>
           </form>
         ) : (
           <div className="name-greeting">

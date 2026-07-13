@@ -62,6 +62,10 @@ export default function App() {
               dev.leviatas.com
             </a>{' '}
             ·{' '}
+            <Link to="/privacidad" className="app-footer__link">
+              Privacidad
+            </Link>{' '}
+            ·{' '}
             <button
               type="button"
               className="app-version app-version--btn"

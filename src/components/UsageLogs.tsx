@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { fetchLogs, type LogsResponse } from '../lib/usage'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
-// Los datos vienen del backend (incluye la IP de cada visitante).
+// Los datos vienen del backend. La columna "Visitante" es un id anónimo
+// derivado de la IP (no la IP real).
 
 function fmt(t: number) {
   return t ? new Date(t).toLocaleString('es-AR') : '—'
@@ -53,18 +54,18 @@ export default function UsageLogs({
         {s && (
           <>
             <div className="logs-tiles">
-              <div className="logs-tile"><strong>{s.uniqueIps}</strong><span>IPs (PCs)</span></div>
+              <div className="logs-tile"><strong>{s.uniqueIps}</strong><span>Visitantes</span></div>
               <div className="logs-tile"><strong>{s.opens}</strong><span>Aperturas</span></div>
               <div className="logs-tile"><strong>{s.answers}</strong><span>Respuestas</span></div>
               <div className="logs-tile"><strong>{s.pct}%</strong><span>Correctas</span></div>
             </div>
             <p className="logs-last">Última actividad: {fmt(s.last)}</p>
 
-            <h3>Por IP (PC)</h3>
+            <h3>Por visitante</h3>
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>Nombre</th><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
+                  <tr><th>Nombre</th><th>Visitante</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
                 </thead>
                 <tbody>
                   {s.byIp.length === 0 ? (
@@ -113,7 +114,7 @@ export default function UsageLogs({
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>Fecha</th><th>Nombre</th><th>IP</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
+                  <tr><th>Fecha</th><th>Nombre</th><th>Visitante</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
                 </thead>
                 <tbody>
                   {data!.recent.map((e, i) => (
