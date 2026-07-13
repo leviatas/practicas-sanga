@@ -1,6 +1,7 @@
 // ============================================================================
 // Registro de uso — habla con el backend (Node + SQLite).
-// Cada evento queda guardado en el servidor con la IP del visitante.
+// Cada evento queda guardado en el servidor con un identificador anónimo del
+// visitante (derivado de la IP, no la IP real). Ver server/src/index.js.
 // ============================================================================
 
 // En dev no hay backend (y no queremos ensuciar las estadísticas), así que no

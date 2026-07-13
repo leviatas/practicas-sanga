@@ -1538,3 +1538,55 @@ button {
     transform: translateY(-70px) scale(1.2);
   }
 }
+
+/* ---- Nota bajo el formulario de nombre ---- */
+.name-form__hint {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ---- Link de Privacidad en el footer ---- */
+.app-footer__link {
+  color: inherit;
+}
+
+/* ---- Página de Privacidad / aviso legal ---- */
+.legal-prose {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  max-width: 720px;
+}
+
+.legal-prose h2 {
+  font-size: 1.15rem;
+  margin: 24px 0 8px;
+}
+
+.legal-prose h2:first-child {
+  margin-top: 0;
+}
+
+.legal-prose p {
+  margin: 0 0 12px;
+}
+
+.legal-prose ul {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.legal-prose li {
+  margin-bottom: 6px;
+}
+
+.legal-prose a {
+  color: var(--accent);
+}
+
+.legal-back {
+  margin-top: 20px;
+}

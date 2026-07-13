@@ -1,5 +1,6 @@
 // Backend de logs de uso (Node puro, sin dependencias externas).
-// Guarda cada visita/evento con IP y fecha en SQLite (node:sqlite).
+// Guarda cada visita/evento en SQLite (node:sqlite). La IP NO se almacena en
+// claro: se guarda un identificador anónimo derivado de ella (ver anonId).
 //
 // Endpoints:
 //   POST /api/event   -> registra un evento (open, practice_start, answer, complete)
@@ -15,6 +16,7 @@ import { createServer } from 'node:http'
 import { DatabaseSync } from 'node:sqlite'
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
+import { createHash, randomBytes } from 'node:crypto'
 
 const PORT = Number(process.env.PORT || 3000)
 const DB_PATH = process.env.DB_PATH || '/data/usage.db'
@@ -52,6 +54,29 @@ const insertEvent = db.prepare(
   `INSERT INTO events (ts, ip, ua, type, grade, practice, title, correct, name)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 )
+
+// --- Salt para anonimizar la IP ---
+// La columna 'ip' NO guarda la IP real, sino un identificador anónimo:
+// sha256(salt + ip) truncado. Alcanza para contar visitantes distintos, pero
+// no permite recuperar la IP. El salt se genera una vez y se persiste en la
+// misma base (sobrevive reinicios), así que se puede usar IP_SALT del entorno
+// para fijarlo, o dejar que el servidor cree uno aleatorio.
+db.exec(`CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT)`)
+function loadSalt() {
+  if (process.env.IP_SALT) return process.env.IP_SALT
+  const row = db.prepare(`SELECT value FROM meta WHERE key='ip_salt'`).get()
+  if (row?.value) return row.value
+  const salt = randomBytes(16).toString('hex')
+  db.prepare(`INSERT INTO meta (key, value) VALUES ('ip_salt', ?)`).run(salt)
+  return salt
+}
+const IP_SALT = loadSalt()
+
+/** Devuelve un identificador anónimo del visitante (no la IP real). */
+function anonId(ip) {
+  if (!ip) return ''
+  return createHash('sha256').update(IP_SALT + ip).digest('hex').slice(0, 16)
+}
 
 // --- Helpers ---
 function clientIp(req) {
@@ -158,7 +183,7 @@ const server = createServer(async (req, res) => {
     if (!ALLOWED_TYPES.has(type)) return send(res, 400, { error: 'bad type' })
     insertEvent.run(
       Date.now(),
-      clientIp(req),
+      anonId(clientIp(req)),
       String(req.headers['user-agent'] || '').slice(0, 300),
       type,
       body.grade ? String(body.grade).slice(0, 40) : null,

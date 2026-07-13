@@ -8,6 +8,7 @@ import GradePage from './pages/GradePage'
 import SubjectPage from './pages/SubjectPage'
 import TermPage from './pages/TermPage'
 import PracticePage from './pages/PracticePage'
+import PrivacyPage from './pages/PrivacyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 const router = createBrowserRouter([
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
         path: 'grado/:gradeId/:subjectId/:termId/:practiceId',
         element: <PracticePage />,
       },
+      { path: 'privacidad', element: <PrivacyPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
