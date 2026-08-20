@@ -2,17 +2,18 @@ import type { Grade, Practice, Subject } from '../types'
 import { grade1Practices } from './grade1'
 import { grade4Practices } from './grade4'
 import { grade4OralPractices } from './grade4Oral'
+import { grade4CienciasPractices } from './grade4Ciencias'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
 // GRADOS DISPONIBLES
 //
 // Jerarquía: Grado → Materia → Período → Prácticas.
-//   Grado (1er, 4to) → Materia (English) → Período (1st Midterms) → Prácticas.
+//   Ej: 4to Grado → Ciencias Naturales → Materiales sólidos → Prácticas.
 //
-// Por ahora cada grado tiene una sola materia (English) con un solo período
-// (1st Midterms). A futuro se pueden sumar más materias o períodos sin tocar
-// las páginas: alcanza con agregar entradas acá. El `id` se usa en la URL.
+// Un grado puede tener varias materias y cada materia varios períodos. Para
+// sumar contenido no hace falta tocar las páginas: alcanza con agregar
+// entradas acá. El `id` se usa en la URL.
 // ============================================================================
 
 // Helper: arma la materia "English" con un período "1st Midterms" que contiene
@@ -37,9 +38,11 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
   ]
 }
 
-// 4to: materia "English" con dos períodos: "1st Midterms" (elegir/arrastrar) y
-// "Midterms oral" (tocá hablar: decís la palabra en inglés y la app valida).
-function englishGrade4(): Subject[] {
+// 4to: dos materias.
+//  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
+//    decís la palabra en inglés y la app valida).
+//  - Ciencias Naturales: "Los materiales" (características de los sólidos).
+function grade4Subjects(): Subject[] {
   return [
     {
       id: 'english',
@@ -60,6 +63,22 @@ function englishGrade4(): Subject[] {
           emoji: '🎤',
           description: 'Tocá hablar: decí la palabra en inglés y la app te valida.',
           practices: grade4OralPractices,
+        },
+      ],
+    },
+    {
+      id: 'ciencias',
+      name: 'Ciencias Naturales',
+      emoji: '🔬',
+      description: 'Los materiales y sus propiedades.',
+      terms: [
+        {
+          id: 'materiales-solidos',
+          name: 'Materiales sólidos',
+          emoji: '🧱',
+          description:
+            'Dureza, rigidez, fragilidad, elasticidad, flexibilidad, permeabilidad, plasticidad y maleabilidad.',
+          practices: grade4CienciasPractices,
         },
       ],
     },
@@ -107,7 +126,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    subjects: englishGrade4(),
+    subjects: grade4Subjects(),
   },
 ]
 
