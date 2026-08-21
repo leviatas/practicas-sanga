@@ -338,13 +338,13 @@ export const grade4CienciasPractices: Practice[] = [
         options: [{ text: 'Plasticidad', correct: true }, { text: 'Elasticidad' }],
         explanation: 'Queda con la forma nueva: no vuelve a ser una lámina lisa.' },
       { id: 'pn10', emoji: '💎',
-        prompt: '¿Cuál de estas frases es la correcta?',
+        prompt: 'Pruebo perforar con un punzón una tabla de MADERA y una chapa de ACERO: la madera se perfora y el acero no. ¿Cuál de estas frases es la correcta?',
         options: [
-          { text: 'El acero es más duro que la madera porque no se puede perforar con un punzón', correct: true },
-          { text: 'La madera es más dura porque es más liviana' },
-          { text: 'Los dos tienen la misma dureza porque son sólidos' },
+          { text: 'El acero es más duro que la madera', correct: true },
+          { text: 'La madera es más dura que el acero' },
+          { text: 'Los dos tienen la misma dureza' },
         ],
-        explanation: 'La dureza compara la resistencia a ser rayado o perforado.' },
+        explanation: 'La dureza es la resistencia a ser rayado o perforado: si el punzón no perfora el acero, el acero es el más duro.' },
     ],
   },
 ]
