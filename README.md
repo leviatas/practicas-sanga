@@ -5,7 +5,8 @@ Pensada para usarse cómodamente tanto en **celular** como en **computadora**.
 
 Actualmente incluye los **midterms de inglés** de **1er grado** y **4to grado**,
 las **actividades de Jardín (3 años)** y **Ciencias Naturales de 4to grado**
-(características de los materiales sólidos).
+(características de los materiales sólidos, clasificación de materiales y
+el calor y los materiales, con las experiencias del laboratorio).
 
 - ✅ Sin registro ni contraseñas
 - ✅ Responsive (mobile + escritorio) y accesible (teclado, buen contraste, modo oscuro)

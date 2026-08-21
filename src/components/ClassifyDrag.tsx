@@ -126,7 +126,7 @@ export default function ClassifyDrag({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="classify-bins">
+      <div className="classify-bins" data-count={categories.length}>
         {categories.map((cat) => (
           <Zone key={cat} id={`cat:${cat}`} title={cat} disabled={locked}>
             {items
