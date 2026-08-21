@@ -3,6 +3,8 @@ import { grade1Practices } from './grade1'
 import { grade4Practices } from './grade4'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
+import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
+import { grade4CienciasCalorPractices } from './grade4CienciasCalor'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -41,7 +43,8 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
 // 4to: dos materias.
 //  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
 //    decís la palabra en inglés y la app valida).
-//  - Ciencias Naturales: "Los materiales" (características de los sólidos).
+//  - Ciencias Naturales: "Los materiales" — tres períodos: características de
+//    los sólidos, clasificación (estado y origen) y el calor y los materiales.
 function grade4Subjects(): Subject[] {
   return [
     {
@@ -70,7 +73,7 @@ function grade4Subjects(): Subject[] {
       id: 'ciencias',
       name: 'Ciencias Naturales',
       emoji: '🔬',
-      description: 'Los materiales y sus propiedades.',
+      description: 'Los materiales, sus propiedades y el calor.',
       terms: [
         {
           id: 'materiales-solidos',
@@ -79,6 +82,22 @@ function grade4Subjects(): Subject[] {
           description:
             'Dureza, rigidez, fragilidad, elasticidad, flexibilidad, permeabilidad, plasticidad y maleabilidad.',
           practices: grade4CienciasPractices,
+        },
+        {
+          id: 'clasificacion-materiales',
+          name: 'Clasificación de materiales',
+          emoji: '🗂️',
+          description:
+            'Según su estado (sólidos, líquidos y gaseosos), según su origen (naturales, manufacturados y sintéticos) y sus usos.',
+          practices: grade4CienciasClasificacionPractices,
+        },
+        {
+          id: 'calor-materiales',
+          name: 'El calor y los materiales',
+          emoji: '🔥',
+          description:
+            'Calor y temperatura, conductores y aislantes, cambios que produce el calor y las experiencias del laboratorio.',
+          practices: grade4CienciasCalorPractices,
         },
       ],
     },
