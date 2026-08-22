@@ -240,6 +240,7 @@ export const grade4CienciasClasificacionPractices: Practice[] = [
         prompt: 'Completá la conclusión sobre las bebidas calientes.',
         segments: ['Para bebidas calientes es mejor usar vasos de ', ' o de ', ', porque resisten el calor.'],
         blanks: ['vidrio', 'metal'],
+        anyOrder: true,
         bank: ['metal', 'plástico', 'vidrio', 'papel'],
         explanation: 'El vidrio y el metal resisten el calor; el plástico se puede deformar.' },
       { id: 'cu10', kind: 'classify',

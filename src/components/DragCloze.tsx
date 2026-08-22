@@ -147,13 +147,30 @@ export default function DragCloze({
     })
   }
 
-  function isRight(i: number): boolean {
-    return assign[i] !== null && textOf(assign[i]) === blanks[i]
-  }
+  // ¿Está bien cada hueco? Normalmente cada ficha va en su hueco, pero si la
+  // pregunta tiene `anyOrder` la frase es simétrica ("por ___ o ___") y alcanza
+  // con que estén todas las fichas correctas, en cualquier orden. Los repetidos
+  // se van descontando de izquierda a derecha, así una ficha de más queda mal.
+  const right: boolean[] = (() => {
+    const texts = assign.map((id) => textOf(id))
+    if (!question.anyOrder) {
+      return texts.map((t, i) => t !== null && t === blanks[i])
+    }
+    const pending = [...blanks]
+    return texts.map((t) => {
+      if (t === null) return false
+      const i = pending.indexOf(t)
+      if (i < 0) return false
+      pending.splice(i, 1)
+      return true
+    })
+  })()
+
+  const allRight = right.every(Boolean)
 
   function stateFor(i: number): '' | 'is-correct' | 'is-wrong' {
     if (!locked) return ''
-    return isRight(i) ? 'is-correct' : 'is-wrong'
+    return right[i] ? 'is-correct' : 'is-wrong'
   }
 
   return (
@@ -201,7 +218,7 @@ export default function DragCloze({
               type="button"
               className="btn btn--primary"
               disabled={!allFilled}
-              onClick={() => onValidate(blanks.every((_, i) => isRight(i)))}
+              onClick={() => onValidate(allRight)}
             >
               Validar ✅
             </button>
