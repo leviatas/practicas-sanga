@@ -52,6 +52,13 @@ export interface Question {
   blanks?: string[]
   /** Para kind 'drag': todas las fichas disponibles para arrastrar. */
   bank?: string[]
+  /**
+   * Para kind 'drag': si es `true`, NO importa en qué hueco va cada ficha
+   * mientras estén todas las correctas. Se usa cuando la frase es simétrica y
+   * las dos respuestas son igual de válidas en cualquier orden. Ej:
+   * "atravesado por ___ o ___" (gases o líquidos / líquidos o gases).
+   */
+  anyOrder?: boolean
   /** Para kind 'classify': las categorías (columnas) donde clasificar. */
   categories?: string[]
   /** Para kind 'classify': cada palabra y a qué categoría pertenece. */

@@ -192,6 +192,7 @@ export const grade4CienciasCalorPractices: Practice[] = [
         prompt: 'Completá lo que pasa con el hielo y con el chocolate.',
         segments: ['El hielo, al calentarse, ', ' y se convierte en agua. El chocolate, al calentarse, ', ' y se vuelve líquido.'],
         blanks: ['se derrite', 'se funde'],
+        anyOrder: true,
         bank: ['se funde', 'se derrite', 'se expande', 'se evapora'],
         explanation: 'Los dos pasan de sólido a líquido: es una fusión.' },
       { id: 'cc2', kind: 'drag',
