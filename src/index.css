@@ -221,6 +221,30 @@ button {
   color: var(--text-muted);
 }
 
+/* Fila de tarjetas con 3 números (accesos al panel). */
+.logs-tiles--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Intentos fallidos: se destacan en rojo para que salten a la vista. */
+.logs-tile--warn {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+.logs-tile--warn strong {
+  color: var(--wrong);
+}
+
+.logs-table tr.is-fail td {
+  background: var(--wrong-bg);
+}
+
+.logs-table code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+}
+
 .logs-last {
   font-size: 0.85rem;
   color: var(--text-muted);

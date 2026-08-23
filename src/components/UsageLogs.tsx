@@ -3,10 +3,31 @@ import { fetchLogs, type LogsResponse } from '../lib/usage'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
 // Los datos vienen del backend. La columna "Visitante" es un id anónimo
-// derivado de la IP (no la IP real).
+// derivado de la IP (no la IP real); en cambio, la sección "Accesos al panel"
+// sí muestra la IP real de quien entró o lo intentó.
 
 function fmt(t: number) {
   return t ? new Date(t).toLocaleString('es-AR') : '—'
+}
+
+/** Acorta el user-agent para que entre en la tabla ("Chrome · Android"). */
+function shortUa(ua: string | null) {
+  if (!ua) return '—'
+  const browser =
+    /Edg\//.test(ua) ? 'Edge'
+    : /OPR\//.test(ua) ? 'Opera'
+    : /Chrome\//.test(ua) ? 'Chrome'
+    : /Firefox\//.test(ua) ? 'Firefox'
+    : /Safari\//.test(ua) ? 'Safari'
+    : 'Otro'
+  const os =
+    /Android/.test(ua) ? 'Android'
+    : /iPhone|iPad|iOS/.test(ua) ? 'iOS'
+    : /Windows/.test(ua) ? 'Windows'
+    : /Mac OS X/.test(ua) ? 'Mac'
+    : /Linux/.test(ua) ? 'Linux'
+    : ''
+  return os ? `${browser} · ${os}` : browser
 }
 
 export default function UsageLogs({
@@ -37,6 +58,7 @@ export default function UsageLogs({
   }, [password])
 
   const s = data?.summary
+  const acc = data?.access
 
   return (
     <div className="logs-overlay" role="dialog" aria-modal="true" aria-label="Logs de uso">
@@ -60,6 +82,74 @@ export default function UsageLogs({
               <div className="logs-tile"><strong>{s.pct}%</strong><span>Correctas</span></div>
             </div>
             <p className="logs-last">Última actividad: {fmt(s.last)}</p>
+
+            <h3>Accesos al panel 🔐</h3>
+            {!acc ? (
+              <p className="logs-note">
+                El servidor todavía no registra accesos (actualizá el backend).
+              </p>
+            ) : (
+              <>
+                <div className="logs-tiles logs-tiles--3">
+                  <div className="logs-tile"><strong>{acc.ok}</strong><span>Entraron</span></div>
+                  <div className={`logs-tile${acc.failed ? ' logs-tile--warn' : ''}`}>
+                    <strong>{acc.failed}</strong><span>Fallidos</span>
+                  </div>
+                  <div className="logs-tile"><strong>{acc.uniqueIps}</strong><span>IPs distintas</span></div>
+                </div>
+                {acc.failed > 0 && (
+                  <p className="logs-note">
+                    Último intento fallido: {fmt(acc.lastFail)}
+                  </p>
+                )}
+                <div className="logs-tablewrap">
+                  <table className="logs-table">
+                    <thead>
+                      <tr><th>Fecha</th><th>IP</th><th>Resultado</th><th>Intentos</th><th>Navegador</th></tr>
+                    </thead>
+                    <tbody>
+                      {acc.recent.length === 0 ? (
+                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
+                      ) : (
+                        acc.recent.map((r, i) => (
+                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
+                            <td>{fmt(r.ts)}</td>
+                            <td><code>{r.ip || '(desconocida)'}</code></td>
+                            <td>{r.ok ? '✅ Entró' : '⛔ Contraseña incorrecta'}</td>
+                            <td>{r.tries}</td>
+                            <td>{shortUa(r.ua)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3>Accesos por IP</h3>
+                <div className="logs-tablewrap">
+                  <table className="logs-table">
+                    <thead>
+                      <tr><th>IP</th><th>Intentos</th><th>Entró</th><th>Falló</th><th>Último</th></tr>
+                    </thead>
+                    <tbody>
+                      {acc.byIp.length === 0 ? (
+                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
+                      ) : (
+                        acc.byIp.map((r, i) => (
+                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
+                            <td><code>{r.ip || '(desconocida)'}</code></td>
+                            <td>{r.attempts}</td>
+                            <td>{r.ok}</td>
+                            <td>{r.failed}</td>
+                            <td>{fmt(r.last)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
 
             <h3>Por visitante</h3>
             <div className="logs-tablewrap">

@@ -58,6 +58,33 @@ export interface RecentEvent {
   name: string | null
 }
 
+/** Un intento de entrar al panel de logs (con la IP real). */
+export interface AccessRow {
+  ts: number
+  ip: string | null
+  ua: string | null
+  ok: number
+  tries: number
+}
+
+export interface AccessByIp {
+  ip: string | null
+  attempts: number
+  ok: number
+  failed: number
+  last: number
+}
+
+export interface LogsAccess {
+  attempts: number
+  ok: number
+  failed: number
+  uniqueIps: number
+  lastFail: number
+  byIp: AccessByIp[]
+  recent: AccessRow[]
+}
+
 export interface LogsResponse {
   summary: {
     opens: number
@@ -71,6 +98,8 @@ export interface LogsResponse {
     byPractice: LogsByPractice[]
   }
   recent: RecentEvent[]
+  /** Accesos al panel. Puede faltar si el backend es más viejo que la app. */
+  access?: LogsAccess
 }
 
 /** Trae los logs del backend. Lanza 'unauthorized' si la contraseña es incorrecta. */
