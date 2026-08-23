@@ -89,19 +89,17 @@ guarda cada evento con la **IP del visitante** en **SQLite**.
 - Para verlos: **click en la versión** del footer y poné la **contraseña**
   (variable `LOGS_PASSWORD`, default `Sanga70`; la valida el backend, y
   `prod.sh` la rota si seguía siendo la default).
-- El panel muestra resumen, actividad por visitante, por práctica y reciente.
+- El panel muestra resumen, actividad **por IP**, por práctica y reciente.
 - **Accesos al panel**: cada intento de abrirlo (haya entrado o no) queda
-  registrado con la **IP real**, la fecha, el navegador y la cantidad de
-  intentos. Es el único lugar donde se guarda una IP sin anonimizar: sirve para
-  ver si alguien está probando contraseñas.
+  registrado con la **IP**, la fecha, el navegador y la cantidad de intentos.
+  Sirve para ver si alguien está probando contraseñas.
 
 Arquitectura: `nginx` sirve la app y hace `proxy_pass` de `/api` al servicio
 `backend` (pasando la IP real, también detrás de Cloudflare). La base SQLite
 persiste en el volumen `sanga-db`.
 
-> Es logging básico de uso: la IP de los visitantes **no** se guarda en claro,
-> sino un identificador anónimo derivado de ella. La excepción son los accesos
-> al panel de administración, donde la IP se guarda entera a propósito.
+> Es logging básico de uso; no guarda datos personales más allá de la IP y el
+> nombre que se haya cargado. Está declarado en la página de Privacidad.
 
 ---
 
