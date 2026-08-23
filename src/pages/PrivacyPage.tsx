@@ -61,6 +61,14 @@ export default function PrivacyPage() {
           </li>
           <li>El tipo de navegador y la fecha.</li>
         </ul>
+        <p>
+          Aparte de eso, la app tiene un <strong>panel de administración</strong>{' '}
+          protegido con contraseña, que solo usa quien mantiene el sitio. Por
+          seguridad, cada intento de entrar a ese panel queda registrado con la{' '}
+          <strong>dirección IP real</strong> de quien lo intentó, la fecha y el
+          navegador, para poder detectar accesos indebidos. Ese registro no
+          tiene nada que ver con el uso normal de las prácticas.
+        </p>
 
         <h2>Para qué se usan estos datos</h2>
         <ul>
@@ -94,7 +102,7 @@ export default function PrivacyPage() {
         <h2>Cambios</h2>
         <p>
           Si cambiamos qué datos se guardan, actualizaremos esta página. Última
-          actualización: <strong>julio de 2026</strong>.
+          actualización: <strong>agosto de 2026</strong>.
         </p>
       </div>
 

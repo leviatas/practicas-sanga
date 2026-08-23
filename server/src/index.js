@@ -1,10 +1,18 @@
 // Backend de logs de uso (Node puro, sin dependencias externas).
-// Guarda cada visita/evento en SQLite (node:sqlite). La IP NO se almacena en
-// claro: se guarda un identificador anónimo derivado de ella (ver anonId).
+// Guarda cada visita/evento en SQLite (node:sqlite). La IP de los VISITANTES
+// NO se almacena en claro: se guarda un identificador anónimo derivado de ella
+// (ver anonId).
+//
+// Excepción a propósito: los intentos de entrar al PANEL DE LOGS (GET
+// /api/logs) sí guardan la IP real en la tabla `admin_access`, junto con si la
+// contraseña era correcta. Es un registro de seguridad del panel de
+// administración (para ver quién entró o quién lo está probando), no
+// telemetría de los chicos que usan la app.
 //
 // Endpoints:
 //   POST /api/event   -> registra un evento (open, practice_start, answer, complete)
-//   GET  /api/logs     -> devuelve eventos + resumen (requiere contraseña)
+//   GET  /api/logs     -> devuelve eventos + resumen + accesos al panel
+//                         (requiere contraseña; anota el intento con la IP real)
 //   GET  /api/health   -> 200 ok
 //
 // Variables de entorno:
@@ -44,6 +52,23 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);
 `)
+// Registro de accesos al panel de logs. A diferencia de `events`, acá la IP va
+// en claro: es el único modo de saber quién entró (o quién lo intentó).
+// Los intentos seguidos de la misma IP con el mismo resultado se agrupan en una
+// sola fila (`tries`), así un bot insistente no borra el historial; además se
+// conservan solo las últimas ACCESS_KEEP filas.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS admin_access (
+    id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts    INTEGER NOT NULL,
+    ip    TEXT,
+    ua    TEXT,
+    ok    INTEGER NOT NULL,
+    tries INTEGER NOT NULL DEFAULT 1
+  );
+  CREATE INDEX IF NOT EXISTS idx_admin_access_ts ON admin_access(ts);
+`)
+
 // Para bases ya existentes (creadas antes de la columna 'name'): agregarla.
 try {
   db.exec(`ALTER TABLE events ADD COLUMN name TEXT`)
@@ -119,6 +144,70 @@ function readBody(req) {
 }
 
 const ALLOWED_TYPES = new Set(['open', 'practice_start', 'answer', 'complete'])
+
+// --- Accesos al panel ---
+const ACCESS_KEEP = 500 // filas que se conservan
+const ACCESS_GROUP_MS = 2 * 60 * 1000 // ventana para agrupar intentos iguales
+
+const selectLastAccess = db.prepare(
+  `SELECT id, ip, ok, ts FROM admin_access ORDER BY id DESC LIMIT 1`,
+)
+const bumpAccess = db.prepare(
+  `UPDATE admin_access SET ts = ?, ua = ?, tries = tries + 1 WHERE id = ?`,
+)
+const insertAccess = db.prepare(
+  `INSERT INTO admin_access (ts, ip, ua, ok) VALUES (?, ?, ?, ?)`,
+)
+const trimAccess = db.prepare(
+  `DELETE FROM admin_access WHERE id <= (SELECT MAX(id) - ? FROM admin_access)`,
+)
+
+/** Anota un intento de entrar al panel (con la IP real). */
+function recordAccess(req, ok) {
+  const now = Date.now()
+  const ip = clientIp(req) || null
+  const ua = String(req.headers['user-agent'] || '').slice(0, 300)
+  const last = selectLastAccess.get()
+  if (
+    last &&
+    last.ip === ip &&
+    last.ok === (ok ? 1 : 0) &&
+    now - last.ts < ACCESS_GROUP_MS
+  ) {
+    bumpAccess.run(now, ua, last.id)
+    return
+  }
+  insertAccess.run(now, ip, ua, ok ? 1 : 0)
+  trimAccess.run(ACCESS_KEEP)
+}
+
+function buildAccess() {
+  const totals = db
+    .prepare(
+      `SELECT COALESCE(SUM(tries), 0) attempts,
+              COALESCE(SUM(CASE WHEN ok=1 THEN tries ELSE 0 END), 0) ok,
+              COALESCE(SUM(CASE WHEN ok=0 THEN tries ELSE 0 END), 0) failed,
+              COUNT(DISTINCT ip) uniqueIps
+       FROM admin_access`,
+    )
+    .get()
+  const lastFail =
+    db.prepare(`SELECT MAX(ts) t FROM admin_access WHERE ok=0`).get().t || 0
+  const byIp = db
+    .prepare(
+      `SELECT ip,
+              SUM(tries) attempts,
+              SUM(CASE WHEN ok=1 THEN tries ELSE 0 END) ok,
+              SUM(CASE WHEN ok=0 THEN tries ELSE 0 END) failed,
+              MAX(ts) last
+       FROM admin_access GROUP BY ip ORDER BY last DESC LIMIT 100`,
+    )
+    .all()
+  const recent = db
+    .prepare(`SELECT ts, ip, ua, ok, tries FROM admin_access ORDER BY ts DESC LIMIT 100`)
+    .all()
+  return { ...totals, lastFail, byIp, recent }
+}
 
 function buildSummary() {
   const opens = db.prepare(`SELECT COUNT(*) n FROM events WHERE type='open'`).get().n
@@ -197,12 +286,14 @@ const server = createServer(async (req, res) => {
 
   if (path === '/api/logs' && req.method === 'GET') {
     const pw = req.headers['x-logs-password'] || url.searchParams.get('password')
-    if (pw !== LOGS_PASSWORD) return send(res, 401, { error: 'unauthorized' })
+    const ok = pw === LOGS_PASSWORD
+    recordAccess(req, ok) // queda anotado el intento, entre o no
+    if (!ok) return send(res, 401, { error: 'unauthorized' })
     const recent = db
       .prepare(`SELECT ts, ip, type, grade, title, practice, correct, name
                 FROM events ORDER BY ts DESC LIMIT 200`)
       .all()
-    return send(res, 200, { summary: buildSummary(), recent })
+    return send(res, 200, { summary: buildSummary(), recent, access: buildAccess() })
   }
 
   return send(res, 404, { error: 'not found' })
