@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { fetchLogs, type LogsResponse } from '../lib/usage'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
-// Los datos vienen del backend. La columna "Visitante" es un id anónimo
-// derivado de la IP (no la IP real); en cambio, la sección "Accesos al panel"
-// sí muestra la IP real de quien entró o lo intentó.
+// Los datos vienen del backend: la columna "IP" es la del visitante, y la
+// sección "Accesos al panel" muestra la de quien entró o lo intentó.
 
 function fmt(t: number) {
   return t ? new Date(t).toLocaleString('es-AR') : '—'
@@ -151,11 +150,11 @@ export default function UsageLogs({
               </>
             )}
 
-            <h3>Por visitante</h3>
+            <h3>Por IP</h3>
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>Nombre</th><th>Visitante</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
+                  <tr><th>Nombre</th><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
                 </thead>
                 <tbody>
                   {s.byIp.length === 0 ? (
@@ -164,7 +163,7 @@ export default function UsageLogs({
                     s.byIp.map((r) => (
                       <tr key={r.ip}>
                         <td>{r.name || '—'}</td>
-                        <td>{r.ip || '(desconocida)'}</td>
+                        <td><code>{r.ip || '(desconocida)'}</code></td>
                         <td>{r.opens}</td>
                         <td>{r.answers}</td>
                         <td>{r.correct}</td>
@@ -204,14 +203,14 @@ export default function UsageLogs({
             <div className="logs-tablewrap">
               <table className="logs-table">
                 <thead>
-                  <tr><th>Fecha</th><th>Nombre</th><th>Visitante</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
+                  <tr><th>Fecha</th><th>Nombre</th><th>IP</th><th>Evento</th><th>Práctica</th><th>OK</th></tr>
                 </thead>
                 <tbody>
                   {data!.recent.map((e, i) => (
                     <tr key={i}>
                       <td>{fmt(e.ts)}</td>
                       <td>{e.name || '—'}</td>
-                      <td>{e.ip || '—'}</td>
+                      <td><code>{e.ip || '—'}</code></td>
                       <td>{e.type}</td>
                       <td>{e.title ?? e.practice ?? ''}</td>
                       <td>{e.correct === null ? '' : e.correct ? '✓' : '✗'}</td>

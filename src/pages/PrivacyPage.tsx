@@ -55,9 +55,8 @@ export default function PrivacyPage() {
         <ul>
           <li>El <strong>nombre</strong> que hayas cargado, si cargaste uno.</li>
           <li>
-            Un <strong>identificador anónimo del dispositivo</strong> (derivado
-            de la dirección IP mediante un código irreversible), para poder
-            contar visitantes distintos <em>sin</em> almacenar tu IP.
+            La <strong>dirección IP</strong> desde la que se usa la app, para
+            poder distinguir un equipo de otro y ver cuánto se usa.
           </li>
           <li>El tipo de navegador y la fecha.</li>
         </ul>
@@ -65,9 +64,13 @@ export default function PrivacyPage() {
           Aparte de eso, la app tiene un <strong>panel de administración</strong>{' '}
           protegido con contraseña, que solo usa quien mantiene el sitio. Por
           seguridad, cada intento de entrar a ese panel queda registrado con la{' '}
-          <strong>dirección IP real</strong> de quien lo intentó, la fecha y el
-          navegador, para poder detectar accesos indebidos. Ese registro no
-          tiene nada que ver con el uso normal de las prácticas.
+          <strong>dirección IP</strong> de quien lo intentó, la fecha y el
+          navegador, para poder detectar accesos indebidos.
+        </p>
+        <p>
+          Estos datos los ve únicamente quien mantiene el sitio, no se publican
+          ni se comparten, y podés pedir que se borren escribiendo al mail de
+          más abajo.
         </p>
 
         <h2>Para qué se usan estos datos</h2>
