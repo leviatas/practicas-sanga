@@ -10,6 +10,18 @@
     />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E" />
     <title>Prácticas Sanga</title>
+    <!-- Tema guardado (claro/oscuro). Se aplica antes de pintar para que no
+         haya un flashazo del tema equivocado al abrir. Ver src/lib/theme.ts. -->
+    <script>
+      try {
+        var t = localStorage.getItem('sanga:theme')
+        if (t === 'light' || t === 'dark') {
+          document.documentElement.setAttribute('data-theme', t)
+        }
+      } catch (e) {
+        /* localStorage no disponible: queda el tema del dispositivo */
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

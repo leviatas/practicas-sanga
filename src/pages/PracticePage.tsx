@@ -10,6 +10,7 @@ import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
+import RevealChoices from '../components/RevealChoices'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -493,6 +494,14 @@ function Quiz({
               correct={dragCorrect}
               onValidate={handleDragValidate}
             />
+          ) : question.kind === 'reveal' ? (
+            <RevealChoices
+              key={question.id}
+              question={question}
+              onValidate={handleDragValidate}
+              onSkip={handleNext}
+              lastOfRound={current + 1 >= round.length}
+            />
           ) : (
             <ul className="quiz-options" role="list">
               {(question.options ?? []).map((option, index) => {
@@ -539,6 +548,23 @@ function Quiz({
             {question.explanation && (
               <p className="quiz-feedback__explanation">{question.explanation}</p>
             )}
+          </div>
+        )}
+
+        {answered && question.kind === 'reveal' && (
+          <div
+            className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-neutral'}`}
+            role="status"
+          >
+            <p className="quiz-feedback__title">
+              {dragCorrect
+                ? praise(childName, question.id)
+                : `Buen intento${childName ? `, ${childName}` : ''}: ya viste por qué. La repasás en la próxima ronda 💪`}
+            </p>
+            <p className="quiz-feedback__explanation">
+              Podés seguir tocando las otras opciones para leer todas las
+              explicaciones.
+            </p>
           </div>
         )}
 

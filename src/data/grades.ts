@@ -5,6 +5,7 @@ import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
 import { grade4CienciasCalorPractices } from './grade4CienciasCalor'
+import { grade4MatematicaPractices } from './grade4Matematica'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -40,11 +41,15 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
   ]
 }
 
-// 4to: dos materias.
+// 4to: tres materias.
 //  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
 //    decís la palabra en inglés y la app valida).
 //  - Ciencias Naturales: "Los materiales" — tres períodos: características de
 //    los sólidos, clasificación (estado y origen) y el calor y los materiales.
+//  - Matemática: "2da Trimestral" — con "Estrategias de cálculo de
+//    multiplicación y división" y "Relaciones multiplicativas con el cuadro de
+//    multiplicaciones", de opciones para explorar (se toca una y se despliega
+//    el por qué).
 function grade4Subjects(): Subject[] {
   return [
     {
@@ -98,6 +103,21 @@ function grade4Subjects(): Subject[] {
           description:
             'Calor y temperatura, conductores y aislantes, cambios que produce el calor y las experiencias del laboratorio.',
           practices: grade4CienciasCalorPractices,
+        },
+      ],
+    },
+    {
+      id: 'matematica',
+      name: 'Matemática',
+      emoji: '🔢',
+      description: 'Cálculo mental: multiplicar y dividir con trucos.',
+      terms: [
+        {
+          id: '2da-trimestral',
+          name: '2da Trimestral',
+          emoji: '📐',
+          description: 'Todas las prácticas para el segundo trimestral.',
+          practices: grade4MatematicaPractices,
         },
       ],
     },

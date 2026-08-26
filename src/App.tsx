@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { logEvent } from './lib/usage'
 import UsageLogs from './components/UsageLogs'
+import ThemeToggle from './components/ThemeToggle'
 
 export default function App() {
   const location = useLocation()
@@ -36,11 +37,14 @@ export default function App() {
             </span>
             <span className="brand__text">Prácticas Sanga</span>
           </Link>
-          {!isHome && (
-            <Link to="/" className="btn btn--ghost btn--small">
-              🏠 Inicio
-            </Link>
-          )}
+          <div className="app-header__actions">
+            {!isHome && (
+              <Link to="/" className="btn btn--ghost btn--small">
+                🏠 Inicio
+              </Link>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 

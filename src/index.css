@@ -12,24 +12,55 @@
   --border: #e5e7eb;
   --correct: #16a34a;
   --correct-bg: #dcfce7;
+  /* Gris de las opciones incorrectas ya desplegadas (kind 'reveal'). */
+  --neutral-bg: #eceef4;
   --wrong: #dc2626;
   --wrong-bg: #fee2e2;
   --radius: 18px;
   --shadow: 0 6px 20px rgba(20, 24, 40, 0.08);
   --max-width: 880px;
+  color-scheme: light;
 }
 
+/* --- Tema oscuro ---
+   Por defecto manda el dispositivo. El botón del encabezado puede forzarlo:
+   pone data-theme="light" o "dark" en el <html> y lo recuerda en el navegador
+   (ver src/lib/theme.ts). Por eso los colores oscuros van dos veces: para el
+   dispositivo (salvo que se haya elegido claro a mano) y para la elección
+   explícita "oscuro". */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14161d;
-    --surface: #1e2029;
-    --text: #f2f3f7;
-    --text-muted: #a4abbd;
-    --border: #2c2f3a;
-    --correct-bg: #14432a;
-    --wrong-bg: #451c1c;
-    --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  :root:not([data-theme='light']) {
+  --bg: #14161d;
+  --surface: #1e2029;
+  --text: #f2f3f7;
+  --text-muted: #a4abbd;
+  --border: #2c2f3a;
+  --correct-bg: #14432a;
+  --wrong-bg: #451c1c;
+  --neutral-bg: #262932;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
   }
+}
+
+:root[data-theme='dark'] {
+  --bg: #14161d;
+  --surface: #1e2029;
+  --text: #f2f3f7;
+  --text-muted: #a4abbd;
+  --border: #2c2f3a;
+  --correct-bg: #14432a;
+  --wrong-bg: #451c1c;
+  --neutral-bg: #262932;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+/* Elección explícita "claro": los valores de :root ya son los claros; esto
+   solo asegura que los controles del navegador (scrollbars, inputs) también
+   se vean claros aunque el sistema esté en oscuro. */
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 * {
@@ -103,6 +134,27 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* Botones de la derecha del encabezado (Inicio + tema). */
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* En pantallas angostas el botón del tema queda solo con el ícono. */
+@media (max-width: 430px) {
+  .theme-toggle__label {
+    display: none;
+  }
 }
 
 .brand {
@@ -725,6 +777,36 @@ button {
   font-size: calc(1.1rem * var(--fit));
 }
 
+.app--exercise .reveal-hint {
+  margin-bottom: calc(12px * var(--fit));
+}
+.app--exercise .reveal-hint__btn {
+  padding: calc(7px * var(--fit)) calc(13px * var(--fit));
+  font-size: calc(0.92rem * var(--fit));
+}
+.app--exercise .reveal-hint__text {
+  margin-top: calc(9px * var(--fit));
+  padding: calc(11px * var(--fit)) calc(13px * var(--fit));
+  font-size: calc(0.92rem * var(--fit));
+}
+.app--exercise .reveal-options {
+  gap: calc(12px * var(--fit));
+}
+.app--exercise .reveal-option__head {
+  min-height: calc(52px * var(--fit));
+  padding: calc(13px * var(--fit)) calc(16px * var(--fit));
+  font-size: calc(1.05rem * var(--fit));
+  gap: calc(10px * var(--fit));
+}
+.app--exercise .reveal-option__why {
+  padding: 0 calc(16px * var(--fit)) calc(13px * var(--fit))
+    calc(40px * var(--fit));
+  font-size: calc(0.92rem * var(--fit));
+}
+.app--exercise .reveal-help {
+  margin-top: calc(12px * var(--fit));
+}
+
 /* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
 .app--exercise .school-photo,
 .app--exercise .family-photo,
@@ -1187,6 +1269,151 @@ button {
   font-size: 1.2rem;
 }
 
+/* ---- Opciones "para explorar" (kind 'reveal') ----
+   No se ve cuál es la correcta: al tocar una se despliega su explicación,
+   en verde si es la correcta o en gris si no lo es. */
+/* Pista plegable (kind 'reveal'): ayuda para pensar antes de tocar una
+   opción. Amarilla y discreta, para que se note que es opcional. */
+.reveal-hint {
+  margin: 0 0 14px;
+  text-align: left;
+}
+
+.reveal-hint__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 2px dashed var(--border);
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.reveal-hint__btn:hover {
+  color: var(--text);
+}
+
+.reveal-hint__text {
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--neutral-bg);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  animation: reveal-open 0.16s ease-out;
+}
+
+.reveal-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.reveal-option {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  overflow: hidden;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.reveal-option__head {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  min-height: 52px;
+}
+
+.reveal-option__head:hover .reveal-option__text {
+  text-decoration: underline;
+}
+
+.reveal-option__letter {
+  font-weight: 800;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.reveal-option__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.reveal-option__mark {
+  flex-shrink: 0;
+  font-weight: 900;
+  color: var(--text-muted);
+}
+
+.reveal-option__why {
+  margin: 0;
+  padding: 0 16px 14px 40px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  animation: reveal-open 0.16s ease-out;
+}
+
+@keyframes reveal-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Correcta: verde. Incorrecta: gris (no rojo, para que invite a seguir). */
+.reveal-option.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.reveal-option.is-correct .reveal-option__head,
+.reveal-option.is-correct .reveal-option__letter,
+.reveal-option.is-correct .reveal-option__mark {
+  color: var(--correct);
+}
+
+.reveal-option.is-correct .reveal-option__why {
+  color: var(--text);
+}
+
+.reveal-option.is-wrong {
+  background: var(--neutral-bg);
+  border-color: var(--border);
+}
+
+.reveal-help {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 .quiz-feedback {
   margin-top: 18px;
   padding: 14px 16px;
@@ -1202,6 +1429,13 @@ button {
 .quiz-feedback.is-wrong {
   background: var(--wrong-bg);
   border-color: var(--wrong);
+}
+
+/* Cierre en gris (kind 'reveal'): no acertó de una, pero ya leyó el por qué.
+   Nada de rojo: la idea es que invite a seguir, no que suene a reto. */
+.quiz-feedback.is-neutral {
+  background: var(--neutral-bg);
+  border-color: var(--border);
 }
 
 .quiz-feedback__title {

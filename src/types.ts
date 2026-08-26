@@ -8,6 +8,13 @@ export interface Option {
   correct?: boolean
   /** Emoji grande para actividades visuales (kind 'tap', ideal para jardín). */
   emoji?: string
+  /**
+   * Explicación propia de ESTA opción (kind 'reveal'): por qué es correcta o
+   * por qué no. Se despliega al tocarla, en verde si es correcta o en gris si
+   * no lo es. Escribila completa, como la vería el alumno
+   * (ej: "Incorrecto. Estás sumando en lugar de multiplicar.").
+   */
+  why?: string
 }
 
 export interface Question {
@@ -26,6 +33,12 @@ export interface Question {
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**
+   * Pista opcional (kind 'reveal'): una ayuda para pensar ANTES de tocar una
+   * opción. Aparece plegada en un botón "Pista"; el alumno la abre solo si la
+   * necesita. No revela la respuesta: la orienta.
+   */
+  hint?: string
+  /**
    * Tipo de ejercicio:
    *  - 'choice' (por defecto): elegir una opción.
    *  - 'drag': arrastrar fichas a los huecos de un párrafo y validar.
@@ -34,9 +47,14 @@ export interface Question {
    *    festeja al acertar y avanza solo.
    *  - 'speak': el alumno DICE la respuesta en voz alta y la app valida con
    *    reconocimiento de voz (Web Speech API). Reintenta sin penalizar.
+   *  - 'reveal': opciones "para explorar". No se ve cuál es la correcta: al
+   *    tocar una se despliega su explicación (`why`) en verde si es correcta o
+   *    en gris si no. Se puede seguir tocando hasta dar con la correcta, o
+   *    pedir verla con el botón "Ver la respuesta correcta". Solo cuenta como
+   *    dominada si acertó en el primer toque.
    */
-  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak'
-  /** Opciones de respuesta (para kind 'choice'). */
+  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak' | 'reveal'
+  /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
    * Si es `true`, las opciones NO se barajan (se muestran en el orden dado).
