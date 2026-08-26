@@ -202,6 +202,14 @@ function Quiz({
     }
   }, [allDone, gradeId, practiceId, practice.title, childName])
 
+  // Cuándo hay que volver a medir --fit dentro de la MISMA pregunta.
+  // En 'reveal' el contenido crece a medida que el alumno despliega
+  // explicaciones: si remidiéramos, la letra se achicaría justo mientras está
+  // leyendo. Así que ahí medimos una sola vez por pregunta y, si después no
+  // entra, la tarjeta scrollea (que es lo que ya hace de por sí).
+  const fitSignal =
+    round[current]?.kind === 'reveal' ? 'reveal' : `${answered}:${dragCorrect}`
+
   // Ajusta --fit para que el contenido de la tarjeta entre sin scroll.
   // Mide el alto natural del contenido vs el alto disponible y, si no entra,
   // achica proporcionalmente (letra, cuadros e imagen). Adaptativo a la
@@ -238,7 +246,7 @@ function Quiz({
       window.removeEventListener('resize', fit)
       window.removeEventListener('orientationchange', fit)
     }
-  }, [current, answered, dragCorrect, round, phase])
+  }, [current, fitSignal, round, phase])
 
   function persist(next: Set<string>) {
     saveMastered(gradeId, practiceId, next)
