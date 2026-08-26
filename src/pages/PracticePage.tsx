@@ -109,6 +109,7 @@ export default function PracticePage() {
         key={practice.id}
         practice={practice}
         gradeId={grade.id}
+        subjectId={subject.id}
         termPath={termPath}
       />
     </section>
@@ -118,10 +119,12 @@ export default function PracticePage() {
 function Quiz({
   practice,
   gradeId,
+  subjectId,
   termPath,
 }: {
   practice: Practice
   gradeId: string
+  subjectId: string
   termPath: string
 }) {
   const practiceId = practice.id
@@ -202,13 +205,11 @@ function Quiz({
     }
   }, [allDone, gradeId, practiceId, practice.title, childName])
 
-  // Cuándo hay que volver a medir --fit dentro de la MISMA pregunta.
-  // En 'reveal' el contenido crece a medida que el alumno despliega
-  // explicaciones: si remidiéramos, la letra se achicaría justo mientras está
-  // leyendo. Así que ahí medimos una sola vez por pregunta y, si después no
-  // entra, la tarjeta scrollea (que es lo que ya hace de por sí).
-  const fitSignal =
-    round[current]?.kind === 'reveal' ? 'reveal' : `${answered}:${dragCorrect}`
+  // Matemática no se achica NUNCA: son consignas y explicaciones largas para
+  // leer, así que la letra queda siempre en su tamaño y la tarjeta scrollea si
+  // no entra. (Antes, al desplegar una explicación el contenido crecía y el
+  // texto se encogía justo mientras el alumno lo estaba leyendo.)
+  const noFit = subjectId === 'matematica'
 
   // Ajusta --fit para que el contenido de la tarjeta entre sin scroll.
   // Mide el alto natural del contenido vs el alto disponible y, si no entra,
@@ -219,6 +220,11 @@ function Quiz({
     const inner = fitRef.current
     const quiz = card?.closest('.quiz') as HTMLElement | null
     if (!card || !inner || !quiz) return
+
+    if (noFit) {
+      quiz.style.setProperty('--fit', '1')
+      return
+    }
 
     function fit() {
       quiz!.style.setProperty('--fit', '1')
@@ -246,7 +252,7 @@ function Quiz({
       window.removeEventListener('resize', fit)
       window.removeEventListener('orientationchange', fit)
     }
-  }, [current, fitSignal, round, phase])
+  }, [current, answered, dragCorrect, round, phase, noFit])
 
   function persist(next: Set<string>) {
     saveMastered(gradeId, practiceId, next)
