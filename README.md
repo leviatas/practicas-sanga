@@ -108,10 +108,22 @@ persiste en el volumen `sanga-db`.
 ### Opción A — con Docker (no necesitás Node instalado)
 
 ```bash
-docker compose -f docker-compose.dev.yml up
+./dev.sh              # elige puerto libre (5173 por defecto) y muestra los logs
+DEV_PORT=5200 ./dev.sh   # forzar un puerto
+./dev.sh -d           # levantar en segundo plano
+./dev.sh logs         # ver logs en vivo
+./dev.sh down         # detener
 ```
 
-Abrí **http://localhost:5173** (recarga automática al editar).
+Abrí la URL que imprime el script (**http://localhost:5173** por defecto):
+recarga automática al editar. Levanta también el backend de logs, con una base
+de datos propia separada de la de producción.
+
+El equivalente manual es:
+
+```bash
+docker compose -f docker-compose.dev.yml up
+```
 
 ### Opción B — con Node local (>= 20)
 
@@ -170,6 +182,7 @@ Un grado puede tener varias prácticas. Agregá otra entrada en el array
 
 ```
 ├── prod.sh                 # build + deploy de producción (un comando)
+├── dev.sh                  # entorno de desarrollo (un comando)
 ├── docker-compose.yml      # producción (nginx)
 ├── docker-compose.dev.yml  # desarrollo (Vite + hot reload)
 ├── Dockerfile              # build multi-stage (node → nginx)

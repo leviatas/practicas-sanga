@@ -18,8 +18,10 @@ export default defineConfig({
     host: true,
     port: 5173,
     // En desarrollo, /api va al backend de logs (Node) en :3000.
+    // Dentro de Docker (./dev.sh) el backend es otro contenedor: el compose de
+    // desarrollo pasa API_TARGET=http://backend:3000.
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/api': process.env.API_TARGET || 'http://localhost:3000',
     },
   },
   preview: {

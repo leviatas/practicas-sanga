@@ -1,8 +1,14 @@
 # ============================================================================
 # Docker Compose — modo desarrollo (hot reload con Vite)
 #
+#   ./dev.sh                  # elige el puerto y lo guarda en .env (DEV_PORT)
 #   docker compose -f docker-compose.dev.yml up
-#   → disponible en http://localhost:5173 con recarga automática
+#   → disponible en http://localhost:<DEV_PORT> con recarga automática
+#
+# El puerto del host sale de la variable DEV_PORT, que ./dev.sh escribe en el
+# archivo .env (ignorado por git). Si no hay .env, usa 5173 por defecto.
+# También podés forzarlo puntualmente:
+#   DEV_PORT=5200 docker compose -f docker-compose.dev.yml up
 # ============================================================================
 
 services:
@@ -12,9 +18,32 @@ services:
     working_dir: /app
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     ports:
-      - "5173:5173"
+      - "${DEV_PORT:-5173}:5173"
     volumes:
       - .:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+      # Vite hace proxy de /api hacia el backend de logs (ver vite.config.ts).
+      # Dentro de Docker el backend no es "localhost" sino el servicio "backend".
+      - API_TARGET=http://backend:3000
+    depends_on:
+      - backend
+
+  # Backend de logs de uso (Node + SQLite), igual que en producción pero con
+  # su propia base, para no mezclar datos de prueba con los reales.
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: practicas-sanga-backend:latest
+    container_name: practicas-sanga-backend-dev
+    environment:
+      - LOGS_PASSWORD=${LOGS_PASSWORD:-Sanga70}
+      - DB_PATH=/data/usage.db
+    volumes:
+      - sanga-db-dev:/data
+
+volumes:
+  # Base SQLite de desarrollo (separada de la de producción).
+  sanga-db-dev:
