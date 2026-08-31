@@ -1854,6 +1854,15 @@ button {
   transform: scale(0.96);
 }
 
+/* Ayuda "📢 ESCUCHA": va debajo de la imagen y arriba de la consigna, y suena
+   la respuesta correcta en inglés. Se puede tocar todas las veces que haga
+   falta; el alumno igual tiene que elegir la opción correcta. */
+.speak-btn--answer {
+  margin-top: calc(4px * var(--fit, 1));
+  margin-bottom: calc(12px * var(--fit, 1));
+  letter-spacing: 0.04em;
+}
+
 /* ---- Ejercicio ORAL (kind 'speak'): hablar y validar por voz ---- */
 .speak {
   display: flex;

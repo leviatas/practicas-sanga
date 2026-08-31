@@ -42,9 +42,9 @@ function withShuffledQuiz(questions: Question[]): Question[] {
 }
 
 // Lee un texto en voz alta (Web Speech API). Quita emojis para que la voz no
-// diga "círculo rojo" y demás. Se usa solo para la consigna (no las opciones),
-// así no revela la respuesta.
-function speak(text: string) {
+// diga "círculo rojo" y demás. `lang` elige el idioma: la consigna se lee en
+// español (por defecto) y la respuesta de ayuda en inglés ('en-US').
+function speak(text: string, lang = 'es-AR') {
   try {
     const synth = window.speechSynthesis
     if (!synth) return
@@ -55,12 +55,30 @@ function speak(text: string) {
     if (!clean) return
     synth.cancel()
     const u = new SpeechSynthesisUtterance(clean)
-    u.lang = 'es-AR'
+    u.lang = lang
     u.rate = 0.9
+    // Algunos navegadores ignoran `lang` si no se les da una voz de ese idioma.
+    const base = lang.slice(0, 2).toLowerCase()
+    const voice = synth
+      .getVoices()
+      .find((v) => v.lang?.toLowerCase().replace('_', '-').startsWith(base))
+    if (voice) u.voice = voice
     synth.speak(u)
   } catch {
     // Sin soporte de voz: no rompemos nada.
   }
+}
+
+// Respuesta que se puede escuchar como AYUDA (botón "📢 ESCUCHA"), solo en las
+// preguntas con imagen y una única opción correcta (ej: la foto de un brazo →
+// "ARM"). Escucharla no responde la pregunta: el alumno igual tiene que elegir
+// la opción correcta, y puede tocar el botón las veces que quiera.
+function listenableAnswer(q: Question): string | null {
+  if (!q.image) return null
+  if (q.kind != null && q.kind !== 'choice') return null
+  const correct = (q.options ?? []).filter((o) => o.correct)
+  if (correct.length !== 1) return null
+  return correct[0].text.trim() || null
 }
 
 // Preguntas todavía no dominadas (las que faltan o se respondieron mal).
@@ -427,6 +445,8 @@ function Quiz({
     ((current + (answered ? 1 : 0)) / round.length) * 100,
   )
   const isChoice = question.kind == null || question.kind === 'choice'
+  // Ayuda opcional: escuchar en inglés la respuesta correcta (ver arriba).
+  const listenAnswer = listenableAnswer(question)
   // En 1er grado los ejercicios van en MAYÚSCULAS.
   const upper = gradeId === '1'
   const T = (s: string) => (upper ? s.toUpperCase() : s)
@@ -490,6 +510,17 @@ function Quiz({
                 {question.emoji}
               </div>
             )}
+            {listenAnswer && (
+              <button
+                type="button"
+                className="speak-btn speak-btn--answer"
+                onClick={() => speak(listenAnswer, 'en-US')}
+                aria-label={`Escuchar la respuesta en inglés: ${listenAnswer}`}
+              >
+                📢 ESCUCHA
+              </button>
+            )}
+
             <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
 
             {gradeId === 'jardin' && (
