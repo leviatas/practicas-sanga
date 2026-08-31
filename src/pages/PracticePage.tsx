@@ -8,12 +8,14 @@ import { logEvent } from '../lib/usage'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
+import LabelDrag from '../components/LabelDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
+import { bodyPartsImages } from '../components/bodyPartsImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -296,6 +298,14 @@ function Quiz({
     if (isCorrect) markMastered(round[current].id)
   }
 
+  // Vuelve a habilitar el ejercicio ya validado para seguir intentando (lo usa
+  // "Label the body parts": corregir las mal puestas o sacarlas todas). No toca
+  // el progreso: el intento fallido ya quedó registrado.
+  function handleDragRetry() {
+    setAnswered(false)
+    setDragCorrect(false)
+  }
+
   // Actividad de jardín ('tap'): solo llega cuando el chico acierta. Festeja,
   // marca dominada y avanza solo tras un ratito.
   function handleTapCorrect() {
@@ -459,6 +469,13 @@ function Quiz({
               alt="Árbol genealógico de la familia de Alison"
             />
           )}
+          {question.image && bodyPartsImages[question.image] && (
+            <img
+              className="school-photo"
+              src={bodyPartsImages[question.image]}
+              alt="¿Qué parte del cuerpo es?"
+            />
+          )}
           {question.emoji && (
             <div className="quiz-card__emoji" aria-hidden="true">
               {question.emoji}
@@ -492,6 +509,15 @@ function Quiz({
               locked={answered}
               correct={dragCorrect}
               onValidate={handleDragValidate}
+            />
+          ) : question.kind === 'label' ? (
+            <LabelDrag
+              key={question.id}
+              question={question}
+              locked={answered}
+              correct={dragCorrect}
+              onValidate={handleDragValidate}
+              onRetry={handleDragRetry}
             />
           ) : question.kind === 'tap' ? (
             <TapGrid
