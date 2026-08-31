@@ -9,13 +9,14 @@ import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import LabelDrag from '../components/LabelDrag'
+import LabelDrag from '../components/LabelDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
+import SentenceBuilder from '../components/SentenceBuilder'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
-import { bodyPartsImages } from '../components/bodyPartsImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -23,7 +24,7 @@ function shuffle<T>(items: readonly T[]): T[] {
   const arr = items.slice()
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
   }
   return arr
 }
@@ -451,181 +452,194 @@ function Quiz({
       </p>
 
       <div className="quiz-card" ref={cardRef}>
-       <div className="quiz-card__fit" ref={fitRef}>
-        <div className="quiz-card__scroll">
-          {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
-          {question.scene && <PrepositionScene name={question.scene} />}
-          {question.image && schoolImages[question.image] && (
-            <img
-              className="school-photo"
-              src={schoolImages[question.image]}
-              alt="¿Qué objeto de la escuela es?"
-            />
-          )}
-          {question.image && familyImages[question.image] && (
-            <img
-              className="family-photo"
-              src={familyImages[question.image]}
-              alt="Árbol genealógico de la familia de Alison"
-            />
-          )}
-          {question.image && bodyPartsImages[question.image] && (
-            <img
-              className="school-photo"
-              src={bodyPartsImages[question.image]}
-              alt="¿Qué parte del cuerpo es?"
-            />
-          )}
-          {question.emoji && (
-            <div className="quiz-card__emoji" aria-hidden="true">
-              {question.emoji}
-            </div>
-          )}
-          <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+        <div className="quiz-card__fit" ref={fitRef}>
+          <div className="quiz-card__scroll">
+            {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
+            {question.scene && <PrepositionScene name={question.scene} />}
+            {question.image && schoolImages[question.image] && (
+              <img
+                className="school-photo"
+                src={schoolImages[question.image]}
+                alt="¿Qué objeto de la escuela es?"
+              />
+            )}
+            {question.image && familyImages[question.image] && (
+              <img
+                className="family-photo"
+                src={familyImages[question.image]}
+                alt="Árbol genealógico de la familia de Alison"
+              />
+            )}
+            {question.emoji && (
+              <div className="quiz-card__emoji" aria-hidden="true">
+                {question.emoji}
+              </div>
+            )}
+            <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
 
-          {gradeId === 'jardin' && (
-            <button
-              type="button"
-              className="speak-btn"
-              onClick={() => speak(question.prompt)}
-              aria-label="Escuchar la consigna"
-            >
-              🔊 Escuchar
-            </button>
-          )}
+            {gradeId === 'jardin' && (
+              <button
+                type="button"
+                className="speak-btn"
+                onClick={() => speak(question.prompt)}
+                aria-label="Escuchar la consigna"
+              >
+                🔊 Escuchar
+              </button>
+            )}
 
-          {question.kind === 'drag' ? (
-            <DragCloze
-              key={question.id}
-              question={question}
-              locked={answered}
-              correct={dragCorrect}
-              onValidate={handleDragValidate}
-            />
-          ) : question.kind === 'classify' ? (
-            <ClassifyDrag
-              key={question.id}
-              question={question}
-              locked={answered}
-              correct={dragCorrect}
-              onValidate={handleDragValidate}
-            />
-          ) : question.kind === 'label' ? (
-            <LabelDrag
-              key={question.id}
-              question={question}
-              locked={answered}
-              correct={dragCorrect}
-              onValidate={handleDragValidate}
-              onRetry={handleDragRetry}
-            />
-          ) : question.kind === 'tap' ? (
-            <TapGrid
-              key={question.id}
-              question={question}
-              locked={answered}
-              onCorrect={handleTapCorrect}
-            />
-          ) : question.kind === 'speak' ? (
-            <SpeakCheck
-              key={question.id}
-              question={question}
-              locked={answered}
-              correct={dragCorrect}
-              onValidate={handleDragValidate}
-            />
-          ) : question.kind === 'reveal' ? (
-            <RevealChoices
-              key={question.id}
-              question={question}
-              onValidate={handleDragValidate}
-              onSkip={handleNext}
-              lastOfRound={current + 1 >= round.length}
-            />
-          ) : (
-            <ul className="quiz-options" role="list">
-              {(question.options ?? []).map((option, index) => {
-                const isSelected = selected === index
-                const showState = answered && (isSelected || option.correct)
-                let stateClass = ''
-                if (answered && option.correct) stateClass = 'is-correct'
-                else if (isSelected) stateClass = 'is-wrong'
+            {question.kind === 'drag' ? (
+              <DragCloze
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'classify' ? (
+              <ClassifyDrag
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'label' ? (
+              <LabelDrag
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+                onRetry={handleDragRetry}
+              />
+            ) : question.kind === 'tap' ? (
+              <TapGrid
+                key={question.id}
+                question={question}
+                locked={answered}
+                onCorrect={handleTapCorrect}
+              />
+            ) : question.kind === 'speak' ? (
+              <SpeakCheck
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'sentence' ? (
+              <SentenceBuilder
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'reveal' ? (
+              <RevealChoices
+                key={question.id}
+                question={question}
+                onValidate={handleDragValidate}
+                onSkip={handleNext}
+                lastOfRound={current + 1 >= round.length}
+              />
+            ) : (
+              <ul className="quiz-options" role="list">
+                {(question.options ?? []).map((option, index) => {
+                  const isSelected = selected === index
+                  const showState = answered && (isSelected || option.correct)
+                  let stateClass = ''
+                  if (answered && option.correct) stateClass = 'is-correct'
+                  else if (isSelected) stateClass = 'is-wrong'
 
-                return (
-                  <li key={index}>
-                    <button
-                      className={`quiz-option ${stateClass}`}
-                      onClick={() => handleSelect(index)}
-                      disabled={answered}
-                      aria-pressed={isSelected}
-                    >
-                      <span className="quiz-option__text">{T(option.text)}</span>
-                      {showState && (
-                        <span className="quiz-option__mark" aria-hidden="true">
-                          {option.correct ? '✓' : '✗'}
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </div>
-
-        {answered && isChoice && (
-          <div
-            className={`quiz-feedback ${
-              question.options?.[selected!]?.correct ? 'is-correct' : 'is-wrong'
-            }`}
-            role="status"
-          >
-            <p className="quiz-feedback__title">
-              {question.options?.[selected!]?.correct
-                ? praise(childName, question.id)
-                : `Ups${childName ? `, ${childName}` : ''}, no era esa. La repasás en la próxima ronda 🙊`}
-            </p>
-            {question.explanation && (
-              <p className="quiz-feedback__explanation">{question.explanation}</p>
+                  return (
+                    <li key={index}>
+                      <button
+                        className={`quiz-option ${stateClass}`}
+                        onClick={() => handleSelect(index)}
+                        disabled={answered}
+                        aria-pressed={isSelected}
+                      >
+                        <span className="quiz-option__text">{T(option.text)}</span>
+                        {showState && (
+                          <span className="quiz-option__mark" aria-hidden="true">
+                            {option.correct ? '✓' : '✗'}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
             )}
           </div>
-        )}
 
-        {answered && question.kind === 'reveal' && (
-          <div
-            className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-neutral'}`}
-            role="status"
-          >
-            <p className="quiz-feedback__title">
-              {dragCorrect
-                ? praise(childName, question.id)
-                : `Buen intento${childName ? `, ${childName}` : ''}: ya viste por qué. La repasás en la próxima ronda 💪`}
-            </p>
-            <p className="quiz-feedback__explanation">
-              Podés seguir tocando las otras opciones para leer todas las
-              explicaciones.
-            </p>
-          </div>
-        )}
+          {answered && isChoice && (
+            <div
+              className={`quiz-feedback ${question.options?.[selected!]?.correct ? 'is-correct' : 'is-wrong'
+                }`}
+              role="status"
+            >
+              <p className="quiz-feedback__title">
+                {question.options?.[selected!]?.correct
+                  ? praise(childName, question.id)
+                  : `Ups${childName ? `, ${childName}` : ''}, no era esa. La repasás en la próxima ronda 🙊`}
+              </p>
+              {question.explanation && (
+                <p className="quiz-feedback__explanation">{question.explanation}</p>
+              )}
+            </div>
+          )}
 
-        {answered && question.kind === 'tap' && (
-          <div className="quiz-feedback is-correct tap-cheer" role="status">
-            <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
-          </div>
-        )}
+          {answered && question.kind === 'reveal' && (
+            <div
+              className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-neutral'}`}
+              role="status"
+            >
+              <p className="quiz-feedback__title">
+                {dragCorrect
+                  ? praise(childName, question.id)
+                  : `Buen intento${childName ? `, ${childName}` : ''}: ya viste por qué. La repasás en la próxima ronda 💪`}
+              </p>
+              <p className="quiz-feedback__explanation">
+                Podés seguir tocando las otras opciones para leer todas las
+                explicaciones.
+              </p>
+            </div>
+          )}
 
-        {answered && (
-          <div className="quiz-actions">
-            <button className="btn btn--primary" onClick={handleNext}>
-              {current + 1 >= round.length
-                ? 'Terminar ronda 🏁'
-                : question.kind === 'tap'
-                  ? 'Seguir →'
-                  : 'Siguiente →'}
-            </button>
-          </div>
-        )}
-       </div>
+          {answered && question.kind === 'sentence' && (
+            <div
+              className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
+              role="status"
+            >
+              <p className="quiz-feedback__title">
+                {dragCorrect
+                  ? praise(childName, question.id)
+                  : `Casi${childName ? `, ${childName}` : ''}: mirá las que quedaron en verde. La repasás en la próxima ronda 💪`}
+              </p>
+            </div>
+          )}
+
+          {answered && question.kind === 'tap' && (
+            <div className="quiz-feedback is-correct tap-cheer" role="status">
+              <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
+            </div>
+          )}
+
+          {answered && (
+            <div className="quiz-actions">
+              <button className="btn btn--primary" onClick={handleNext}>
+                {current + 1 >= round.length
+                  ? 'Terminar ronda 🏁'
+                  : question.kind === 'tap'
+                    ? 'Seguir →'
+                    : 'Siguiente →'}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -809,6 +809,7 @@ button {
 
 /* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
 .app--exercise .school-photo,
+.app--exercise .sentence-scene,
 .app--exercise .family-photo,
 .app--exercise .prep-photo,
 .app--exercise .prep-scene,
@@ -816,6 +817,19 @@ button {
   max-height: calc(30dvh * var(--fit));
   width: auto;
   margin-bottom: calc(10px * var(--fit));
+}
+
+/* Armar la oración: las columnas y sus fichas escalan con --fit. */
+.app--exercise .sentence-columns {
+  gap: calc(6px * var(--fit));
+  margin-bottom: calc(16px * var(--fit));
+}
+.app--exercise .sentence-column {
+  gap: calc(4px * var(--fit));
+}
+.app--exercise .sentence-option {
+  padding: calc(8px * var(--fit)) calc(6px * var(--fit));
+  font-size: calc(clamp(0.62rem, 2.2vw, 0.9rem) * var(--fit));
 }
 
 /* Ejercicios de arrastrar / clasificar. */
@@ -1441,6 +1455,107 @@ button {
 .quiz-option__mark {
   font-weight: 900;
   font-size: 1.2rem;
+}
+
+/* ---- Armar la oración (kind 'sentence') ----
+   Debajo del dibujo va una columna por cada parte de la oración. Se toca una
+   opción en cada columna y con "Enviar" se corrigen todas juntas. Las columnas
+   van siempre en el orden de la oración, así que se mantienen en fila (y si no
+   entran, la fila scrollea de costado en vez de apilarse). */
+.sentence-scene {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: #fff; /* los dibujos son línea negra sobre blanco */
+  box-shadow: var(--shadow);
+}
+
+.sentence-columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.sentence-column {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.sentence-option {
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 6px;
+  font-size: clamp(0.62rem, 2.2vw, 0.9rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.08s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.sentence-option:not(:disabled):hover {
+  border-color: var(--accent);
+}
+
+.sentence-option:active {
+  transform: scale(0.98);
+}
+
+.sentence-option:disabled {
+  cursor: default;
+}
+
+/* Elegida, todavía sin enviar: se resalta sin decir si está bien o mal. */
+.sentence-option.is-picked {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.sentence-option.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+  color: var(--correct);
+}
+
+.sentence-option.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+.sentence-score {
+  text-align: center;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.sentence-score__right {
+  color: var(--correct);
+}
+
+.sentence-score__wrong {
+  color: var(--wrong);
+}
+
+.sentence-answer {
+  text-align: center;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 /* ---- Opciones "para explorar" (kind 'reveal') ----
