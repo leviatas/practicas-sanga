@@ -1,5 +1,9 @@
 import type { Grade, Practice, Subject } from '../types'
 import { grade1Practices } from './grade1'
+import {
+  grade1BodyPartsPractices,
+  grade1BodyLabelPractices,
+} from './grade1BodyParts'
 import { grade4Practices } from './grade4'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
@@ -20,9 +24,9 @@ import { jardinPractices } from './jardin'
 // entradas acá. El `id` se usa en la URL.
 // ============================================================================
 
-// Helper: arma la materia "English" con un período "1st Midterms" que contiene
-// las prácticas indicadas.
-function englishFirstMidterms(practices: Practice[]): Subject[] {
+// Helper: arma la materia "English" para 1er grado con los períodos
+// "1st Midterms" y "2nd Midterms".
+function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices: Practice[]): Subject[] {
   return [
     {
       id: 'english',
@@ -35,7 +39,14 @@ function englishFirstMidterms(practices: Practice[]): Subject[] {
           name: '1st Midterms',
           emoji: '📝',
           description: 'Todas las prácticas para el primer parcial.',
-          practices,
+          practices: firstMidtermPractices,
+        },
+        {
+          id: '2nd-midterms',
+          name: '2nd Midterms',
+          emoji: '📝',
+          description: 'Todas las prácticas para el segundo parcial.',
+          practices: secondMidtermPractices,
         },
       ],
     },
@@ -175,7 +186,10 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
-    subjects: englishFirstMidterms(grade1Practices),
+    subjects: grade1English(grade1Practices, [
+      ...grade1BodyPartsPractices,
+      ...grade1BodyLabelPractices,
+    ]),
   },
   {
     id: '4',

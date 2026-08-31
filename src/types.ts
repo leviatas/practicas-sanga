@@ -17,6 +17,21 @@ export interface Option {
   why?: string
 }
 
+export interface Hotspot {
+  /** Palabra correcta para este casillero (ej: 'NOSE'). */
+  label: string
+  /**
+   * Punto que señala la flecha, en % del ancho y del alto de la IMAGEN
+   * (0–100). Ej: { x: 43, y: 26 } = nariz.
+   */
+  x: number
+  y: number
+  /** Columna donde va el casillero: a la izquierda o a la derecha del dibujo. */
+  side: 'left' | 'right'
+  /** Alto del casillero dentro de la columna, en % (0–100). */
+  at: number
+}
+
 export interface Question {
   /** Identificador único dentro de la práctica. */
   id: string
@@ -52,8 +67,11 @@ export interface Question {
    *    en gris si no. Se puede seguir tocando hasta dar con la correcta, o
    *    pedir verla con el botón "Ver la respuesta correcta". Solo cuenta como
    *    dominada si acertó en el primer toque.
+   *  - 'label': señalar partes de un dibujo. Cada flecha del dibujo apunta a
+   *    una parte y termina en un casillero vacío; el alumno arrastra (o toca)
+   *    la palabra del banco hasta el casillero y valida.
    */
-  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak' | 'reveal'
+  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak' | 'reveal' | 'label'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -81,6 +99,10 @@ export interface Question {
   categories?: string[]
   /** Para kind 'classify': cada palabra y a qué categoría pertenece. */
   items?: { text: string; category: string }[]
+  /** Para kind 'label': clave de la imagen a etiquetar (ej: 'fullbody'). */
+  labelImage?: string
+  /** Para kind 'label': los puntos señalados por las flechas. */
+  hotspots?: Hotspot[]
   /**
    * Para kind 'speak': lo que el alumno tiene que decir en voz alta (ej: la
    * palabra o frase correcta). Se compara con lo que reconoce el micrófono.

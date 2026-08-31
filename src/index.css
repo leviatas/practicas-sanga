@@ -835,6 +835,14 @@ button {
 .app--exercise .classify-bin {
   min-height: calc(96px * var(--fit));
 }
+.app--exercise .label-stage {
+  /* Tope por alto de pantalla, convertido a ancho para no romper el aspecto. */
+  max-width: min(860px, calc(58dvh * var(--fit) / var(--label-ratio)));
+}
+.app--exercise .label-word {
+  font-size: calc(0.9rem * var(--fit));
+  padding: calc(6px * var(--fit)) calc(11px * var(--fit));
+}
 
 /* Feedback y botón: también escalan, y nunca se achican por flex. */
 .app--exercise .quiz-feedback,
@@ -1144,6 +1152,18 @@ button {
   transform: scale(1.05);
 }
 
+.drag-chip.is-wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.drag-chip.is-correct {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
 .drag-bank {
   display: flex;
   flex-wrap: wrap;
@@ -1219,6 +1239,160 @@ button {
 .classify-bins + .drag-bank,
 .classify-bin + .drag-bank {
   margin-top: 0;
+}
+
+/* ---- Señalar partes de un dibujo (drag & drop sobre flechas) ---- */
+/* El escenario tiene una relación de aspecto fija: el dibujo ocupa el 54%
+   central del ancho y las dos columnas de casilleros los costados. El SVG de
+   las flechas usa el mismo aspecto (viewBox 1000×645), así las puntas de
+   flecha caen exactamente sobre la parte del cuerpo. */
+/* `--label-ratio` (alto/ancho) lo fija el componente: cambia con el reparto
+   dibujo/columnas (más ancho para el dibujo en pantallas angostas). */
+.label-stage {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  aspect-ratio: 1 / var(--label-ratio);
+  margin: 0 auto 12px;
+}
+
+/* Este ejercicio necesita más ancho que el resto: el dibujo va en el medio y
+   los casilleros a los costados. */
+/* `width: 100%` es necesario: en la vista de ejercicio el `.quiz` tiene
+   `margin: 0 auto`, así que sin esto su ancho lo fija el contenido y el
+   escenario se encoge de golpe al vaciarse el banco de palabras. */
+.quiz:has(.label-stage) {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* `left` y `width` los fija el componente (ver LAYOUTS en LabelDrag). */
+.label-stage__img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.label-arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Negras: sobre el dibujo (fondo blanco) se ven mucho mejor que en color.
+   El halo blanco es para el tema oscuro: el tramo de flecha que sale del
+   dibujo cae sobre el fondo oscuro de la página y si no se pierde. */
+.label-arrows {
+  filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
+}
+
+.label-arrows line {
+  stroke: #111318;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.label-arrows marker path {
+  fill: #111318;
+}
+
+/* Al validar, cada flecha toma el color de su casillero. */
+.label-arrows line.is-correct,
+.label-arrows marker.is-correct path {
+  stroke: #22c55e;
+  fill: #22c55e;
+}
+
+.label-arrows line.is-wrong,
+.label-arrows marker.is-wrong path {
+  stroke: #ef4444;
+  fill: #ef4444;
+}
+
+/* `left`/`top`/`width` los pone el componente (ya vienen centrados: no usamos
+   `transform`, porque dnd-kit lo ignora al medir las zonas de drop). El alto es
+   fijo para poder centrar verticalmente sin transform. */
+.label-slot {
+  --label-slot-h: calc(28px * var(--fit, 1));
+  position: absolute;
+  height: var(--label-slot-h);
+}
+
+.label-slot__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 2px;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: calc(0.8rem * var(--fit, 1));
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.label-slot__ph {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.label-slot__btn.is-dragging {
+  opacity: 0.35;
+}
+
+/* El casillero con palabra se agarra y se arrastra; el vacío, no. */
+.label-slot__btn {
+  touch-action: none;
+}
+
+.label-slot.is-over .label-slot__btn {
+  border-color: var(--accent);
+  border-style: solid;
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+}
+
+.label-slot.is-correct .label-slot__btn {
+  border-style: solid;
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.label-slot.is-wrong .label-slot__btn {
+  border-style: solid;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Palabra elegida con un toque (esperando que toquen un casillero). */
+.label-word.is-picked {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.label-bank.is-over {
+  border-color: var(--accent);
+}
+
+.drag-explanation {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+  font-size: 0.92rem;
 }
 
 .quiz-option {

@@ -865,35 +865,35 @@ export const grade4PdlPractices: Practice[] = [
       // --- Identificar la sílaba tónica (choice) ---
       {
         id: 'st5',
-        prompt: '¿Cuál es la sílaba tónica de la palabra «teléfono»?',
+        prompt: '¿Cuál es la sílaba tónica de la palabra «telefono»?',
         options: [
-          { text: 'lé', correct: true },
+          { text: 'le', correct: true },
           { text: 'te' },
           { text: 'no' },
         ],
         explanation:
-          'La sílaba tónica es «lé» (la que suena más fuerte): te-LÉ-fo-no.',
+          'La sílaba tónica es «le» (la que suena más fuerte): te-LE-fo-no.',
       },
       {
         id: 'st6',
-        prompt: '¿Cuál es la sílaba tónica de la palabra «camión»?',
+        prompt: '¿Cuál es la sílaba tónica de la palabra «camion»?',
         options: [
-          { text: 'mión', correct: true },
+          { text: 'mion', correct: true },
           { text: 'ca' },
           { text: 'mi' },
         ],
         explanation:
-          'La sílaba tónica es «mión» (la última): ca-MIÓN.',
+          'La sílaba tónica es «mion» (la última): ca-MION.',
       },
       {
         id: 'st7',
-        prompt: '¿Cuál es la sílaba tónica de la palabra «lápiz»?',
+        prompt: '¿Cuál es la sílaba tónica de la palabra «lapiz»?',
         options: [
-          { text: 'lá', correct: true },
+          { text: 'la', correct: true },
           { text: 'piz' },
         ],
         explanation:
-          'La sílaba tónica es «lá» (la anteúltima): LÁ-piz.',
+          'La sílaba tónica es «la» (la anteúltima): LA-piz.',
       },
       {
         id: 'st8',
@@ -1072,6 +1072,7 @@ export const grade4PdlPractices: Practice[] = [
         ],
         blanks: ['N', 'S', 'vocal'],
         bank: ['N', 'S', 'vocal', 'L', 'R', 'consonante'],
+        anyOrder: true,
         explanation:
           'Las agudas llevan tilde cuando terminan en N, S o vocal.',
       },
