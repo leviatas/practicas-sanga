@@ -12,10 +12,12 @@ import LabelDrag from '../components/LabelDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
+import SentenceBuilder from '../components/SentenceBuilder'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
 import { bodyPartsImages } from '../components/bodyPartsImages'
+import { sentenceImages } from '../components/sentenceImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -476,6 +478,13 @@ function Quiz({
               alt="¿Qué parte del cuerpo es?"
             />
           )}
+          {question.image && sentenceImages[question.image] && (
+            <img
+              className="sentence-scene"
+              src={sentenceImages[question.image]}
+              alt="Escena para describir con there is o there are"
+            />
+          )}
           {question.emoji && (
             <div className="quiz-card__emoji" aria-hidden="true">
               {question.emoji}
@@ -528,6 +537,14 @@ function Quiz({
             />
           ) : question.kind === 'speak' ? (
             <SpeakCheck
+              key={question.id}
+              question={question}
+              locked={answered}
+              correct={dragCorrect}
+              onValidate={handleDragValidate}
+            />
+          ) : question.kind === 'sentence' ? (
+            <SentenceBuilder
               key={question.id}
               question={question}
               locked={answered}
@@ -604,6 +621,19 @@ function Quiz({
             <p className="quiz-feedback__explanation">
               Podés seguir tocando las otras opciones para leer todas las
               explicaciones.
+            </p>
+          </div>
+        )}
+
+        {answered && question.kind === 'sentence' && (
+          <div
+            className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
+            role="status"
+          >
+            <p className="quiz-feedback__title">
+              {dragCorrect
+                ? praise(childName, question.id)
+                : `Casi${childName ? `, ${childName}` : ''}: mirá las que quedaron en verde. La repasás en la próxima ronda 💪`}
             </p>
           </div>
         )}

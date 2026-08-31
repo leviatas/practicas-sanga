@@ -32,6 +32,13 @@ export interface Hotspot {
   at: number
 }
 
+export interface SentenceColumn {
+  /** Todas las opciones de la columna, en el orden en que se muestran. */
+  options: string[]
+  /** La opción correcta para esta escena (tiene que estar en `options`). */
+  answer: string
+}
+
 export interface Question {
   /** Identificador único dentro de la práctica. */
   id: string
@@ -70,8 +77,20 @@ export interface Question {
    *  - 'label': señalar partes de un dibujo. Cada flecha del dibujo apunta a
    *    una parte y termina en un casillero vacío; el alumno arrastra (o toca)
    *    la palabra del banco hasta el casillero y valida.
+   *  - 'sentence': armar una oración que describa la escena. Debajo del dibujo
+   *    hay varias columnas y el alumno toca una opción en cada una; con
+   *    "Enviar" se corrige todo junto (verde la acertada; roja la elegida que
+   *    no iba, y en verde la que correspondía).
    */
-  kind?: 'choice' | 'drag' | 'classify' | 'tap' | 'speak' | 'reveal' | 'label'
+  kind?:
+    | 'choice'
+    | 'drag'
+    | 'classify'
+    | 'tap'
+    | 'speak'
+    | 'reveal'
+    | 'label'
+    | 'sentence'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -99,6 +118,11 @@ export interface Question {
   categories?: string[]
   /** Para kind 'classify': cada palabra y a qué categoría pertenece. */
   items?: { text: string; category: string }[]
+  /**
+   * Para kind 'sentence': las columnas de la oración, de izquierda a derecha.
+   * El alumno elige una opción de cada una y se corrige todo junto al enviar.
+   */
+  columns?: SentenceColumn[]
   /** Para kind 'label': clave de la imagen a etiquetar (ej: 'fullbody'). */
   labelImage?: string
   /** Para kind 'label': los puntos señalados por las flechas. */
