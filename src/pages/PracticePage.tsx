@@ -9,7 +9,6 @@ import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
 import ClassifyDrag from '../components/ClassifyDrag'
 import LabelDrag from '../components/LabelDrag'
-import LabelDrag from '../components/LabelDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
@@ -17,6 +16,7 @@ import SentenceBuilder from '../components/SentenceBuilder'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
+import { sentenceImages } from '../components/sentenceImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -468,6 +468,13 @@ function Quiz({
                 className="family-photo"
                 src={familyImages[question.image]}
                 alt="Árbol genealógico de la familia de Alison"
+              />
+            )}
+            {question.image && sentenceImages[question.image] && (
+              <img
+                className="sentence-scene"
+                src={sentenceImages[question.image]}
+                alt="Mirá la escena y armá la oración que la describe"
               />
             )}
             {question.emoji && (

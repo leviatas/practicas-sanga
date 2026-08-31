@@ -127,10 +127,6 @@ export interface Question {
    * El alumno elige una opción de cada una y se corrige todo junto al enviar.
    */
   columns?: SentenceColumn[]
-  /** Para kind 'label': clave de la imagen a etiquetar (ej: 'fullbody'). */
-  labelImage?: string
-  /** Para kind 'label': los puntos señalados por las flechas. */
-  hotspots?: Hotspot[]
   /**
    * Para kind 'speak': lo que el alumno tiene que decir en voz alta (ej: la
    * palabra o frase correcta). Se compara con lo que reconoce el micrófono.
