@@ -16,6 +16,7 @@ import SentenceBuilder from '../components/SentenceBuilder'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
+import { bodyPartsImages } from '../components/bodyPartsImages'
 import { sentenceImages } from '../components/sentenceImages'
 import NotFoundPage from './NotFoundPage'
 
@@ -475,6 +476,13 @@ function Quiz({
                 className="sentence-scene"
                 src={sentenceImages[question.image]}
                 alt="Mirá la escena y armá la oración que la describe"
+              />
+            )}
+            {question.image && bodyPartsImages[question.image] && (
+              <img
+                className="body-photo"
+                src={bodyPartsImages[question.image]}
+                alt="¿Qué parte del cuerpo es?"
               />
             )}
             {question.emoji && (

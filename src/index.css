@@ -809,6 +809,7 @@ button {
 
 /* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
 .app--exercise .school-photo,
+.app--exercise .body-photo,
 .app--exercise .sentence-scene,
 .app--exercise .family-photo,
 .app--exercise .prep-photo,
@@ -973,6 +974,18 @@ button {
   height: auto;
   margin: 0 auto 12px;
   border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+/* ---- Foto de parte del cuerpo (1er grado) ---- */
+.body-photo {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: #fff; /* los dibujos son linea negra sobre blanco */
   box-shadow: var(--shadow);
 }
 
