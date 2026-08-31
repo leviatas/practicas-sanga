@@ -6,6 +6,7 @@ import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
 import { grade4CienciasCalorPractices } from './grade4CienciasCalor'
 import { grade4MatematicaPractices } from './grade4Matematica'
+import { grade4PdlPractices } from './grade4Pdl'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -118,6 +119,22 @@ function grade4Subjects(): Subject[] {
           emoji: '📐',
           description: 'Todas las prácticas para el segundo trimestral.',
           practices: grade4MatematicaPractices,
+        },
+      ],
+    },
+    {
+      id: 'pdl',
+      name: 'Prácticas del Lenguaje',
+      emoji: '✍️',
+      description: 'Poesía, gramática, diccionario y tildación.',
+      terms: [
+        {
+          id: '2do-trimestre',
+          name: '2do Trimestre',
+          emoji: '📚',
+          description:
+            'Poesía, artículos y adjetivos, diccionario, clasificación semántica y tildación.',
+          practices: grade4PdlPractices,
         },
       ],
     },

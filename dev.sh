@@ -156,6 +156,15 @@ ts_ip() {
 }
 TS_IP="$(ts_ip || true)"
 
+# --- ¿Hay token de Cloudflare Tunnel en .env? Entonces exponemos a internet ---
+TUNNEL_ON=false
+if [ -f "$ENV_FILE" ]; then
+  TOKEN_VAL="$(grep -E '^CLOUDFLARED_TOKEN=' "$ENV_FILE" 2>/dev/null | tail -n1 | cut -d= -f2- | tr -d '[:space:]' || true)"
+  if [ -n "${TOKEN_VAL:-}" ]; then
+    TUNNEL_ON=true
+  fi
+fi
+
 echo ""
 echo "🚀 Levantando el entorno de desarrollo (puerto ${DEV_PORT})..."
 echo ""
@@ -163,11 +172,19 @@ echo "   Local:      http://localhost:${DEV_PORT}"
 if [ -n "${TS_IP}" ]; then
   echo "   Tailscale:  http://${TS_IP}:${DEV_PORT}"
 fi
+if [ "$TUNNEL_ON" = true ]; then
+  echo "   🌐 CLOUDFLARED_TOKEN detectado: se levanta también el túnel de Cloudflare."
+fi
 echo ""
 
 # docker compose toma DEV_PORT automáticamente desde .env
+PROFILE_FLAG=""
+if [ "$TUNNEL_ON" = true ]; then
+  PROFILE_FLAG="--profile tunnel"
+fi
+
 if [ "$DETACHED" = true ]; then
-  $COMPOSE up -d --build
+  $COMPOSE $PROFILE_FLAG up -d --build
   echo ""
   echo "✅ Corriendo en segundo plano (la primera vez tarda: hace npm install)."
   echo ""
@@ -177,5 +194,5 @@ else
   echo "   (la primera vez tarda un poco: hace npm install dentro del contenedor)"
   echo "   Ctrl+C para cortar. Para detener del todo:  ./dev.sh down"
   echo ""
-  $COMPOSE up -d --build
+  $COMPOSE $PROFILE_FLAG up -d --build
 fi

@@ -44,6 +44,22 @@ services:
     volumes:
       - sanga-db-dev:/data
 
+  # Túnel de Cloudflare (opcional). Solo se levanta con el profile "tunnel",
+  # que ./dev.sh activa automáticamente si hay CLOUDFLARED_TOKEN en .env.
+  # En el panel de Cloudflare (Zero Trust > Networks > Tunnels) configurá el
+  # public hostname apuntando al servicio interno:  http://dev:5173
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: practicas-sanga-tunnel-dev
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TOKEN:-}
+    depends_on:
+      - dev
+    restart: unless-stopped
+    profiles:
+      - tunnel
+
 volumes:
   # Base SQLite de desarrollo (separada de la de producción).
   sanga-db-dev:
