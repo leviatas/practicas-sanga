@@ -2,9 +2,10 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → cinco prácticas:
+// 2do Trimestre → seis prácticas:
 //
-// 1) La poesía y las imágenes sensoriales
+// 1) La poesía y las imágenes sensoriales (todavía sin ejercicios)
+// 1 bis) La poesía y las imágenes sensoriales Extra
 // 2) Los artículos y los adjetivos — La construcción sustantiva
 // 3) El diccionario y la enciclopedia
 // 4) Clasificación semántica de los adjetivos
@@ -16,9 +17,22 @@ import type { Practice } from '../types'
 
 export const grade4PdlPractices: Practice[] = [
   // ========================= 1. POESÍA E IMÁGENES SENSORIALES ==============
+  // Sin preguntas todavía: es la sección donde van a entrar los ejercicios
+  // nuevos. Los que estaban pasaron a "… Extra" (abajo).
   {
     id: 'poesia-imagenes-sensoriales',
     title: 'La poesía y las imágenes sensoriales',
+    description: 'Próximamente.',
+    emoji: '📜',
+    questions: [],
+  },
+
+  // ============== 1 bis. POESÍA E IMÁGENES SENSORIALES — EXTRA ============
+  // Los ejercicios que antes estaban en "La poesía y las imágenes
+  // sensoriales".
+  {
+    id: 'poesia-imagenes-sensoriales-extra',
+    title: 'La poesía y las imágenes sensoriales Extra',
     description:
       'Identificá y clasificá imágenes sensoriales en fragmentos poéticos: visuales, auditivas, olfativas, gustativas y táctiles.',
     emoji: '📜',

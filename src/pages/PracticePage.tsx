@@ -386,6 +386,25 @@ function Quiz({
     setPhase('playing')
   }
 
+  // ---- Práctica todavía sin ejercicios ----
+  // (Ej: una sección recién creada, esperando sus preguntas.)
+  if (total === 0) {
+    return (
+      <div className="quiz-result" role="status">
+        <span className="quiz-result__emoji" aria-hidden="true">
+          🚧
+        </span>
+        <h1 className="quiz-result__title">Todavía no hay ejercicios acá</h1>
+        <p className="quiz-result__score">Muy pronto los vas a encontrar. 😉</p>
+        <div className="quiz-result__actions">
+          <Link className="btn btn--primary" to={termPath}>
+            ← Volver a las prácticas
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   // ---- Pantalla de fin de ronda / completado ----
   if (phase === 'roundEnd' || round.length === 0) {
     if (allDone) {
