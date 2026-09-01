@@ -2,9 +2,10 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → cinco prácticas:
+// 2do Trimestre → seis prácticas:
 //
-// 1) La poesía y las imágenes sensoriales
+// 1) La poesía y las imágenes sensoriales (todavía sin ejercicios)
+// 1 bis) La poesía y las imágenes sensoriales Extra
 // 2) Los artículos y los adjetivos — La construcción sustantiva
 // 3) El diccionario y la enciclopedia
 // 4) Clasificación semántica de los adjetivos
@@ -16,9 +17,674 @@ import type { Practice } from '../types'
 
 export const grade4PdlPractices: Practice[] = [
   // ========================= 1. POESÍA E IMÁGENES SENSORIALES ==============
+  // Reconocer la forma del poema: estrofas y versos. Cada pregunta muestra el
+  // poema completo arriba de la consigna y se responde tocando un número.
   {
     id: 'poesia-imagenes-sensoriales',
     title: 'La poesía y las imágenes sensoriales',
+    description: 'Contá las estrofas y los versos de un poema.',
+    emoji: '📜',
+    questions: [
+      // --- "El gato dormilón": 3 estrofas de 4 versos ---
+      {
+        id: 'pe1',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántas estrofas tiene este poema?',
+        keepOrder: true,
+        options: [
+          { text: '2' },
+          { text: '3', correct: true },
+          { text: '4' },
+          { text: '6' },
+        ],
+        explanation:
+          'Tiene 3 estrofas: cada bloque de versos separado por un espacio en blanco es una estrofa.',
+      },
+      {
+        id: 'pe2',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántos versos tiene cada estrofa de este poema?',
+        keepOrder: true,
+        options: [
+          { text: '2' },
+          { text: '3' },
+          { text: '4', correct: true },
+          { text: '5' },
+        ],
+        explanation:
+          'Cada estrofa tiene 4 versos. Cada renglón del poema es un verso.',
+      },
+      {
+        id: 'pe3',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántos versos tiene el poema en total?',
+        keepOrder: true,
+        options: [
+          { text: '8' },
+          { text: '10' },
+          { text: '12', correct: true },
+          { text: '14' },
+        ],
+        explanation: 'Son 3 estrofas de 4 versos cada una: 3 × 4 = 12 versos.',
+      },
+      // --- "La lluvia": 2 estrofas de 4 versos ---
+      {
+        id: 'pe4',
+        poemTitle: 'La lluvia',
+        poem:
+          'La lluvia en la ventana\n' +
+          'dibuja su canción,\n' +
+          'y el patio se despierta\n' +
+          'mojado de emoción.\n' +
+          '\n' +
+          'Las gotas van cayendo\n' +
+          'como un suave tambor,\n' +
+          'y el árbol del jardín\n' +
+          'se viste de frescor.',
+        prompt: '¿Cuántas estrofas tiene este poema?',
+        keepOrder: true,
+        options: [
+          { text: '1' },
+          { text: '2', correct: true },
+          { text: '4' },
+          { text: '8' },
+        ],
+        explanation:
+          'Tiene 2 estrofas, separadas por una línea en blanco.',
+      },
+      {
+        id: 'pe5',
+        poemTitle: 'La lluvia',
+        poem:
+          'La lluvia en la ventana\n' +
+          'dibuja su canción,\n' +
+          'y el patio se despierta\n' +
+          'mojado de emoción.\n' +
+          '\n' +
+          'Las gotas van cayendo\n' +
+          'como un suave tambor,\n' +
+          'y el árbol del jardín\n' +
+          'se viste de frescor.',
+        prompt: '¿Cuántos versos tiene el poema en total?',
+        keepOrder: true,
+        options: [
+          { text: '4' },
+          { text: '6' },
+          { text: '8', correct: true },
+          { text: '10' },
+        ],
+        explanation: 'Son 2 estrofas de 4 versos cada una: 2 × 4 = 8 versos.',
+      },
+
+      // --- ¿Qué es lo que está resaltado? (mismo poema, distintas partes) ---
+      {
+        id: 'pr1',
+        poemTitle: 'El gato dormilón',
+        poem:
+          '[Mi gato se ha dormido]\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.',
+        prompt: 'Lo que está resaltado es...',
+        options: [
+          { text: 'Un verso', correct: true },
+          { text: 'Una estrofa' },
+          { text: 'Una rima' },
+        ],
+        explanation:
+          'Es un verso: cada renglón del poema es un verso.',
+      },
+      {
+        id: 'pr2',
+        poemTitle: 'El gato dormilón',
+        poem:
+          '[Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.]',
+        prompt: 'Lo que está resaltado es...',
+        options: [
+          { text: 'Una estrofa', correct: true },
+          { text: 'Un verso' },
+          { text: 'Una rima' },
+        ],
+        explanation:
+          'Es una estrofa: un grupo de versos separado de los demás por un espacio en blanco. Esta tiene 4 versos.',
+      },
+      {
+        id: 'pr3',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del [sillón],\n' +
+          'sueña con mariposas\n' +
+          'y un enorme [ratón].',
+        prompt: '¿Qué tienen en común las palabras resaltadas?',
+        options: [
+          { text: 'Riman', correct: true },
+          { text: 'Forman una estrofa' },
+          { text: 'Son versos' },
+        ],
+        explanation:
+          'Riman: "sillón" y "ratón" terminan igual (-ón). Están al final del segundo y del cuarto verso.',
+      },
+
+      // --- Tocá los versos que riman entre sí (coplas cortitas) ---
+      {
+        id: 'pv1',
+        kind: 'verses',
+        prompt: 'Tocá los versos que riman entre sí.',
+        verses: [
+          'Tengo un gato dormilón,',
+          'que se acurruca en el sillón',
+          'y mueve alegre la cola.',
+        ],
+        rhyme: [0, 1],
+        explanation: 'Riman "dormilón" y "sillón": terminan igual (-ón).',
+      },
+      {
+        id: 'pv2',
+        kind: 'verses',
+        prompt: 'Tocá los versos que riman entre sí.',
+        verses: [
+          'Una abeja mañanera',
+          'visitó una flor,',
+          'voló sobre la pradera',
+          'y se escondió.',
+        ],
+        rhyme: [0, 2],
+        explanation: 'Riman "mañanera" y "pradera": terminan igual (-era).',
+      },
+      {
+        id: 'pv3',
+        kind: 'verses',
+        prompt: 'Tocá los versos que riman entre sí.',
+        verses: [
+          'Por la noche sale la luna,',
+          'y me trae buena fortuna,',
+          'junto a un viejo molino.',
+        ],
+        rhyme: [0, 1],
+        explanation: 'Riman "luna" y "fortuna": terminan igual (-una).',
+      },
+
+      // --- Clasificar parejas por su rima (se corrige al soltar) ---
+      {
+        id: 'pc1',
+        kind: 'classify',
+        prompt: 'Arrastrá cada pareja a su caja. Si no va ahí, vuelve sola.',
+        checkOnDrop: true,
+        categories: ['RIMA CONSONANTE', 'RIMA ASONANTE', 'NO RIMAN'],
+        items: [
+          { text: 'gato – pato', category: 'RIMA CONSONANTE' },
+          { text: 'canción – corazón', category: 'RIMA CONSONANTE' },
+          { text: 'estrella – bella', category: 'RIMA CONSONANTE' },
+          { text: 'ventana – mañana', category: 'RIMA CONSONANTE' },
+          { text: 'mesa – pera', category: 'RIMA ASONANTE' },
+          { text: 'luna – ruta', category: 'RIMA ASONANTE' },
+          { text: 'camino – vestido', category: 'RIMA ASONANTE' },
+          { text: 'perro – árbol', category: 'NO RIMAN' },
+          { text: 'mariposa – jardín', category: 'NO RIMAN' },
+        ],
+        explanation:
+          'En la rima consonante coinciden las vocales Y las consonantes desde la última vocal acentuada (gato – pato). En la asonante coinciden solo las vocales (mesa – pera).',
+      },
+
+      // --- ¿Con qué sentido? Una oración por vez; al tocar, pasa sola ---
+      {
+        id: 'ps1',
+        prompt:
+          'El perfume de las rosas llenó la habitación.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato', correct: true },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen olfativa: se percibe con el olfato.',
+      },
+      {
+        id: 'ps2',
+        prompt:
+          'El cielo estaba cubierto de nubes blancas.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista', correct: true },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen visual: se percibe con la vista.',
+      },
+      {
+        id: 'ps3',
+        prompt:
+          'Escuchamos el canto de los pájaros desde la ventana.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído', correct: true },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen auditiva: se percibe con el oído.',
+      },
+      {
+        id: 'ps4',
+        prompt:
+          'La manta era suave y calentita.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto', correct: true },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen táctil: se percibe con el tacto.',
+      },
+      {
+        id: 'ps5',
+        prompt:
+          'El helado de frutilla estaba muy dulce.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto', correct: true },
+        ],
+        explanation:
+          'Es una imagen gustativa: se percibe con el gusto.',
+      },
+      {
+        id: 'ps6',
+        prompt:
+          'La campana de la escuela sonó muy fuerte.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído', correct: true },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen auditiva: se percibe con el oído.',
+      },
+      {
+        id: 'ps7',
+        prompt:
+          'El vestido azul tenía pequeñas flores amarillas.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista', correct: true },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen visual: se percibe con la vista.',
+      },
+      {
+        id: 'ps8',
+        prompt:
+          'El aroma del pan recién horneado llenó la cocina.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato', correct: true },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen olfativa: se percibe con el olfato.',
+      },
+      {
+        id: 'ps9',
+        prompt:
+          'La arena caliente quemaba mis pies.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto', correct: true },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen táctil: se percibe con el tacto.',
+      },
+      {
+        id: 'ps10',
+        prompt:
+          'La limonada estaba fresca y muy ácida.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto', correct: true },
+        ],
+        explanation:
+          'Es una imagen gustativa: se percibe con el gusto.',
+      },
+      {
+        id: 'ps11',
+        prompt:
+          'Las estrellas brillaban en el cielo oscuro.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista', correct: true },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen visual: se percibe con la vista.',
+      },
+      {
+        id: 'ps12',
+        prompt:
+          'El viento silbaba entre los árboles.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído', correct: true },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen auditiva: se percibe con el oído.',
+      },
+      {
+        id: 'ps13',
+        prompt:
+          'La madera áspera lastimaba mis manos.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto', correct: true },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen táctil: se percibe con el tacto.',
+      },
+      {
+        id: 'ps14',
+        prompt:
+          'El olor a tierra mojada llegó después de la lluvia.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato', correct: true },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen olfativa: se percibe con el olfato.',
+      },
+      {
+        id: 'ps15',
+        prompt:
+          'La sopa estaba caliente y un poco salada.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto', correct: true },
+        ],
+        explanation:
+          'Es una imagen gustativa: se percibe con el gusto.',
+      },
+      {
+        id: 'ps16',
+        prompt:
+          'Las hojas secas crujían bajo nuestros pies.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído', correct: true },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen auditiva: se percibe con el oído.',
+      },
+      {
+        id: 'ps17',
+        prompt:
+          'El gatito tenía un pelaje suave y sedoso.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto', correct: true },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen táctil: se percibe con el tacto.',
+      },
+      {
+        id: 'ps18',
+        prompt:
+          'El jardín estaba lleno de flores de colores.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista', correct: true },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen visual: se percibe con la vista.',
+      },
+      {
+        id: 'ps19',
+        prompt:
+          'El chocolate amargo tenía un sabor intenso.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto', correct: true },
+        ],
+        explanation:
+          'Es una imagen gustativa: se percibe con el gusto.',
+      },
+      {
+        id: 'ps20',
+        prompt:
+          'El aroma de las naranjas se sentía en toda la casa.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato', correct: true },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen olfativa: se percibe con el olfato.',
+      },
+      {
+        id: 'ps21',
+        prompt:
+          'El trueno retumbó durante toda la tormenta.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído', correct: true },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen auditiva: se percibe con el oído.',
+      },
+      {
+        id: 'ps22',
+        prompt:
+          'La pared estaba fría al tocarla.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto', correct: true },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen táctil: se percibe con el tacto.',
+      },
+      {
+        id: 'ps23',
+        prompt:
+          'Una mariposa de alas violetas se posó sobre la flor.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista', correct: true },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen visual: se percibe con la vista.',
+      },
+      {
+        id: 'ps24',
+        prompt:
+          'La torta tenía un delicioso sabor a vainilla.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato' },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto', correct: true },
+        ],
+        explanation:
+          'Es una imagen gustativa: se percibe con el gusto.',
+      },
+      {
+        id: 'ps25',
+        prompt:
+          'El perfume de los jazmines perfumaba el patio.',
+        keepOrder: true,
+        autoNext: true,
+        options: [
+          { text: '👁️ Vista' },
+          { text: '👂 Oído' },
+          { text: '👃 Olfato', correct: true },
+          { text: '✋ Tacto' },
+          { text: '👅 Gusto' },
+        ],
+        explanation:
+          'Es una imagen olfativa: se percibe con el olfato.',
+      },
+    ],
+  },
+
+  // ============== 1 bis. POESÍA E IMÁGENES SENSORIALES — EXTRA ============
+  // Los ejercicios que antes estaban en "La poesía y las imágenes
+  // sensoriales".
+  {
+    id: 'poesia-imagenes-sensoriales-extra',
+    title: 'La poesía y las imágenes sensoriales Extra',
     description:
       'Identificá y clasificá imágenes sensoriales en fragmentos poéticos: visuales, auditivas, olfativas, gustativas y táctiles.',
     emoji: '📜',

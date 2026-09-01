@@ -119,15 +119,16 @@ export default function TermPage() {
                 </span>
                 <span className="practice-card__body">
                   <span className="practice-card__title">{practice.title}</span>
-                  <span className="practice-card__desc">
-                    {practice.description}
-                  </span>
+                  {/* La descripción de la práctica no se muestra: ocupaba
+                      demasiado lugar en la lista (sigue en los datos). */}
                   <span className="practice-card__meta">
-                    {complete
-                      ? '✅ ¡Completada!'
-                      : done > 0
-                        ? `Dominadas: ${done}/${total}`
-                        : `${total} preguntas`}
+                    {total === 0
+                      ? 'Próximamente'
+                      : complete
+                        ? '✅ ¡Completada!'
+                        : done > 0
+                          ? `Dominadas: ${done}/${total}`
+                          : `${total} preguntas`}
                   </span>
                 </span>
                 <span className="practice-card__arrow" aria-hidden="true">

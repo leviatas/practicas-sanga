@@ -838,6 +838,31 @@ button {
   font-size: calc(clamp(0.62rem, 2.2vw, 0.9rem) * var(--fit));
 }
 
+/* Poema de apoyo: escala con --fit como el resto del contenido. */
+.app--exercise .poem {
+  margin-bottom: calc(14px * var(--fit));
+  padding: calc(12px * var(--fit)) calc(16px * var(--fit));
+}
+.app--exercise .poem__title {
+  /* Piso de legibilidad: el poema hay que poder leerlo. Si con eso no entra,
+     la tarjeta scrollea (mejor que letra de 9px en una pantalla baja). */
+  font-size: max(0.9rem, calc(1.05rem * var(--fit)));
+  margin-bottom: calc(8px * var(--fit));
+}
+.app--exercise .poem__text {
+  font-size: max(0.85rem, calc(1rem * var(--fit)));
+}
+
+/* Versos que riman: escalan con --fit. */
+.app--exercise .verses__list {
+  gap: calc(8px * var(--fit));
+  margin-bottom: calc(16px * var(--fit));
+}
+.app--exercise .verse-option {
+  padding: calc(12px * var(--fit)) calc(14px * var(--fit));
+  font-size: max(0.85rem, calc(1.05rem * var(--fit)));
+}
+
 /* Ejercicios de arrastrar / clasificar. */
 .app--exercise .drag-paragraph {
   font-size: calc(1.15rem * var(--fit));
@@ -1473,6 +1498,94 @@ button {
 .quiz-option__mark {
   font-weight: 900;
   font-size: 1.2rem;
+}
+
+/* ---- Poema de apoyo (campo `poem`) ----
+   Se muestra arriba de la consigna, con sus versos y estrofas tal cual están
+   escritos en los datos (`white-space: pre-line`). */
+.poem {
+  max-width: 30rem;
+  margin: 0 auto 16px;
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.poem__title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.poem__text {
+  margin: 0;
+  white-space: pre-line;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* Resaltado dentro del poema (lo que en los datos va entre [corchetes]). */
+.poem__mark {
+  background: color-mix(in srgb, var(--accent) 26%, transparent);
+  color: inherit;
+  border-radius: 6px;
+  padding: 1px 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---- Tocá los versos que riman (kind 'verses') ---- */
+.verses__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 16px;
+  max-width: 30rem;
+  display: grid;
+  gap: 8px;
+}
+
+.verse-option {
+  width: 100%;
+  text-align: center;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.08s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.verse-option:not(:disabled):hover {
+  border-color: var(--accent);
+}
+
+.verse-option:active {
+  transform: scale(0.99);
+}
+
+.verse-option.is-picked {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  font-weight: 800;
+}
+
+.verse-option.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+  font-weight: 800;
+}
+
+.verse-option.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
 }
 
 /* ---- Armar la oración (kind 'sentence') ----

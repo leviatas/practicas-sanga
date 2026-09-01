@@ -13,6 +13,7 @@ import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
 import SentenceBuilder from '../components/SentenceBuilder'
+import VersePick from '../components/VersePick'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -38,6 +39,8 @@ function withShuffledQuiz(questions: Question[]): Question[] {
     // keepOrder: mantener el orden dado (ej: números 1..10 al contar).
     options: q.options && !q.keepOrder ? shuffle(q.options) : q.options,
     bank: q.bank ? shuffle(q.bank) : q.bank,
+    // Las fichas a clasificar también salen mezcladas.
+    items: q.items && !q.keepOrder ? shuffle(q.items) : q.items,
   }))
 }
 
@@ -79,6 +82,20 @@ function listenableAnswer(q: Question): string | null {
   const correct = (q.options ?? []).filter((o) => o.correct)
   if (correct.length !== 1) return null
   return correct[0].text.trim() || null
+}
+
+// Pinta el poema respetando versos y estrofas. Lo que en los datos va entre
+// [corchetes] sale resaltado (para preguntar "lo resaltado, ¿qué es?").
+function renderPoem(text: string) {
+  return text.split(/(\[[^\]]*\])/g).map((part, i) =>
+    part.startsWith('[') && part.endsWith(']') ? (
+      <mark key={i} className="poem__mark">
+        {part.slice(1, -1)}
+      </mark>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  )
 }
 
 // Preguntas todavía no dominadas (las que faltan o se respondieron mal).
@@ -307,6 +324,11 @@ function Quiz({
     const correct = !!q.options?.[index]?.correct
     logAnswer(correct)
     if (correct) markMastered(q.id)
+    // `autoNext`: se ve un ratito si estuvo bien o mal y sigue solo.
+    if (q.autoNext) {
+      clearTimeout(autoNextRef.current)
+      autoNextRef.current = setTimeout(handleNext, correct ? 1100 : 2000)
+    }
   }
 
   // Validación del ejercicio de arrastrar.
@@ -384,6 +406,25 @@ function Quiz({
     setAnswered(false)
     setDragCorrect(false)
     setPhase('playing')
+  }
+
+  // ---- Práctica todavía sin ejercicios ----
+  // (Ej: una sección recién creada, esperando sus preguntas.)
+  if (total === 0) {
+    return (
+      <div className="quiz-result" role="status">
+        <span className="quiz-result__emoji" aria-hidden="true">
+          🚧
+        </span>
+        <h1 className="quiz-result__title">Todavía no hay ejercicios acá</h1>
+        <p className="quiz-result__score">Muy pronto los vas a encontrar. 😉</p>
+        <div className="quiz-result__actions">
+          <Link className="btn btn--primary" to={termPath}>
+            ← Volver a las prácticas
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   // ---- Pantalla de fin de ronda / completado ----
@@ -510,6 +551,16 @@ function Quiz({
                 {question.emoji}
               </div>
             )}
+
+            {question.poem && (
+              <div className="poem">
+                {question.poemTitle && (
+                  <p className="poem__title">{question.poemTitle}</p>
+                )}
+                {/* `white-space: pre-line` respeta versos y estrofas. */}
+                <p className="poem__text">{renderPoem(question.poem)}</p>
+              </div>
+            )}
             {listenAnswer && (
               <button
                 type="button"
@@ -582,6 +633,13 @@ function Quiz({
                 correct={dragCorrect}
                 onValidate={handleDragValidate}
               />
+            ) : question.kind === 'verses' ? (
+              <VersePick
+                key={question.id}
+                question={question}
+                locked={answered}
+                onValidate={handleDragValidate}
+              />
             ) : question.kind === 'reveal' ? (
               <RevealChoices
                 key={question.id}
@@ -652,6 +710,22 @@ function Quiz({
                 Podés seguir tocando las otras opciones para leer todas las
                 explicaciones.
               </p>
+            </div>
+          )}
+
+          {answered && question.kind === 'verses' && (
+            <div
+              className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
+              role="status"
+            >
+              <p className="quiz-feedback__title">
+                {dragCorrect
+                  ? praise(childName, question.id)
+                  : `Casi${childName ? `, ${childName}` : ''}: mirá los que quedaron en verde. La repasás en la próxima ronda 💪`}
+              </p>
+              {question.explanation && (
+                <p className="quiz-feedback__explanation">{question.explanation}</p>
+              )}
             </div>
           )}
 

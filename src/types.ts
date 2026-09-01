@@ -52,6 +52,19 @@ export interface Question {
   scene?: string
   /** Apoyo visual con una foto de un objeto de la escuela. Ej: 'pen', 'ruler'. */
   image?: string
+  /**
+   * Poema (u otro texto) que se muestra ARRIBA de la consigna, con sus saltos
+   * de línea y sus estrofas tal cual se escriben acá: un salto de línea separa
+   * versos y una línea en blanco separa estrofas.
+   *
+   * Lo que va entre [corchetes] se muestra RESALTADO. Sirve para preguntar
+   * "lo que está resaltado, ¿qué es?": se puede resaltar un verso entero, una
+   * estrofa completa o solo algunas palabras. Ej:
+   *   '[Mi gato se ha dormido]\nencima del sillón,'
+   */
+  poem?: string
+  /** Título del poema (se muestra arriba del texto, en negrita). */
+  poemTitle?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**
@@ -77,6 +90,9 @@ export interface Question {
    *  - 'label': señalar partes de un dibujo. Cada flecha del dibujo apunta a
    *    una parte y termina en un casillero vacío; el alumno arrastra (o toca)
    *    la palabra del banco hasta el casillero y valida.
+   *  - 'verses': tocar los versos que riman entre sí. Se muestra una copla
+   *    cortita y el alumno toca los versos que rimen; con "Enviar" se corrige
+   *    todo junto (verdes los que rimaban, roja la elección de más).
    *  - 'sentence': armar una oración que describa la escena. Debajo del dibujo
    *    hay varias columnas y el alumno toca una opción en cada una; con
    *    "Enviar" se corrige todo junto (verde la acertada; roja la elegida que
@@ -91,6 +107,7 @@ export interface Question {
   | 'reveal'
   | 'label'
   | 'sentence'
+  | 'verses'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -127,6 +144,25 @@ export interface Question {
    * El alumno elige una opción de cada una y se corrige todo junto al enviar.
    */
   columns?: SentenceColumn[]
+  /**
+   * Para kind 'classify': si es `true`, se corrige ficha por ficha al soltarla.
+   * La que va bien queda pegada en su caja (en verde) y la que va mal vuelve
+   * sola al banco. No hay botón "Validar": termina cuando están todas.
+   */
+  checkOnDrop?: boolean
+  /** Para kind 'verses': los versos de la copla, uno por renglón. */
+  verses?: string[]
+  /**
+   * Para kind 'verses': los índices (base 0) de los versos que riman entre sí.
+   * Ej: [0, 1] = riman el primero y el segundo.
+   */
+  rhyme?: number[]
+  /**
+   * Para kind 'choice': si es `true`, al tocar una opción se muestra un ratito
+   * si estuvo bien o mal y se pasa SOLO a la siguiente (sin botón). Ideal para
+   * tandas largas de la misma consigna, ej: clasificar imágenes sensoriales.
+   */
+  autoNext?: boolean
   /**
    * Para kind 'speak': lo que el alumno tiene que decir en voz alta (ej: la
    * palabra o frase correcta). Se compara con lo que reconoce el micrófono.
