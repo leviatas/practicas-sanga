@@ -838,6 +838,21 @@ button {
   font-size: calc(clamp(0.62rem, 2.2vw, 0.9rem) * var(--fit));
 }
 
+/* Poema de apoyo: escala con --fit como el resto del contenido. */
+.app--exercise .poem {
+  margin-bottom: calc(14px * var(--fit));
+  padding: calc(12px * var(--fit)) calc(16px * var(--fit));
+}
+.app--exercise .poem__title {
+  /* Piso de legibilidad: el poema hay que poder leerlo. Si con eso no entra,
+     la tarjeta scrollea (mejor que letra de 9px en una pantalla baja). */
+  font-size: max(0.9rem, calc(1.05rem * var(--fit)));
+  margin-bottom: calc(8px * var(--fit));
+}
+.app--exercise .poem__text {
+  font-size: max(0.85rem, calc(1rem * var(--fit)));
+}
+
 /* Ejercicios de arrastrar / clasificar. */
 .app--exercise .drag-paragraph {
   font-size: calc(1.15rem * var(--fit));
@@ -1473,6 +1488,35 @@ button {
 .quiz-option__mark {
   font-weight: 900;
   font-size: 1.2rem;
+}
+
+/* ---- Poema de apoyo (campo `poem`) ----
+   Se muestra arriba de la consigna, con sus versos y estrofas tal cual están
+   escritos en los datos (`white-space: pre-line`). */
+.poem {
+  max-width: 30rem;
+  margin: 0 auto 16px;
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.poem__title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.poem__text {
+  margin: 0;
+  white-space: pre-line;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
 }
 
 /* ---- Armar la oración (kind 'sentence') ----

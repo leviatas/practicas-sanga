@@ -52,6 +52,14 @@ export interface Question {
   scene?: string
   /** Apoyo visual con una foto de un objeto de la escuela. Ej: 'pen', 'ruler'. */
   image?: string
+  /**
+   * Poema (u otro texto) que se muestra ARRIBA de la consigna, con sus saltos
+   * de línea y sus estrofas tal cual se escriben acá: un salto de línea separa
+   * versos y una línea en blanco separa estrofas.
+   */
+  poem?: string
+  /** Título del poema (se muestra arriba del texto, en negrita). */
+  poemTitle?: string
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**

@@ -529,6 +529,16 @@ function Quiz({
                 {question.emoji}
               </div>
             )}
+
+            {question.poem && (
+              <div className="poem">
+                {question.poemTitle && (
+                  <p className="poem__title">{question.poemTitle}</p>
+                )}
+                {/* `white-space: pre-line` respeta versos y estrofas. */}
+                <p className="poem__text">{question.poem}</p>
+              </div>
+            )}
             {listenAnswer && (
               <button
                 type="button"

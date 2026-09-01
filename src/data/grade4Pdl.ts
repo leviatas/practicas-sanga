@@ -17,14 +17,150 @@ import type { Practice } from '../types'
 
 export const grade4PdlPractices: Practice[] = [
   // ========================= 1. POESÍA E IMÁGENES SENSORIALES ==============
-  // Sin preguntas todavía: es la sección donde van a entrar los ejercicios
-  // nuevos. Los que estaban pasaron a "… Extra" (abajo).
+  // Reconocer la forma del poema: estrofas y versos. Cada pregunta muestra el
+  // poema completo arriba de la consigna y se responde tocando un número.
   {
     id: 'poesia-imagenes-sensoriales',
     title: 'La poesía y las imágenes sensoriales',
-    description: 'Próximamente.',
+    description: 'Contá las estrofas y los versos de un poema.',
     emoji: '📜',
-    questions: [],
+    questions: [
+      // --- "El gato dormilón": 3 estrofas de 4 versos ---
+      {
+        id: 'pe1',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántas estrofas tiene este poema?',
+        keepOrder: true,
+        options: [
+          { text: '2' },
+          { text: '3', correct: true },
+          { text: '4' },
+          { text: '6' },
+        ],
+        explanation:
+          'Tiene 3 estrofas: cada bloque de versos separado por un espacio en blanco es una estrofa.',
+      },
+      {
+        id: 'pe2',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántos versos tiene cada estrofa de este poema?',
+        keepOrder: true,
+        options: [
+          { text: '2' },
+          { text: '3' },
+          { text: '4', correct: true },
+          { text: '5' },
+        ],
+        explanation:
+          'Cada estrofa tiene 4 versos. Cada renglón del poema es un verso.',
+      },
+      {
+        id: 'pe3',
+        poemTitle: 'El gato dormilón',
+        poem:
+          'Mi gato se ha dormido\n' +
+          'encima del sillón,\n' +
+          'sueña con mariposas\n' +
+          'y un enorme ratón.\n' +
+          '\n' +
+          'Afuera canta el viento,\n' +
+          'se mueve el limonero,\n' +
+          'mi gato sigue soñando\n' +
+          'debajo del sombrero.\n' +
+          '\n' +
+          'Cuando despierta el gato,\n' +
+          'se estira bajo el sol,\n' +
+          'bosteza despacito\n' +
+          'y vuelve al almohadón.',
+        prompt: '¿Cuántos versos tiene el poema en total?',
+        keepOrder: true,
+        options: [
+          { text: '8' },
+          { text: '10' },
+          { text: '12', correct: true },
+          { text: '14' },
+        ],
+        explanation: 'Son 3 estrofas de 4 versos cada una: 3 × 4 = 12 versos.',
+      },
+      // --- "La lluvia": 2 estrofas de 4 versos ---
+      {
+        id: 'pe4',
+        poemTitle: 'La lluvia',
+        poem:
+          'La lluvia en la ventana\n' +
+          'dibuja su canción,\n' +
+          'y el patio se despierta\n' +
+          'mojado de emoción.\n' +
+          '\n' +
+          'Las gotas van cayendo\n' +
+          'como un suave tambor,\n' +
+          'y el árbol del jardín\n' +
+          'se viste de frescor.',
+        prompt: '¿Cuántas estrofas tiene este poema?',
+        keepOrder: true,
+        options: [
+          { text: '1' },
+          { text: '2', correct: true },
+          { text: '4' },
+          { text: '8' },
+        ],
+        explanation:
+          'Tiene 2 estrofas, separadas por una línea en blanco.',
+      },
+      {
+        id: 'pe5',
+        poemTitle: 'La lluvia',
+        poem:
+          'La lluvia en la ventana\n' +
+          'dibuja su canción,\n' +
+          'y el patio se despierta\n' +
+          'mojado de emoción.\n' +
+          '\n' +
+          'Las gotas van cayendo\n' +
+          'como un suave tambor,\n' +
+          'y el árbol del jardín\n' +
+          'se viste de frescor.',
+        prompt: '¿Cuántos versos tiene el poema en total?',
+        keepOrder: true,
+        options: [
+          { text: '4' },
+          { text: '6' },
+          { text: '8', correct: true },
+          { text: '10' },
+        ],
+        explanation: 'Son 2 estrofas de 4 versos cada una: 2 × 4 = 8 versos.',
+      },
+    ],
   },
 
   // ============== 1 bis. POESÍA E IMÁGENES SENSORIALES — EXTRA ============
