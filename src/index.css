@@ -816,6 +816,11 @@ button {
 .app--exercise .prep-scene,
 .app--exercise .city-map {
   max-height: calc(30dvh * var(--fit));
+  /* Y NUNCA más anchas que la tarjeta. Con `width: auto` mandaba el
+     `max-width` en px de cada dibujo (ej: 420px la escena de la oración), así
+     que en un celular angosto la imagen ensanchaba la tarjeta y se salía de la
+     pantalla: se cortaban la última columna y el botón "Reiniciar". */
+  max-width: 100%;
   width: auto;
   margin-bottom: calc(10px * var(--fit));
 }

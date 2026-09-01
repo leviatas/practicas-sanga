@@ -23,3 +23,16 @@ subió** (la versión que quedó en `package.json` tras el merge). Ej:
 
 Si el merge fue solo de docs y no cambió la versión, aclararlo:
 "Merge de docs, la versión sigue en v1.11.2".
+
+## Pedir permiso SIEMPRE para PR y merge (IMPORTANTE)
+
+**Nunca abrir un Pull Request ni mergear a `main` sin pedirme permiso antes y
+esperar mi respuesta.** Vale para cada PR y para cada merge, todas las veces:
+que en un pedido anterior yo haya dicho "PR y merge" NO autoriza los
+siguientes.
+
+Flujo esperado al terminar un cambio:
+
+1. Commit y push a la rama de trabajo (eso sí, sin preguntar).
+2. Contarme qué quedó hecho y **preguntarme** si abro el PR.
+3. Con el PR abierto, **volver a preguntarme** antes de mergear.
