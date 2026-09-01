@@ -16,6 +16,10 @@ import type { Question } from '../types'
 
 // Ejercicio de clasificar: el alumno arrastra cada palabra a su categoría y
 // toca "Validar". Funciona con mouse y con touch (móvil).
+//
+// Con `checkOnDrop` la corrección es ficha por ficha: la que va bien queda
+// pegada en su caja (en verde) y la que va mal vuelve sola al banco, marcada
+// un instante en rojo. No hay botón "Validar": termina cuando están todas.
 
 function Chip({
   text,
@@ -76,12 +80,15 @@ export default function ClassifyDrag({
 }) {
   const categories = question.categories ?? []
   const items = question.items ?? []
+  const checkOnDrop = !!question.checkOnDrop
 
   // A qué categoría fue asignada cada palabra (o null = todavía en el banco).
   const [assign, setAssign] = useState<Record<string, string | null>>(() =>
     Object.fromEntries(items.map((it) => [it.text, null])),
   )
   const [active, setActive] = useState<string | null>(null)
+  // Ficha que acaba de volver del casillero equivocado (se marca un ratito).
+  const [bounced, setBounced] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -105,15 +112,37 @@ export default function ClassifyDrag({
     const text = idText(String(e.active.id), 'item:')
     if (!text) return
     const overId = e.over ? String(e.over.id) : null
+    const cat = overId?.startsWith('cat:') ? overId.slice(4) : null
+
+    if (checkOnDrop) {
+      if (!cat) return
+      const item = items.find((i) => i.text === text)
+      if (!item) return
+      if (item.category !== cat) {
+        // Caja equivocada: la ficha vuelve al banco y se marca un instante.
+        setBounced(text)
+        window.setTimeout(() => setBounced((b) => (b === text ? null : b)), 900)
+        return
+      }
+      const next = { ...assign, [text]: cat }
+      setAssign(next)
+      setBounced(null)
+      // ¿Ya están todas en su lugar? Entonces el ejercicio está resuelto.
+      if (items.every((it) => next[it.text] === it.category)) onValidate(true)
+      return
+    }
+
     setAssign((prev) => {
       const next = { ...prev }
-      if (overId && overId.startsWith('cat:')) next[text] = overId.slice(4)
+      if (cat) next[text] = cat
       else if (overId === 'pool') next[text] = null
       return next
     })
   }
 
   function stateFor(text: string): '' | 'is-correct' | 'is-wrong' {
+    // Con `checkOnDrop` lo que está en una caja ya está bien puesto.
+    if (checkOnDrop) return assign[text] != null ? 'is-correct' : ''
     if (!locked) return ''
     const it = items.find((i) => i.text === text)!
     return assign[text] === it.category ? 'is-correct' : 'is-wrong'
@@ -136,7 +165,7 @@ export default function ClassifyDrag({
                   key={it.text}
                   text={it.text}
                   state={stateFor(it.text)}
-                  disabled={locked}
+                  disabled={locked || checkOnDrop}
                 />
               ))}
           </Zone>
@@ -151,21 +180,29 @@ export default function ClassifyDrag({
                 Arrastrá cada palabra a su columna ⬚
               </span>
             ) : (
-              pool.map((it) => <Chip key={it.text} text={it.text} />)
+              pool.map((it) => (
+                <Chip
+                  key={it.text}
+                  text={it.text}
+                  state={bounced === it.text ? 'is-wrong' : ''}
+                />
+              ))
             )}
           </Zone>
-          <div className="quiz-actions">
-            <button
-              type="button"
-              className="btn btn--primary"
-              disabled={!allAssigned}
-              onClick={() =>
-                onValidate(items.every((it) => assign[it.text] === it.category))
-              }
-            >
-              Validar ✅
-            </button>
-          </div>
+          {!checkOnDrop && (
+            <div className="quiz-actions">
+              <button
+                type="button"
+                className="btn btn--primary"
+                disabled={!allAssigned}
+                onClick={() =>
+                  onValidate(items.every((it) => assign[it.text] === it.category))
+                }
+              >
+                Validar ✅
+              </button>
+            </div>
+          )}
         </>
       )}
 
