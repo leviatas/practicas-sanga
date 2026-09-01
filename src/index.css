@@ -748,9 +748,6 @@ button {
 .app--exercise .quiz-card__fit {
   flex: 0 0 auto;
   width: 100%;
-  /* Nada de adentro puede ensanchar la tarjeta (la página nunca scrollea
-     de costado en el celular). */
-  min-width: 0;
   margin: auto 0;
   padding: calc(clamp(16px, 4vw, 28px) * var(--fit));
 }
@@ -1114,63 +1111,29 @@ button {
   text-align: center;
 }
 
-/* Modo "armar la palabra": todas las cajas de letras en una sola línea, que
-   ocupa TODO el ancho disponible (en el celular, el máximo posible). Los
-   casilleros se reparten ese ancho en partes iguales y su tamaño NO depende de
-   lo que tengan adentro: así la palabra no se acorta ni se agranda al ir
-   colocando las letras ni al acertarla. En palabras muy largas los casilleros
-   bajan hasta un mínimo legible y recién ahí la fila scrollea (nunca la
-   página). */
+/* Modo "armar la palabra": todas las cajas de letras en una sola línea. */
 .drag-paragraph--letters {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-  align-items: stretch;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
+  align-items: center;
+  gap: 4px;
   line-height: 1.4;
   overflow-x: auto;
 }
 
 .drag-paragraph--letters > span {
-  display: flex;
-  /* Todos los casilleros del mismo ancho, repartiendo la fila completa. */
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-/* Solo en pantallas anchas los casilleros dejan de crecer (una palabra de 4
-   letras no necesita 4 cajas gigantes). En el celular NO hay tope: la fila
-   siempre usa todo el ancho disponible. */
-@media (min-width: 560px) {
-  .drag-paragraph--letters > span {
-    max-width: 4.5rem;
-  }
+  display: inline-flex;
 }
 
 .drag-paragraph--letters .drag-blank {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 auto;
-  width: 100%;
-  min-width: 1.75rem;
-  padding: 2px;
+  min-width: 2.4rem;
   margin: 0;
 }
 
 .drag-paragraph--letters .drag-chip {
-  width: 100%;
-  min-width: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-/* El casillero vacío es ancho: el ⬚ va un poco más grande para que se lea
-   como "acá va una letra". */
-.drag-paragraph--letters .drag-blank__ph {
-  font-size: 1.3em;
+  min-width: 2.2rem;
+  padding: 8px 6px;
 }
 
 .drag-blank.is-over {
