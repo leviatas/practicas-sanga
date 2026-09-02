@@ -211,8 +211,8 @@ export interface Subject {
   emoji: string
   /** Descripción corta (opcional). */
   description?: string
-  /** Muestra la etiqueta "NEW" en la lista de materias. */
-  isNew?: boolean
+  /** Hasta qué día se muestra la etiqueta "NEW" ('AAAA-MM-DD', inclusive). */
+  newUntil?: string
   /** Períodos/exámenes de la materia (ej: 1st Midterms). */
   terms: Term[]
 }
@@ -226,8 +226,8 @@ export interface Grade {
   emoji: string
   /** Color de acento (cualquier valor CSS válido). */
   color: string
-  /** Muestra la etiqueta "NEW" en la pantalla de inicio. */
-  isNew?: boolean
+  /** Hasta qué día se muestra la etiqueta "NEW" ('AAAA-MM-DD', inclusive). */
+  newUntil?: string
   /** Materias del grado (ej: English). Cada una tiene sus períodos y prácticas. */
   subjects: Subject[]
 }
