@@ -2,10 +2,9 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → seis prácticas:
+// 2do Trimestre → cinco prácticas:
 //
-// 1) La poesía y las imágenes sensoriales (todavía sin ejercicios)
-// 1 bis) La poesía y las imágenes sensoriales Extra
+// 1) La poesía y las imágenes sensoriales
 // 2) Los artículos y los adjetivos — La construcción sustantiva
 // 3) El diccionario y la enciclopedia
 // 4) Clasificación semántica de los adjetivos
@@ -17,23 +16,10 @@ import type { Practice } from '../types'
 
 export const grade4PdlPractices: Practice[] = [
   // ========================= 1. POESÍA E IMÁGENES SENSORIALES ==============
-  // Reconocer la forma del poema: estrofas y versos. Cada pregunta muestra el
-  // poema completo arriba de la consigna y se responde tocando un número.
+  // Identificar y clasificar imágenes sensoriales, más verso, estrofa y rima.
   {
     id: 'poesia-imagenes-sensoriales',
     title: 'La poesía y las imágenes sensoriales',
-    description: 'Contá las estrofas y los versos de un poema.',
-    emoji: '📜',
-    // Sin ejercicios por ahora: se van a cargar los nuevos.
-    questions: [],
-  },
-
-  // ============== 1 bis. POESÍA E IMÁGENES SENSORIALES — EXTRA ============
-  // Los ejercicios que antes estaban en "La poesía y las imágenes
-  // sensoriales".
-  {
-    id: 'poesia-imagenes-sensoriales-extra',
-    title: 'La poesía y las imágenes sensoriales Extra',
     description:
       'Identificá y clasificá imágenes sensoriales en fragmentos poéticos: visuales, auditivas, olfativas, gustativas y táctiles.',
     emoji: '📜',
@@ -90,7 +76,7 @@ export const grade4PdlPractices: Practice[] = [
       {
         id: 'is5',
         prompt:
-          '«Probé la miel dorada y dulce del panal.» ¿Qué tipo de imagen sensorial es?',
+          '«Probé la miel dulce del panal.» ¿Qué tipo de imagen sensorial es?',
         options: [
           { text: 'Gustativa', correct: true },
           { text: 'Olfativa' },
@@ -165,28 +151,6 @@ export const grade4PdlPractices: Practice[] = [
           { text: 'aroma a café', category: 'Olfativa' },
           { text: 'chocolate dulce', category: 'Gustativa' },
         ],
-      },
-      // --- Completar versos (drag) ---
-      {
-        id: 'is-drag1',
-        kind: 'drag',
-        prompt:
-          'Completá el verso con la imagen sensorial correcta.',
-        segments: ['El viento ', ' me acariciaba la cara.'],
-        blanks: ['helado'],
-        bank: ['helado', 'azul', 'amargo'],
-        explanation:
-          '«Helado» es una imagen táctil que completa el sentido del verso.',
-      },
-      {
-        id: 'is-drag2',
-        kind: 'drag',
-        prompt: 'Completá el verso con las palabras correctas.',
-        segments: ['El ', ' de los pájaros llenaba el ', '.'],
-        blanks: ['canto', 'bosque'],
-        bank: ['canto', 'bosque', 'sabor', 'color'],
-        explanation:
-          '«El canto de los pájaros llenaba el bosque» usa una imagen auditiva.',
       },
       // --- Poesía: verso y estrofa (choice) ---
       {
