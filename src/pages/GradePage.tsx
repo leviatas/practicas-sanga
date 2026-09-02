@@ -112,11 +112,8 @@ export default function GradePage() {
                 </span>
                 <span className="practice-card__body">
                   <span className="practice-card__title">{subject.name}</span>
-                  {subject.description && (
-                    <span className="practice-card__desc">
-                      {subject.description}
-                    </span>
-                  )}
+                  {/* La descripción de la materia no se muestra: ocupaba
+                      demasiado lugar en la lista (sigue en los datos). */}
                   <span className="practice-card__meta">
                     {terms} {terms === 1 ? 'período' : 'períodos'}
                   </span>
