@@ -535,7 +535,7 @@ export const grade4PdlPractices: Practice[] = [
         kind: 'analyze',
         prompt:
           'Analizá la construcción sustantiva de «La gata, mi mascota, duerme en el sillón».',
-        words: ['La', 'gata,', 'mi mascota,'],
+        words: ['La', 'gata', ', mi mascota,'],
         labels: ['MD', 'NÚCLEO', 'APOSICIÓN'],
         explanation:
           'Núcleo: «gata». MD: «La». Aposición: «mi mascota», que va entre comas y aclara quién es el núcleo.',
@@ -545,7 +545,7 @@ export const grade4PdlPractices: Practice[] = [
         kind: 'analyze',
         prompt:
           'Analizá la construcción sustantiva de «El perro pequeño, Toby, corre por el jardín».',
-        words: ['El', 'perro', 'pequeño,', 'Toby,'],
+        words: ['El', 'perro', 'pequeño', ', Toby,'],
         labels: ['MD', 'NÚCLEO', 'MD', 'APOSICIÓN'],
         explanation:
           'Núcleo: «perro». MD: «El» y «pequeño». Aposición: «Toby», que va entre comas y dice cómo se llama el núcleo.',
@@ -555,7 +555,7 @@ export const grade4PdlPractices: Practice[] = [
         kind: 'analyze',
         prompt:
           'Analizá la construcción sustantiva de «La escritora famosa, María Elena Walsh, escribió muchos poemas».',
-        words: ['La', 'escritora', 'famosa,', 'María Elena Walsh,'],
+        words: ['La', 'escritora', 'famosa', ', María Elena Walsh,'],
         labels: ['MD', 'NÚCLEO', 'MD', 'APOSICIÓN'],
         explanation:
           'Núcleo: «escritora». MD: «La» y «famosa». Aposición: «María Elena Walsh», que va entre comas y nombra al núcleo.',
