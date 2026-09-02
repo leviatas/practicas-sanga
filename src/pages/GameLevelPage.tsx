@@ -167,21 +167,40 @@ function Level1() {
         </span>
       </header>
 
-      <h1 className="level__prompt">
-        {LEVEL1_PROMPT}
-        <button
-          type="button"
-          className="game-speak"
-          onClick={sayWord}
-          aria-label={`Escuchar el nombre del dibujo`}
+      {/* La consigna la dice el monstruito en su globo (y también lo que
+          comenta al acertar o errar). El altavoz de al lado la lee. */}
+      <div className="level__buddy">
+        <Monster className="level__monster" waving={solved} />
+        <div
+          className={`game-bubble game-bubble--side${solved ? ' is-happy' : ''}`}
+          role="status"
         >
-          🔊 ESCUCHAR
-        </button>
-      </h1>
+          <h1 className="game-bubble__text">{says ?? LEVEL1_PROMPT}</h1>
+          <button
+            type="button"
+            className="game-speak game-speak--icon"
+            onClick={() => speak(says ?? LEVEL1_PROMPT)}
+            aria-label="Escuchar lo que dice el monstruito"
+          >
+            🔊
+          </button>
+        </div>
+      </div>
 
       <div className="level__card" key={current}>
-        <div className="level__picture" aria-label={ex.word} role="img">
-          {ex.emoji}
+        {/* El dibujo, con su propio altavoz para escuchar qué es. */}
+        <div className="level__picture-row">
+          <div className="level__picture" aria-label={ex.word} role="img">
+            {ex.emoji}
+          </div>
+          <button
+            type="button"
+            className="game-speak game-speak--icon"
+            onClick={sayWord}
+            aria-label="Escuchar el nombre del dibujo"
+          >
+            🔊
+          </button>
         </div>
         <div className="level__letters">
           {ex.letters.map((letter) => {
@@ -203,14 +222,6 @@ function Level1() {
         </div>
       </div>
 
-      <div className="level__buddy">
-        {says && (
-          <div className={`game-bubble game-bubble--small ${solved ? 'is-happy' : ''}`} role="status">
-            <p className="game-bubble__text">{says}</p>
-          </div>
-        )}
-        <Monster className="level__monster" waving={solved} />
-      </div>
     </section>
   )
 }

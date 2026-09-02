@@ -3031,18 +3031,6 @@ button {
   font-size: 0.9rem;
 }
 
-.level__prompt {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px 14px;
-  margin: 0 0 14px;
-  font-size: clamp(1.15rem, 4vw, 1.6rem);
-  font-weight: 900;
-  text-align: center;
-  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
-}
 
 .level__card {
   max-width: 460px;
@@ -3127,15 +3115,74 @@ button {
   75% { transform: translateX(6px); }
 }
 
-/* El monstruito acompaña debajo de la tarjeta y comenta en su globo. */
+/* El monstruito va arriba, con el globo al lado: ahí dice la consigna y
+   comenta al acertar o errar. */
 .level__buddy {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0 auto 16px;
+  max-width: 520px;
+}
+
+/* Globo al costado del monstruito: la puntita sale hacia la izquierda y el
+   texto va en fila con el altavoz. */
+.game-bubble--side {
+  flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-top: 14px;
-  min-height: 190px;
-  justify-content: flex-end;
+  padding: 10px 12px 10px 14px;
+  margin-left: 14px;
+}
+
+.game-bubble--side .game-bubble__text {
+  font-size: clamp(0.95rem, 3.6vw, 1.15rem);
+  text-align: left;
+}
+
+.game-bubble--side::after,
+.game-bubble--side::before {
+  left: auto;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+}
+
+.game-bubble--side::after {
+  right: 100%;
+  border-right: 16px solid #1f2430;
+  border-left: 0;
+}
+
+.game-bubble--side::before {
+  right: calc(100% - 4px);
+  border-top-width: 9px;
+  border-bottom-width: 9px;
+  border-right: 12px solid #fff;
+  border-left: 0;
+}
+
+.game-bubble--side.is-happy::before {
+  border-right-color: #dcfce7;
+}
+
+/* Altavoz redondo, solo el ícono. */
+.game-speak--icon {
+  padding: 0;
+  width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.level__picture-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .level__monster {
@@ -3144,14 +3191,6 @@ button {
   filter: drop-shadow(0 6px 8px rgba(20, 24, 40, 0.25));
 }
 
-.game-bubble--small {
-  padding: 8px 12px;
-  max-width: 180px;
-}
-
-.game-bubble--small .game-bubble__text {
-  font-size: 0.95rem;
-}
 
 .game-bubble.is-happy {
   background: #dcfce7;
@@ -3210,6 +3249,6 @@ button {
     padding: 10px 10px 14px;
   }
   .level__monster {
-    width: 100px;
+    width: 84px;
   }
 }
