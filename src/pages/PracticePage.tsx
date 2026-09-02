@@ -14,6 +14,8 @@ import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
 import SentenceBuilder from '../components/SentenceBuilder'
 import VersePick from '../components/VersePick'
+import WordPick from '../components/WordPick'
+import WordLabel from '../components/WordLabel'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -640,6 +642,21 @@ function Quiz({
                 locked={answered}
                 onValidate={handleDragValidate}
               />
+            ) : question.kind === 'words' ? (
+              <WordPick
+                key={question.id}
+                question={question}
+                locked={answered}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'analyze' ? (
+              <WordLabel
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
             ) : question.kind === 'reveal' ? (
               <RevealChoices
                 key={question.id}
@@ -722,6 +739,22 @@ function Quiz({
                 {dragCorrect
                   ? praise(childName, question.id)
                   : `Casi${childName ? `, ${childName}` : ''}: mirá los que quedaron en verde. La repasás en la próxima ronda 💪`}
+              </p>
+              {question.explanation && (
+                <p className="quiz-feedback__explanation">{question.explanation}</p>
+              )}
+            </div>
+          )}
+
+          {answered && (question.kind === 'words' || question.kind === 'analyze') && (
+            <div
+              className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
+              role="status"
+            >
+              <p className="quiz-feedback__title">
+                {dragCorrect
+                  ? praise(childName, question.id)
+                  : `Casi${childName ? `, ${childName}` : ''}: mirá lo que quedó en verde. La repasás en la próxima ronda 💪`}
               </p>
               {question.explanation && (
                 <p className="quiz-feedback__explanation">{question.explanation}</p>

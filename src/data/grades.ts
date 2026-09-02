@@ -79,7 +79,7 @@ function grade4Subjects(): Subject[] {
           name: '2do Trimestre',
           emoji: '📚',
           description:
-            'Poesía, artículos y adjetivos, diccionario, clasificación semántica y tildación.',
+            'Poesía, artículos y adjetivos, construcción sustantiva, diccionario, clasificación semántica y tildación.',
           practices: grade4PdlPractices,
         },
       ],

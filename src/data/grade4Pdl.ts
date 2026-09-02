@@ -2,15 +2,16 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → cinco prácticas:
+// 2do Trimestre → seis prácticas:
 //
 // 1) La poesía y las imágenes sensoriales
 // 2) Los artículos y los adjetivos — La construcción sustantiva
-// 3) El diccionario y la enciclopedia
-// 4) Clasificación semántica de los adjetivos
-// 5) Separación en sílabas y reglas de tildación
+// 3) Construcción sustantiva (núcleo y modificadores directos)
+// 4) El diccionario y la enciclopedia
+// 5) Clasificación semántica de los adjetivos
+// 6) Separación en sílabas y reglas de tildación
 //
-// Formatos usados: choice, drag, classify, reveal.
+// Formatos usados: choice, drag, classify, reveal, words, analyze.
 // Consignas y explicaciones en castellano.
 // ============================================================================
 
@@ -376,7 +377,88 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 3. EL DICCIONARIO Y LA ENCICLOPEDIA ============
+  // ========================= 3. CONSTRUCCIÓN SUSTANTIVA ====================
+  // Señalar el núcleo, señalar los modificadores directos y analizar la
+  // construcción entera poniendo un cartelito debajo de cada palabra.
+  {
+    id: 'construccion-sustantiva',
+    title: 'Construcción sustantiva',
+    description:
+      'Señalá el núcleo y los modificadores directos, y analizá la construcción palabra por palabra.',
+    emoji: '🧩',
+    questions: [
+      // --- Tocá el núcleo (words) ---
+      {
+        id: 'cs-nu1',
+        kind: 'words',
+        prompt: 'Tocá el núcleo.',
+        words: ['La', 'pequeña', 'mariposa', 'azul'],
+        pick: [2],
+        explanation:
+          'El núcleo de la construcción sustantiva es el sustantivo: «mariposa». «La», «pequeña» y «azul» solo la acompañan.',
+      },
+      {
+        id: 'cs-nu2',
+        kind: 'words',
+        prompt: 'Tocá el núcleo.',
+        words: ['Los', 'altos', 'árboles', 'verdes'],
+        pick: [2],
+        explanation:
+          'El núcleo es el sustantivo «árboles»: es la palabra más importante y de la que hablan las demás.',
+      },
+
+      // --- Tocá los modificadores directos (words) ---
+      {
+        id: 'cs-md1',
+        kind: 'words',
+        prompt: 'Tocá los modificadores directos.',
+        words: ['Las', 'altas', 'montañas', 'nevadas'],
+        pick: [0, 1, 3],
+        explanation:
+          'Los modificadores directos son «las», «altas» y «nevadas»: acompañan al núcleo «montañas» sin ninguna palabra en el medio.',
+      },
+      {
+        id: 'cs-md2',
+        kind: 'words',
+        prompt: 'Tocá los modificadores directos.',
+        words: ['El', 'pequeño', 'barco', 'pesquero'],
+        pick: [0, 1, 3],
+        explanation:
+          'El artículo «el» y los adjetivos «pequeño» y «pesquero» modifican directamente al núcleo «barco».',
+      },
+
+      // --- Analizar la construcción entera (analyze) ---
+      {
+        id: 'cs-an1',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['Las', 'altas', 'montañas', 'nevadas'],
+        labels: ['MD', 'MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «montañas» y los tres modificadores directos son «Las», «altas» y «nevadas».',
+      },
+      {
+        id: 'cs-an2',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['El', 'gato', 'negro'],
+        labels: ['MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «gato»; «El» y «negro» son sus modificadores directos.',
+      },
+      {
+        id: 'cs-an3',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['La', 'pequeña', 'mariposa', 'azul'],
+        labels: ['MD', 'MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «mariposa» y «La», «pequeña» y «azul» son modificadores directos.',
+      },
+    ],
+  },
+
+  // ========================= 4. EL DICCIONARIO Y LA ENCICLOPEDIA ============
   {
     id: 'diccionario-enciclopedia',
     title: 'El diccionario y la enciclopedia',
@@ -574,7 +656,7 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 4. CLASIFICACIÓN SEMÁNTICA DE LOS ADJETIVOS ====
+  // ========================= 5. CLASIFICACIÓN SEMÁNTICA DE LOS ADJETIVOS ====
   {
     id: 'clasificacion-semantica-adjetivos',
     title: 'Clasificación semántica de los adjetivos',
@@ -790,7 +872,7 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 5. SEPARACIÓN EN SÍLABAS Y REGLAS DE TILDACIÓN =
+  // ========================= 6. SEPARACIÓN EN SÍLABAS Y REGLAS DE TILDACIÓN =
   {
     id: 'silabas-tildacion',
     title: 'Separación en sílabas y reglas de tildación',

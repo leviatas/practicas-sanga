@@ -97,6 +97,13 @@ export interface Question {
    *    hay varias columnas y el alumno toca una opción en cada una; con
    *    "Enviar" se corrige todo junto (verde la acertada; roja la elegida que
    *    no iba, y en verde la que correspondía).
+   *  - 'words': tocar palabras dentro de una construcción. Se muestra la
+   *    oración palabra por palabra y el alumno toca la que le piden (ej: el
+   *    núcleo) o las que le piden (ej: los modificadores directos); con
+   *    "Enviar" se corrige todo junto.
+   *  - 'analyze': analizar una construcción sustantiva. La oración se muestra
+   *    con un casillero vacío DEBAJO de cada palabra y el alumno arrastra los
+   *    cartelitos (MD, NÚCLEO, ...) al casillero que corresponda.
    */
   kind?:
   | 'choice'
@@ -108,6 +115,8 @@ export interface Question {
   | 'label'
   | 'sentence'
   | 'verses'
+  | 'words'
+  | 'analyze'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -157,6 +166,22 @@ export interface Question {
    * Ej: [0, 1] = riman el primero y el segundo.
    */
   rhyme?: number[]
+  /**
+   * Para kinds 'words' y 'analyze': la construcción partida en palabras, en el
+   * orden en que se lee. Ej: ['La', 'pequeña', 'mariposa', 'azul'].
+   */
+  words?: string[]
+  /**
+   * Para kind 'words': los índices (base 0) de las palabras que hay que tocar.
+   * Ej: [2] = solo el núcleo; [0, 1, 3] = los tres modificadores directos.
+   */
+  pick?: number[]
+  /**
+   * Para kind 'analyze': el cartelito que va debajo de cada palabra (largo =
+   * `words.length`). Ej: ['MD', 'MD', 'NÚCLEO', 'MD']. Los cartelitos que se
+   * repiten son intercambiables entre sí.
+   */
+  labels?: string[]
   /**
    * Para kind 'choice': si es `true`, al tocar una opción se muestra un ratito
    * si estuvo bien o mal y se pasa SOLO a la siguiente (sin botón). Ideal para
