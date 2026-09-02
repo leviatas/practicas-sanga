@@ -70,9 +70,9 @@ export const grade1ThereIsThereArePractices: Practice[] = [
         image: 'rabbits-desk',
         prompt: PROMPT,
         kind: 'sentence',
-        // El dibujo tiene CUATRO conejos (el documento decía "three", pero la
+        // El dibujo tiene CINCO conejos (el documento decía "three", pero la
         // respuesta tiene que coincidir con lo que ve el chico).
-        columns: sentence('THERE ARE', 'FOUR', 'RABBITS', 'ON', 'THE DESK'),
+        columns: sentence('THERE ARE', 'FIVE', 'RABBITS', 'ON', 'THE DESK'),
       },
       {
         id: 'tita4',
