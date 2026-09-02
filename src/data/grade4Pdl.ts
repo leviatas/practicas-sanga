@@ -6,7 +6,7 @@ import type { Practice } from '../types'
 //
 // 1) La poesía y las imágenes sensoriales
 // 2) Los artículos y los adjetivos — La construcción sustantiva
-// 3) Construcción sustantiva (núcleo y modificadores directos e indirectos)
+// 3) Construcción sustantiva (núcleo, modificadores y aposición)
 // 4) El diccionario y la enciclopedia
 // 5) Clasificación semántica de los adjetivos
 // 6) Separación en sílabas y reglas de tildación
@@ -385,7 +385,7 @@ export const grade4PdlPractices: Practice[] = [
     id: 'construccion-sustantiva',
     title: 'Construcción sustantiva',
     description:
-      'Señalá el núcleo y los modificadores directos e indirectos, y analizá la construcción palabra por palabra.',
+      'Señalá el núcleo, los modificadores directos e indirectos y la aposición, y analizá la construcción palabra por palabra.',
     emoji: '🧩',
     questions: [
       // --- Tocá el núcleo (words) ---
@@ -527,6 +527,38 @@ export const grade4PdlPractices: Practice[] = [
         labels: ['MD', 'NÚCLEO', 'MD', 'MI'],
         explanation:
           'Núcleo: «libros». MD: «Los» e «interesantes». MI: «sobre animales», unido al núcleo por la preposición «sobre».',
+      },
+
+      // --- Marcar la aposición (analyze) ---
+      {
+        id: 'cs-ap1',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «La gata, mi mascota, duerme en el sillón».',
+        words: ['La', 'gata', ', mi mascota,'],
+        labels: ['MD', 'NÚCLEO', 'APOSICIÓN'],
+        explanation:
+          'Núcleo: «gata». MD: «La». Aposición: «mi mascota», que va entre comas y aclara quién es el núcleo.',
+      },
+      {
+        id: 'cs-ap2',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «El perro pequeño, Toby, corre por el jardín».',
+        words: ['El', 'perro', 'pequeño', ', Toby,'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'APOSICIÓN'],
+        explanation:
+          'Núcleo: «perro». MD: «El» y «pequeño». Aposición: «Toby», que va entre comas y dice cómo se llama el núcleo.',
+      },
+      {
+        id: 'cs-ap3',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «La escritora famosa, María Elena Walsh, escribió muchos poemas».',
+        words: ['La', 'escritora', 'famosa', ', María Elena Walsh,'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'APOSICIÓN'],
+        explanation:
+          'Núcleo: «escritora». MD: «La» y «famosa». Aposición: «María Elena Walsh», que va entre comas y nombra al núcleo.',
       },
 
       // --- Las definiciones (choice) ---
