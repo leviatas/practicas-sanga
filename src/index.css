@@ -624,6 +624,26 @@ button {
   font-weight: 800;
 }
 
+/* Título de la tarjeta con la etiqueta "NEW" al lado (materias nuevas). */
+.practice-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge-new {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
 .practice-card__desc {
   color: var(--text-muted);
   font-size: 0.95rem;
