@@ -54,7 +54,9 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
   ]
 }
 
-// 4to: tres materias.
+// 4to: cuatro materias. Prácticas del Lenguaje va primera y con etiqueta NEW.
+//  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
+//    diccionario, clasificación semántica y tildación.
 //  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
 //    decís la palabra en inglés y la app valida).
 //  - Ciencias Naturales: "Los materiales" — tres períodos: características de
@@ -66,9 +68,26 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
 function grade4Subjects(): Subject[] {
   return [
     {
+      id: 'pdl',
+      name: 'Prácticas del Lenguaje',
+      emoji: '📚',
+      isNew: true,
+      description: 'Poesía, gramática, diccionario y tildación.',
+      terms: [
+        {
+          id: '2do-trimestre',
+          name: '2do Trimestre',
+          emoji: '📚',
+          description:
+            'Poesía, artículos y adjetivos, diccionario, clasificación semántica y tildación.',
+          practices: grade4PdlPractices,
+        },
+      ],
+    },
+    {
       id: 'english',
       name: 'English',
-      emoji: '📖',
+      emoji: '🌍',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -90,7 +109,7 @@ function grade4Subjects(): Subject[] {
     {
       id: 'ciencias',
       name: 'Ciencias Naturales',
-      emoji: '🔬',
+      emoji: '🧪',
       description: 'Los materiales, sus propiedades y el calor.',
       terms: [
         {
@@ -122,7 +141,7 @@ function grade4Subjects(): Subject[] {
     {
       id: 'matematica',
       name: 'Matemática',
-      emoji: '🔢',
+      emoji: '🧮',
       description: 'Cálculo mental: multiplicar y dividir con trucos.',
       terms: [
         {
@@ -131,22 +150,6 @@ function grade4Subjects(): Subject[] {
           emoji: '📐',
           description: 'Todas las prácticas para el segundo trimestral.',
           practices: grade4MatematicaPractices,
-        },
-      ],
-    },
-    {
-      id: 'pdl',
-      name: 'Prácticas del Lenguaje',
-      emoji: '✍️',
-      description: 'Poesía, gramática, diccionario y tildación.',
-      terms: [
-        {
-          id: '2do-trimestre',
-          name: '2do Trimestre',
-          emoji: '📚',
-          description:
-            'Poesía, artículos y adjetivos, diccionario, clasificación semántica y tildación.',
-          practices: grade4PdlPractices,
         },
       ],
     },

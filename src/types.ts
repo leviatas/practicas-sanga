@@ -211,6 +211,8 @@ export interface Subject {
   emoji: string
   /** Descripción corta (opcional). */
   description?: string
+  /** Muestra la etiqueta "NEW" en la lista de materias. */
+  isNew?: boolean
   /** Períodos/exámenes de la materia (ej: 1st Midterms). */
   terms: Term[]
 }
