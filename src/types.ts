@@ -101,9 +101,11 @@ export interface Question {
    *    oración palabra por palabra y el alumno toca la que le piden (ej: el
    *    núcleo) o las que le piden (ej: los modificadores directos); con
    *    "Enviar" se corrige todo junto.
-   *  - 'analyze': analizar una construcción sustantiva. La oración se muestra
-   *    con un casillero vacío DEBAJO de cada palabra y el alumno arrastra los
-   *    cartelitos (MD, NÚCLEO, ...) al casillero que corresponda.
+   *  - 'analyze': poner un cartelito debajo de cada palabra. Se muestra la
+   *    construcción con un casillero vacío DEBAJO de cada palabra y el alumno
+   *    arrastra los cartelitos al casillero que corresponda: los MD, NÚCLEO,
+   *    ... de una construcción sustantiva, o —con `bigNumbers`— la palabra
+   *    ONE, TWO, THREE... debajo del número que le toca.
    */
   kind?:
   | 'choice'
@@ -182,6 +184,13 @@ export interface Question {
    * repiten son intercambiables entre sí.
    */
   labels?: string[]
+  /**
+   * Para kind 'analyze': si es `true`, lo de arriba de cada casillero NO es una
+   * palabra sino un NÚMERO gigante de colores (como en la fotocopia de
+   * "NUMBERS"), y los casilleros se acomodan en una grilla de a cinco. Se usa
+   * en 1er grado: arrastrar ONE, TWO, THREE... debajo del número que le toca.
+   */
+  bigNumbers?: boolean
   /**
    * Para kind 'choice': si es `true`, al tocar una opción se muestra un ratito
    * si estuvo bien o mal y se pasa SOLO a la siguiente (sin botón). Ideal para
