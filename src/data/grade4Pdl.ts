@@ -224,46 +224,6 @@ export const grade4PdlPractices: Practice[] = [
         explanation:
           '«La» y «el» son artículos definidos que acompañan a los sustantivos.',
       },
-      {
-        id: 'aa2',
-        prompt: '¿Cuál de los siguientes es un artículo indefinido?',
-        options: [
-          { text: 'Un', correct: true },
-          { text: 'El' },
-          { text: 'Los' },
-        ],
-        explanation:
-          '«Un» es un artículo indefinido. «El» y «Los» son artículos definidos.',
-      },
-      {
-        id: 'aa3',
-        prompt:
-          'En «Unas mariposas volaban sobre las flores», ¿cuáles son los artículos?',
-        options: [
-          { text: '«Unas» y «las»', correct: true },
-          { text: '«mariposas» y «flores»' },
-          { text: '«volaban» y «sobre»' },
-        ],
-        explanation:
-          '«Unas» es artículo indefinido plural y «las» es artículo definido plural.',
-      },
-      // --- Clasificar artículos (classify) ---
-      {
-        id: 'aa-clas1',
-        kind: 'classify',
-        prompt: 'Clasificá cada artículo como definido o indefinido.',
-        categories: ['Definido', 'Indefinido'],
-        items: [
-          { text: 'el', category: 'Definido' },
-          { text: 'un', category: 'Indefinido' },
-          { text: 'la', category: 'Definido' },
-          { text: 'una', category: 'Indefinido' },
-          { text: 'los', category: 'Definido' },
-          { text: 'unas', category: 'Indefinido' },
-          { text: 'las', category: 'Definido' },
-          { text: 'unos', category: 'Indefinido' },
-        ],
-      },
       // --- Identificar adjetivos (choice) ---
       {
         id: 'aa4',
@@ -348,17 +308,6 @@ export const grade4PdlPractices: Practice[] = [
         bank: ['hermoso', 'Un', 'corrió', 'pero'],
         explanation:
           'La construcción sustantiva es «Un hermoso día»: artículo + adjetivo + sustantivo.',
-      },
-      {
-        id: 'aa-drag3',
-        kind: 'drag',
-        prompt:
-          'Completá la construcción sustantiva: «____ gatitos ____ jugaban en el patio».',
-        segments: ['', ' gatitos ', ' jugaban en el patio'],
-        blanks: ['Los', 'pequeños'],
-        bank: ['pequeños', 'Los', 'rápido', 'ella'],
-        explanation:
-          '«Los gatitos pequeños» es la construcción sustantiva: artículo + sustantivo + adjetivo.',
       },
       // --- Clasificar palabras (classify) ---
       {
