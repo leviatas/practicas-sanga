@@ -75,6 +75,13 @@ export interface AccessByIp {
   last: number
 }
 
+/** Una IP que entró al panel dentro de la ventana de los últimos días. */
+export interface AccessRecentIp {
+  ip: string | null
+  entries: number
+  last: number
+}
+
 export interface LogsAccess {
   attempts: number
   ok: number
@@ -83,6 +90,13 @@ export interface LogsAccess {
   lastFail: number
   byIp: AccessByIp[]
   recent: AccessRow[]
+  /**
+   * IPs que entraron en los últimos `lastDays` días, de la más reciente a la
+   * más vieja. Puede faltar si el backend es más viejo que la app: en ese caso
+   * el panel las deduce de `recent`.
+   */
+  last7?: AccessRecentIp[]
+  lastDays?: number
 }
 
 export interface LogsResponse {

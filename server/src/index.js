@@ -10,7 +10,8 @@
 // Endpoints:
 //   POST /api/event   -> registra un evento (open, practice_start, answer, complete)
 //   GET  /api/logs     -> devuelve eventos + resumen + accesos al panel
-//                         (requiere contraseña; anota el intento con la IP real)
+//                         (incluye las IPs que entraron en los últimos 7 días;
+//                         requiere contraseña; anota el intento con la IP real)
 //   GET  /api/health   -> 200 ok
 //
 // Variables de entorno:
@@ -120,6 +121,7 @@ function readBody(req) {
 const ALLOWED_TYPES = new Set(['open', 'practice_start', 'answer', 'complete'])
 
 // --- Accesos al panel ---
+const LAST_IPS_DAYS = 7 // ventana de "últimas IPs que entraron"
 const ACCESS_KEEP = 500 // filas que se conservan
 const ACCESS_GROUP_MS = 2 * 60 * 1000 // ventana para agrupar intentos iguales
 
@@ -180,7 +182,19 @@ function buildAccess() {
   const recent = db
     .prepare(`SELECT ts, ip, ua, ok, tries FROM admin_access ORDER BY ts DESC LIMIT 100`)
     .all()
-  return { ...totals, lastFail, byIp, recent }
+  // Las IPs que ENTRARON (contraseña correcta) en los últimos 7 días, de la
+  // más reciente a la más vieja. Es lo que se muestra en el panel: importa
+  // saber quién entró últimamente, no cuántas IPs distintas hubo desde
+  // siempre.
+  const since = Date.now() - LAST_IPS_DAYS * 24 * 60 * 60 * 1000
+  const last7 = db
+    .prepare(
+      `SELECT ip, SUM(tries) entries, MAX(ts) last
+       FROM admin_access WHERE ok=1 AND ts >= ?
+       GROUP BY ip ORDER BY last DESC LIMIT 50`,
+    )
+    .all(since)
+  return { ...totals, lastFail, byIp, recent, last7, lastDays: LAST_IPS_DAYS }
 }
 
 function buildSummary() {

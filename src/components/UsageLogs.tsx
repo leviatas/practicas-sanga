@@ -1,12 +1,47 @@
 import { useEffect, useState } from 'react'
-import { fetchLogs, type LogsResponse } from '../lib/usage'
+import { fetchLogs, type AccessRecentIp, type LogsAccess, type LogsResponse } from '../lib/usage'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
 // Los datos vienen del backend: la columna "IP" es la del visitante, y la
-// sección "Accesos al panel" muestra la de quien entró o lo intentó.
+// sección "Accesos al panel" muestra la de quien entró o lo intentó, con la
+// lista de las IPs que entraron en los últimos días.
 
 function fmt(t: number) {
   return t ? new Date(t).toLocaleString('es-AR') : '—'
+}
+
+/** "hace 3 h", "ayer", "hace 4 días": para leer de un vistazo. */
+function ago(t: number) {
+  const mins = Math.round((Date.now() - t) / 60000)
+  if (mins < 1) return 'recién'
+  if (mins < 60) return `hace ${mins} min`
+  const hours = Math.round(mins / 60)
+  if (hours < 24) return `hace ${hours} h`
+  const days = Math.round(hours / 24)
+  return days === 1 ? 'ayer' : `hace ${days} días`
+}
+
+/**
+ * Las IPs que entraron al panel en los últimos días. Las manda el backend en
+ * `last7`; si el backend todavía es más viejo que la app, se deducen de los
+ * accesos recientes (`recent`) para que la lista no quede vacía.
+ */
+function recentIps(acc: LogsAccess, days: number): AccessRecentIp[] {
+  if (acc.last7) return acc.last7
+  const since = Date.now() - days * 24 * 60 * 60 * 1000
+  const byIp = new Map<string, AccessRecentIp>()
+  for (const r of acc.recent) {
+    if (!r.ok || r.ts < since) continue
+    const key = r.ip ?? ''
+    const found = byIp.get(key)
+    if (found) {
+      found.entries += r.tries
+      found.last = Math.max(found.last, r.ts)
+    } else {
+      byIp.set(key, { ip: r.ip, entries: r.tries, last: r.ts })
+    }
+  }
+  return [...byIp.values()].sort((a, b) => b.last - a.last)
 }
 
 /** Acorta el user-agent para que entre en la tabla ("Chrome · Android"). */
@@ -58,6 +93,8 @@ export default function UsageLogs({
 
   const s = data?.summary
   const acc = data?.access
+  const days = acc?.lastDays ?? 7
+  const ips = acc ? recentIps(acc, days) : []
 
   return (
     <div className="logs-overlay" role="dialog" aria-modal="true" aria-label="Logs de uso">
@@ -89,18 +126,45 @@ export default function UsageLogs({
               </p>
             ) : (
               <>
-                <div className="logs-tiles logs-tiles--3">
+                <div className="logs-tiles logs-tiles--2">
                   <div className="logs-tile"><strong>{acc.ok}</strong><span>Entraron</span></div>
                   <div className={`logs-tile${acc.failed ? ' logs-tile--warn' : ''}`}>
                     <strong>{acc.failed}</strong><span>Fallidos</span>
                   </div>
-                  <div className="logs-tile"><strong>{acc.uniqueIps}</strong><span>IPs distintas</span></div>
                 </div>
                 {acc.failed > 0 && (
                   <p className="logs-note">
                     Último intento fallido: {fmt(acc.lastFail)}
                   </p>
                 )}
+
+                {/* En lugar de "cuántas IPs distintas hubo", las IPs concretas
+                    que entraron en la última semana: es lo que sirve para
+                    reconocer si alguna no es de casa. */}
+                <h3>Últimas IPs que entraron ({days} días)</h3>
+                {ips.length === 0 ? (
+                  <p className="logs-note">
+                    Nadie entró al panel en los últimos {days} días.
+                  </p>
+                ) : (
+                  <ul className="logs-ips" role="list">
+                    {ips.map((r, i) => (
+                      <li key={i} className="logs-ip">
+                        <code className="logs-ip__addr">
+                          {r.ip || '(desconocida)'}
+                        </code>
+                        <span className="logs-ip__when">
+                          {ago(r.last)} · {fmt(r.last)}
+                        </span>
+                        <span className="logs-ip__count">
+                          {r.entries} {r.entries === 1 ? 'entrada' : 'entradas'}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <h3>Últimos intentos</h3>
                 <div className="logs-tablewrap">
                   <table className="logs-table">
                     <thead>
