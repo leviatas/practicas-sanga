@@ -985,8 +985,7 @@ export const grade4PdlPractices: Practice[] = [
       // --- ¿Lleva tilde o no? (choice) ---
       {
         id: 'st9',
-        prompt:
-          '«Arbol» — ¿Lleva tilde? Si sí, ¿dónde?',
+        prompt: '«Arbol» — ¿Lleva tilde?',
         options: [
           { text: 'Sí: «Árbol» (en la A)', correct: true },
           { text: 'No lleva tilde' },
