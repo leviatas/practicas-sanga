@@ -3,8 +3,8 @@
 //
 // No usa el modelo Grado → Materia → Período → Práctica: es un juego aparte
 // con una pantalla principal (el mapa con el camino y sus niveles) y un
-// ejercicio por nivel. Por ahora está habilitado solo el nivel 1; los demás
-// se ven en el camino pero aparecen con candado hasta que tengan contenido.
+// ejercicio por nivel. Los niveles que todavía no tienen contenido se ven en
+// el camino con candado.
 //
 // Todos los textos del juego van en IMPRENTA MAYÚSCULA (además el CSS los
 // fuerza, por las dudas).
@@ -40,33 +40,137 @@ export interface GameLevel {
 /** Los niveles del camino, de abajo hacia arriba del mapa. */
 export const gameLevels: GameLevel[] = [
   { id: 1, title: 'EL SONIDO INICIAL', x: 51, y: 83, ready: true },
-  { id: 2, title: 'PRÓXIMAMENTE', x: 28, y: 64.5, ready: false },
+  { id: 2, title: 'LA PRIMERA SÍLABA', x: 28, y: 64.5, ready: true },
   { id: 3, title: 'PRÓXIMAMENTE', x: 66, y: 51.5, ready: false },
   { id: 4, title: 'PRÓXIMAMENTE', x: 69, y: 41, ready: false },
   { id: 5, title: 'PRÓXIMAMENTE', x: 35, y: 36, ready: false },
   { id: 6, title: 'PRÓXIMAMENTE', x: 73, y: 27.5, ready: false },
 ]
 
-/** Un ejercicio del nivel 1: ¿con qué sonido empieza esta palabra? */
-export interface InitialSoundExercise {
-  /** La palabra (se lee en voz alta con el botón de escuchar). */
+/** Cuántos ejercicios trae cada ronda (el banco de palabras es más grande). */
+export const ROUND_SIZE = 5
+
+/**
+ * El banco de palabras del juego. Los dos niveles usan las MISMAS imágenes:
+ * el 1 pregunta por la letra inicial y el 2 por la primera sílaba. Cada ronda
+ * toma cinco al azar y, al volver a jugar, salen las que todavía no tocaron
+ * (ver `pickWords` en src/lib/gameDeck.ts).
+ */
+export interface GameWord {
+  /** La palabra, en mayúscula (se muestra y se lee en voz alta). */
   word: string
-  /** El dibujo que se muestra (emoji grande). */
+  /** El dibujo. */
   emoji: string
-  /** Las tres letras de los botones; `answer` es la correcta. */
+  /** Nivel 1: la letra inicial y dos distractores (mismo tipo: vocal o consonante). */
   letters: [string, string, string]
-  answer: string
+  /** Nivel 2: la primera sílaba y lo que queda de la palabra. */
+  syllable: string
+  rest: string
+  /** Nivel 2: la sílaba distractora, igual a `syllable` pero con otra inicial. */
+  otherSyllable: string
 }
 
-/** Consigna que va arriba de cada ejercicio del nivel 1. */
-export const LEVEL1_PROMPT = '¿CON QUÉ SONIDO EMPIEZA ESTA PALABRA?'
-
-// Cinco palabras con dibujo claro y letra inicial bien distinta de las otras
-// dos opciones (evitamos vocales como distractores para no confundir).
-export const level1Exercises: InitialSoundExercise[] = [
-  { word: 'SOL', emoji: '☀️', letters: ['S', 'M', 'P'], answer: 'S' },
-  { word: 'LUNA', emoji: '🌙', letters: ['T', 'L', 'N'], answer: 'L' },
-  { word: 'PATO', emoji: '🦆', letters: ['B', 'D', 'P'], answer: 'P' },
-  { word: 'CASA', emoji: '🏠', letters: ['C', 'G', 'T'], answer: 'C' },
-  { word: 'MANO', emoji: '✋', letters: ['N', 'S', 'M'], answer: 'M' },
+export const gameWords: GameWord[] = [
+  {
+    word: 'SOL',
+    emoji: '☀️',
+    letters: ['S', 'C', 'M'],
+    syllable: 'SOL',
+    rest: '',
+    otherSyllable: 'MOL',
+  },
+  {
+    word: 'LUNA',
+    emoji: '🌙',
+    letters: ['L', 'M', 'T'],
+    syllable: 'LU',
+    rest: 'NA',
+    otherSyllable: 'MU',
+  },
+  {
+    word: 'PATO',
+    emoji: '🦆',
+    letters: ['P', 'T', 'R'],
+    syllable: 'PA',
+    rest: 'TO',
+    otherSyllable: 'MA',
+  },
+  {
+    word: 'CASA',
+    emoji: '🏠',
+    letters: ['C', 'S', 'T'],
+    syllable: 'CA',
+    rest: 'SA',
+    otherSyllable: 'TA',
+  },
+  {
+    word: 'MANO',
+    emoji: '✋',
+    letters: ['M', 'P', 'S'],
+    syllable: 'MA',
+    rest: 'NO',
+    otherSyllable: 'NA',
+  },
+  {
+    word: 'AVIÓN',
+    emoji: '✈️',
+    letters: ['A', 'E', 'O'],
+    syllable: 'A',
+    rest: 'VIÓN',
+    otherSyllable: 'E',
+  },
+  {
+    word: 'ELEFANTE',
+    emoji: '🐘',
+    letters: ['E', 'A', 'I'],
+    syllable: 'E',
+    rest: 'LEFANTE',
+    otherSyllable: 'I',
+  },
+  {
+    word: 'ISLA',
+    emoji: '🏝️',
+    letters: ['I', 'E', 'A'],
+    syllable: 'IS',
+    rest: 'LA',
+    otherSyllable: 'AS',
+  },
+  {
+    word: 'OSO',
+    emoji: '🐻',
+    letters: ['O', 'U', 'A'],
+    syllable: 'O',
+    rest: 'SO',
+    otherSyllable: 'U',
+  },
+  {
+    word: 'UNICORNIO',
+    emoji: '🦄',
+    letters: ['U', 'O', 'I'],
+    syllable: 'U',
+    rest: 'NICORNIO',
+    otherSyllable: 'O',
+  },
+  {
+    word: 'TOMATE',
+    emoji: '🍅',
+    letters: ['T', 'P', 'C'],
+    syllable: 'TO',
+    rest: 'MATE',
+    otherSyllable: 'LO',
+  },
+  {
+    word: 'RATÓN',
+    emoji: '🐭',
+    letters: ['R', 'L', 'P'],
+    syllable: 'RA',
+    rest: 'TÓN',
+    otherSyllable: 'PA',
+  },
 ]
+
+/** Consigna de cada nivel (la dice el monstruito en su globo). */
+export const LEVEL_PROMPTS: Record<number, string> = {
+  1: '¿CON QUÉ SONIDO EMPIEZA ESTA PALABRA?',
+  2: 'COMPLETÁ LA PRIMERA SÍLABA',
+}

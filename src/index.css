@@ -3102,6 +3102,28 @@ button {
   flex-wrap: wrap;
 }
 
+/* Nivel 2: la palabra con la primera sílaba en blanco (____NA). */
+.level__word {
+  margin: -4px 0 0;
+  font-size: clamp(2rem, 9vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+/* El hueco guarda su ancho: al completarse, el resto de la palabra no salta. */
+.level__blank {
+  display: inline-block;
+  min-width: 4ch;
+  text-align: center;
+  color: var(--accent);
+}
+
+.level__blank.is-filled {
+  color: #15803d;
+  animation: letter-pop 0.35s ease;
+}
+
 .letter-btn {
   width: clamp(72px, 22vw, 96px);
   aspect-ratio: 1;
@@ -3115,6 +3137,16 @@ button {
   cursor: pointer;
   box-shadow: 0 5px 0 #1f2430;
   transition: transform 0.08s ease;
+}
+
+/* Los botones de sílaba (nivel 2) llevan dos o tres letras: no son cuadrados,
+   crecen a lo ancho. */
+.letter-btn--syllable {
+  width: auto;
+  aspect-ratio: auto;
+  min-width: clamp(88px, 26vw, 120px);
+  padding: 10px 18px;
+  font-size: clamp(1.8rem, 7vw, 2.4rem);
 }
 
 .letter-btn:active {

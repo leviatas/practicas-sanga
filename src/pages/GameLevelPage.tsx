@@ -1,15 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { gameLevels, level1Exercises, LEVEL1_PROMPT } from '../data/game'
+import {
+  gameLevels,
+  gameWords,
+  LEVEL_PROMPTS,
+  ROUND_SIZE,
+  type GameWord,
+} from '../data/game'
 import { loadGameStars, saveGameStars } from '../lib/gameProgress'
+import { markWordsSeen, pickWords, shuffle } from '../lib/gameDeck'
 import { speak } from '../lib/speak'
 import Monster from '../components/Monster'
 
-// Nivel 1 del juego: "¿Con qué sonido empieza esta palabra?".
-// Se muestra un dibujo y, debajo, tres botones con una letra cada uno; hay
-// que tocar la inicial de la palabra. Si acierta, festeja y pasa solo al
-// siguiente; si no, la letra se pone roja y puede volver a intentar. Al
-// terminar los cinco, da estrellas según cuántos acertó al primer intento.
+// Los niveles del juego. Los dos usan las mismas imágenes y el mismo flujo:
+// se muestra un dibujo y, debajo, unos botones para elegir.
+//   Nivel 1: "¿con qué sonido empieza esta palabra?" → tres letras.
+//   Nivel 2: "completá la primera sílaba" → el hueco y el resto de la palabra
+//            (____NA) con dos sílabas que se diferencian solo en la inicial.
+// Si acierta, festeja y pasa solo al siguiente; si no, la opción se pone roja
+// y puede volver a intentar. Al terminar los cinco, da estrellas según cuántos
+// acertó al primer intento.
+//
+// Cada ronda toma cinco palabras del banco y, al volver a jugar, salen las que
+// todavía no habían tocado (ver src/lib/gameDeck.ts).
 
 // Fondo suave de campo con un lago, para que el ejercicio se lea bien.
 function FieldBackground() {
@@ -52,6 +65,36 @@ function FieldBackground() {
 
 const TALK_MS = 1300
 
+/** Un ejercicio ya armado: el dibujo, los botones y cuál es el correcto. */
+interface Round {
+  word: string
+  emoji: string
+  options: string[]
+  answer: string
+  /** Nivel 2: lo que queda de la palabra después de la primera sílaba. */
+  rest?: string
+}
+
+/** Arma los cinco ejercicios de una ronda del nivel pedido. */
+function buildRound(level: number): Round[] {
+  return pickWords(gameWords, ROUND_SIZE, level).map((w: GameWord) =>
+    level === 2
+      ? {
+          word: w.word,
+          emoji: w.emoji,
+          options: shuffle([w.syllable, w.otherSyllable]),
+          answer: w.syllable,
+          rest: w.rest,
+        }
+      : {
+          word: w.word,
+          emoji: w.emoji,
+          options: shuffle(w.letters),
+          answer: w.letters[0],
+        },
+  )
+}
+
 export default function GameLevelPage() {
   const { levelId } = useParams()
   const id = Number(levelId)
@@ -60,13 +103,14 @@ export default function GameLevelPage() {
   const unlocked = level?.ready && (id === 1 || (stars[id - 1] ?? 0) > 0)
 
   if (!level || !unlocked) return <Navigate to="/juego" replace />
-  return <Level1 key={id} />
+  return <Play key={id} level={id} />
 }
 
-function Level1() {
-  const exercises = level1Exercises
+function Play({ level }: { level: number }) {
+  // Las cinco palabras de esta ronda (se eligen una sola vez al entrar).
+  const [rounds, setRounds] = useState<Round[]>(() => buildRound(level))
   const [current, setCurrent] = useState(0)
-  // Letra tocada en el ejercicio actual (para pintarla) y si ya acertó.
+  // Opción tocada en el ejercicio actual (para pintarla) y si ya acertó.
   const [picked, setPicked] = useState<string | null>(null)
   const [solved, setSolved] = useState(false)
   // Cuántos acertó al primer intento (define las estrellas).
@@ -77,12 +121,20 @@ function Level1() {
   const [says, setSays] = useState<string | null>(null)
   const timer = useRef<number | undefined>(undefined)
 
-  const ex = exercises[current]!
-  const total = exercises.length
+  const prompt = LEVEL_PROMPTS[level] ?? ''
+  const ex = rounds[current]!
+  const total = rounds.length
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
+  // Anotamos las palabras de esta ronda para que la próxima traiga otras.
+  useEffect(() => {
+    markWordsSeen(level, rounds.map((r) => r.word), gameWords.length)
+  }, [level, rounds])
+
+  /** Otra ronda: cinco palabras nuevas del banco. */
   function restart() {
+    setRounds(buildRound(level))
     setCurrent(0)
     setPicked(null)
     setSolved(false)
@@ -92,22 +144,25 @@ function Level1() {
     setSays(null)
   }
 
+  // En minúscula, así la voz lee la palabra y no la deletrea.
   function sayWord() {
-    speak(ex.word)
+    speak(ex.word.toLowerCase())
   }
 
-  function choose(letter: string) {
+  function choose(option: string) {
     if (solved) return
-    setPicked(letter)
-    if (letter === ex.answer) {
+    setPicked(option)
+    if (option === ex.answer) {
       setSolved(true)
       setSays('¡MUY BIEN!')
       if (!missed) setFirstTry((n) => n + 1)
-      speak(`¡Muy bien! ${ex.word} empieza con ${ex.answer}`)
+      speak(
+        `¡Muy bien! ${ex.word.toLowerCase()} empieza con ${ex.answer.toLowerCase()}`,
+      )
       timer.current = window.setTimeout(() => {
         if (current + 1 >= total) {
           const got = !missed ? firstTry + 1 : firstTry
-          saveGameStars(1, starsFor(got, total))
+          saveGameStars(level, starsFor(got, total))
           setFinished(true)
         } else {
           setCurrent((c) => c + 1)
@@ -163,7 +218,7 @@ function Level1() {
           ← MAPA
         </Link>
         <span className="level__counter">
-          NIVEL 1 · {current + 1} DE {total}
+          NIVEL {level} · {current + 1} DE {total}
         </span>
       </header>
 
@@ -175,11 +230,11 @@ function Level1() {
           className={`game-bubble game-bubble--side${solved ? ' is-happy' : ''}`}
           role="status"
         >
-          <h1 className="game-bubble__text">{says ?? LEVEL1_PROMPT}</h1>
+          <h1 className="game-bubble__text">{says ?? prompt}</h1>
           <button
             type="button"
             className="game-speak game-speak--icon"
-            onClick={() => speak(says ?? LEVEL1_PROMPT)}
+            onClick={() => speak(says ?? prompt)}
             aria-label="Escuchar lo que dice el monstruito"
           >
             🔊
@@ -202,26 +257,36 @@ function Level1() {
             🔊
           </button>
         </div>
+
+        {/* Nivel 2: la palabra con la primera sílaba en blanco (____NA). */}
+        {ex.rest !== undefined && (
+          <p className="level__word">
+            <span className={`level__blank${solved ? ' is-filled' : ''}`}>
+              {solved ? ex.answer : '____'}
+            </span>
+            {ex.rest}
+          </p>
+        )}
+
         <div className="level__letters">
-          {ex.letters.map((letter) => {
+          {ex.options.map((option) => {
             let state = ''
-            if (picked === letter) state = letter === ex.answer ? 'is-correct' : 'is-wrong'
+            if (picked === option) state = option === ex.answer ? 'is-correct' : 'is-wrong'
             return (
               <button
-                key={letter}
+                key={option}
                 type="button"
-                className={`letter-btn ${state}`}
-                onClick={() => choose(letter)}
+                className={`letter-btn${option.length > 1 ? ' letter-btn--syllable' : ''} ${state}`}
+                onClick={() => choose(option)}
                 disabled={solved}
-                aria-label={`Letra ${letter}`}
+                aria-label={option}
               >
-                {letter}
+                {option}
               </button>
             )
           })}
         </div>
       </div>
-
     </section>
   )
 }
