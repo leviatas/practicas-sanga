@@ -282,6 +282,45 @@ button {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.logs-tiles--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Las IPs que entraron en los últimos días: una tarjetita por IP, con cuándo
+   fue la última vez y cuántas veces entró. */
+.logs-ips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.logs-ip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logs-ip__addr {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.logs-ip__when,
+.logs-ip__count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 /* Intentos fallidos: se destacan en rojo para que salten a la vista. */
 .logs-tile--warn {
   border-color: var(--wrong);
