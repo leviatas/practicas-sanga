@@ -3169,14 +3169,26 @@ button {
   border-right-color: #dcfce7;
 }
 
-/* Altavoz redondo, solo el ícono. */
+/* Altavoz solo con el ícono: sin fondo ni borde, para que no compita con el
+   globo ni con el dibujo. */
 .game-speak--icon {
   padding: 0;
   width: 44px;
   min-height: 44px;
   border-radius: 50%;
-  font-size: 1.3rem;
+  font-size: 1.7rem;
+  line-height: 1;
   flex-shrink: 0;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: inherit;
+}
+
+.game-speak--icon:hover,
+.game-speak--icon:focus-visible {
+  background: rgba(31, 36, 48, 0.08);
+  outline: none;
 }
 
 .level__picture-row {
