@@ -1941,17 +1941,29 @@ button {
   paint-order: stroke fill;
 }
 
-/* Los colores son los mismos de la fotocopia, número por número. */
-.word-slot__word--number[data-num='1'] { --num: #ef3e36; }
-.word-slot__word--number[data-num='2'] { --num: #f68b1f; }
-.word-slot__word--number[data-num='3'] { --num: #f5d547; }
-.word-slot__word--number[data-num='4'] { --num: #3faa4a; }
-.word-slot__word--number[data-num='5'] { --num: #7fd3f0; }
-.word-slot__word--number[data-num='6'] { --num: #3f7fd0; }
-.word-slot__word--number[data-num='7'] { --num: #9b6fd0; }
-.word-slot__word--number[data-num='8'] { --num: #f48fb1; }
-.word-slot__word--number[data-num='9'] { --num: #8dc63f; }
-.word-slot__word--number[data-num='10'] { --num: #f68b1f; }
+/* Los colores son los mismos de la fotocopia, número por número (valen para
+   el número de cada casillero y para el número gigante de "¿cómo se
+   escribe?"). */
+.word-slot__word--number[data-num='1'],
+.quiz-number[data-num='1'] { --num: #ef3e36; }
+.word-slot__word--number[data-num='2'],
+.quiz-number[data-num='2'] { --num: #f68b1f; }
+.word-slot__word--number[data-num='3'],
+.quiz-number[data-num='3'] { --num: #f5d547; }
+.word-slot__word--number[data-num='4'],
+.quiz-number[data-num='4'] { --num: #3faa4a; }
+.word-slot__word--number[data-num='5'],
+.quiz-number[data-num='5'] { --num: #7fd3f0; }
+.word-slot__word--number[data-num='6'],
+.quiz-number[data-num='6'] { --num: #3f7fd0; }
+.word-slot__word--number[data-num='7'],
+.quiz-number[data-num='7'] { --num: #9b6fd0; }
+.word-slot__word--number[data-num='8'],
+.quiz-number[data-num='8'] { --num: #f48fb1; }
+.word-slot__word--number[data-num='9'],
+.quiz-number[data-num='9'] { --num: #8dc63f; }
+.word-slot__word--number[data-num='10'],
+.quiz-number[data-num='10'] { --num: #f68b1f; }
 
 @media (max-width: 560px) {
   .word-analysis--numbers {
@@ -1974,6 +1986,26 @@ button {
 @media (max-width: 380px) {
   .word-analysis--numbers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* El mismo número gigante, pero como apoyo visual de una pregunta de opciones
+   ("¿cómo se escribe este número?"): va solo y centrado arriba de la consigna,
+   con el botón "📢 ESCUCHA" debajo para oír la pronunciación. */
+.quiz-number {
+  font-size: calc(5.5rem * var(--fit, 1));
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: calc(8px * var(--fit, 1));
+  color: var(--num, var(--text));
+  -webkit-text-stroke: calc(3px * var(--fit, 1)) var(--num-stroke);
+  paint-order: stroke fill;
+}
+
+@media (max-width: 560px) {
+  .quiz-number {
+    font-size: calc(4.5rem * var(--fit, 1));
   }
 }
 

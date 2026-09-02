@@ -66,6 +66,19 @@ export interface Question {
   /** Apoyo visual con una foto de un objeto de la escuela. Ej: 'pen', 'ruler'. */
   image?: string
   /**
+   * Apoyo visual con un NÚMERO gigante y de colores (los mismos de la
+   * fotocopia de "NUMBERS"), arriba de la consigna. Ej: '7'. Se usa en las
+   * preguntas de opciones del tipo "¿cómo se escribe este número?".
+   */
+  bigNumber?: string
+  /**
+   * Palabra o frase en inglés que se puede escuchar con el botón
+   * "📢 ESCUCHA" (voz del navegador). Sirve para oír la pronunciación
+   * correcta; escucharla NO responde la pregunta y se puede tocar todas las
+   * veces que haga falta.
+   */
+  listen?: string
+  /**
    * Poema (u otro texto) que se muestra ARRIBA de la consigna, con sus saltos
    * de línea y sus estrofas tal cual se escriben acá: un salto de línea separa
    * versos y una línea en blanco separa estrofas.

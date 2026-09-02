@@ -75,11 +75,13 @@ function speak(text: string, lang = 'es-AR') {
   }
 }
 
-// Respuesta que se puede escuchar como AYUDA (botón "📢 ESCUCHA"), solo en las
+// Respuesta que se puede escuchar como AYUDA (botón "📢 ESCUCHA"): la de las
 // preguntas con imagen y una única opción correcta (ej: la foto de un brazo →
-// "ARM"). Escucharla no responde la pregunta: el alumno igual tiene que elegir
-// la opción correcta, y puede tocar el botón las veces que quiera.
+// "ARM"), o la que se pida a mano con `listen` (ej: el número 7 → "SEVEN").
+// Escucharla no responde la pregunta: el alumno igual tiene que elegir la
+// opción correcta, y puede tocar el botón las veces que quiera.
 function listenableAnswer(q: Question): string | null {
+  if (q.listen) return q.listen.trim() || null
   if (!q.image) return null
   if (q.kind != null && q.kind !== 'choice') return null
   const correct = (q.options ?? []).filter((o) => o.correct)
@@ -548,6 +550,15 @@ function Quiz({
                 src={bodyPartsImages[question.image]}
                 alt="¿Qué parte del cuerpo es?"
               />
+            )}
+            {question.bigNumber && (
+              <div
+                className="quiz-number"
+                data-num={question.bigNumber}
+                aria-hidden="true"
+              >
+                {question.bigNumber}
+              </div>
             )}
             {question.emoji && (
               <div className="quiz-card__emoji" aria-hidden="true">
