@@ -919,6 +919,15 @@ button {
   font-size: max(2rem, calc(3.2rem * var(--fit)));
 }
 
+/* Completar el acróstico: los casilleros escalan con --fit. */
+.app--exercise .acrostic {
+  --cell: max(24px, calc(32px * var(--fit)));
+  margin-bottom: calc(16px * var(--fit));
+}
+.app--exercise .acrostic__clue {
+  font-size: max(0.7rem, calc(0.9rem * var(--fit)));
+}
+
 /* Ejercicios de arrastrar / clasificar. */
 .app--exercise .drag-paragraph {
   font-size: calc(1.15rem * var(--fit));
@@ -1751,6 +1760,136 @@ button {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   font-size: 0.95rem;
+}
+
+/* ---- Completar el acróstico (kind 'acrostic') ----
+   Cada fila es una consigna ('LA PLATA ☞') más una hilera de casilleros, uno
+   por letra. La letra del acróstico viene puesta y resaltada, y las filas se
+   corren a la derecha para que esa columna quede alineada: leída de arriba
+   hacia abajo forma la palabra vertical. En pantallas chicas la grilla se
+   desplaza en horizontal para no achicar las letras hasta lo ilegible. */
+.acrostic {
+  --cell: 32px;
+  margin: 4px 0 18px;
+}
+
+.acrostic__scroll {
+  overflow-x: auto;
+  padding-bottom: 6px;
+  /* `width: 0` + `min-width: 100%` = ocupa todo el ancho disponible pero NO
+     empuja a la tarjeta a lo ancho: si el acróstico no entra, scrollea acá
+     adentro en vez de desbordar la pantalla. */
+  width: 0;
+  min-width: 100%;
+}
+
+.acrostic__grid {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  gap: 8px 10px;
+  width: max-content;
+  margin-inline: auto;
+}
+
+/* La fila no dibuja nada: deja que la consigna y los casilleros caigan en las
+   dos columnas de la grilla, así todas las consignas quedan alineadas. */
+.acrostic__row {
+  display: contents;
+}
+
+.acrostic__clue {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Las columnas miden --cell como MÁXIMO: si el ancho no alcanza (celular), la
+   grilla las achica a todas por igual y el acróstico sigue entrando entero. */
+.acrostic__boxes {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, var(--cell)));
+  gap: 3px;
+}
+
+.acrostic__cell {
+  width: 100%;
+  aspect-ratio: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* La letra que ya viene escrita: es la del acróstico, va resaltada. */
+.acrostic__cell--given {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  border-style: solid;
+}
+
+.acrostic__cell--input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.acrostic__cell--input:disabled {
+  opacity: 1; /* al corregir se sigue leyendo lo que escribió */
+}
+
+.acrostic__cell.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.acrostic__cell.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+/* Las respuestas de las filas que quedaron mal, para poder repasarlas. */
+.acrostic__answers {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* En celular la consigna pasa ARRIBA de su hilera y los casilleros ocupan todo
+   el ancho: así el acróstico entra entero, sin scroll lateral. */
+@media (max-width: 560px) {
+  .acrostic__grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 10px;
+  }
+  .acrostic__row {
+    display: block;
+  }
+  .acrostic__clue {
+    display: block;
+    margin-bottom: 3px;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+  .acrostic__cell {
+    font-size: 3vw;
+  }
 }
 
 /* ---- NUMBERS (1er grado) ----

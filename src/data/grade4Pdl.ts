@@ -11,7 +11,7 @@ import type { Practice } from '../types'
 // 5) Clasificación semántica de los adjetivos
 // 6) Separación en sílabas y reglas de tildación
 //
-// Formatos usados: choice, drag, classify, reveal, words, analyze.
+// Formatos usados: choice, drag, classify, reveal, words, analyze, acrostic.
 // Consignas y explicaciones en castellano.
 // ============================================================================
 
@@ -647,6 +647,9 @@ export const grade4PdlPractices: Practice[] = [
   },
 
   // ========================= 4. EL DICCIONARIO Y LA ENCICLOPEDIA ============
+  // Cuándo usar cada obra de consulta, orden alfabético (arrastrando a los seis
+  // casilleros), abreviaturas de la entrada (s., adj., v., m., f., SIN, ANT) y
+  // el acróstico de gentilicios.
   {
     id: 'diccionario-enciclopedia',
     title: 'El diccionario y la enciclopedia',
@@ -693,77 +696,36 @@ export const grade4PdlPractices: Practice[] = [
           },
         ],
       },
+      // --- Ordenar alfabéticamente arrastrando a los casilleros (analyze) ---
       {
-        id: 'de3',
-        kind: 'reveal',
-        emoji: '📚',
+        id: 'de-ord1',
+        kind: 'analyze',
         prompt:
-          'Querés saber si «correr» es un verbo o un sustantivo. ¿Dónde buscás?',
-        hint: 'Pensá: ¿necesitás saber la clase de palabra o información sobre un tema?',
-        options: [
-          {
-            text: 'En el diccionario',
-            correct: true,
-            why: '¡Correcto! El diccionario indica la clase de palabra (verbo, sustantivo, adjetivo, etc.) junto con su definición.',
-          },
-          {
-            text: 'En la enciclopedia',
-            why: 'La enciclopedia no se ocupa de clasificar palabras gramaticalmente. Eso lo hace el diccionario.',
-          },
-        ],
+          'Ordená alfabéticamente: arrastrá cada palabra al casillero que le toca, del 1 al 6.',
+        words: ['1', '2', '3', '4', '5', '6'],
+        labels: ['BARCO', 'BROTE', 'CAMPO', 'CHIMPANCÉ', 'DULCE', 'FRÍO'],
+        explanation:
+          'Primero manda la letra inicial (B → C → D → F). Entre BARCO y BROTE decide la segunda letra (a antes que r), y entre CAMPO y CHIMPANCÉ también (a antes que h).',
       },
       {
-        id: 'de4',
-        kind: 'reveal',
-        emoji: '🦕',
+        id: 'de-ord2',
+        kind: 'analyze',
         prompt:
-          'Querés saber en qué período vivieron los dinosaurios y cómo se extinguieron. ¿Dónde buscás?',
-        hint: 'Pensá: ¿buscás una definición breve o información extensa sobre un tema?',
-        options: [
-          {
-            text: 'En la enciclopedia',
-            correct: true,
-            why: '¡Correcto! La enciclopedia tiene artículos extensos con información detallada sobre temas como este.',
-          },
-          {
-            text: 'En el diccionario',
-            why: 'El diccionario te diría qué significa "dinosaurio", pero no te cuenta su historia completa.',
-          },
-        ],
-      },
-      // --- Orden alfabético (choice) ---
-      {
-        id: 'de5',
-        prompt: '¿Cuál es el orden alfabético correcto de estas palabras?',
-        options: [
-          { text: 'barco — campo — dulce — frío', correct: true },
-          { text: 'campo — barco — dulce — frío' },
-          { text: 'dulce — barco — frío — campo' },
-        ],
+          'Ordená alfabéticamente: arrastrá cada palabra al casillero que le toca, del 1 al 6.',
+        words: ['1', '2', '3', '4', '5', '6'],
+        labels: ['GATO', 'GLOBO', 'GOTA', 'GRIS', 'GRÚA', 'GUANTE'],
         explanation:
-          'En el diccionario las palabras van en orden alfabético: B → C → D → F.',
+          'Todas empiezan con G, así que decide la segunda letra: ga → gl → go → gr → gu. Entre GRIS y GRÚA mira la tercera: i antes que u.',
       },
       {
-        id: 'de6',
-        prompt: '¿Cuál es el orden alfabético correcto?',
-        options: [
-          { text: 'gato — globo — gota — grúa', correct: true },
-          { text: 'globo — gato — grúa — gota' },
-          { text: 'grúa — gota — globo — gato' },
-        ],
+        id: 'de-ord3',
+        kind: 'analyze',
+        prompt:
+          'Ordená alfabéticamente: arrastrá cada palabra al casillero que le toca, del 1 al 6.',
+        words: ['1', '2', '3', '4', '5', '6'],
+        labels: ['ABEJA', 'ABRIGO', 'ACCIÓN', 'ACEITE', 'AGUA', 'AIRE'],
         explanation:
-          'Cuando la primera letra es igual, se ordena por la segunda y tercera: ga → gl → go → gr.',
-      },
-      {
-        id: 'de7',
-        prompt: '¿Cuál es el orden alfabético correcto?',
-        options: [
-          { text: 'abeja — abrigo — aceite — agua', correct: true },
-          { text: 'agua — aceite — abrigo — abeja' },
-          { text: 'aceite — abeja — agua — abrigo' },
-        ],
-        explanation:
-          'Todas empiezan con «a»: ab-e → ab-r → ac → ag.',
+          'Todas empiezan con A: ab → ac → ag → ai. Cuando también coincide la segunda letra hay que mirar la tercera (ABEJA antes que ABRIGO, ACCIÓN antes que ACEITE).',
       },
       // --- Partes de una entrada de diccionario (classify) ---
       {
@@ -840,6 +802,203 @@ export const grade4PdlPractices: Practice[] = [
         ],
         explanation:
           'En el diccionario los verbos aparecen en infinitivo (-ar, -er, -ir). Para encontrar «corrió» buscás «correr».',
+      },
+      // --- Abreviaturas del diccionario (choice) ---
+      {
+        id: 'de-abr1',
+        emoji: '📔',
+        prompt: 'En un diccionario, ¿qué significa la abreviatura «s. f.»?',
+        options: [
+          { text: 'Sustantivo femenino', correct: true },
+          { text: 'Sujeto femenino' },
+          { text: 'Singular familiar' },
+        ],
+        explanation:
+          '«s.» es sustantivo y «f.» es femenino: «s. f.» avisa que esa palabra es un sustantivo femenino (ej: «mesa. s. f.»).',
+      },
+      {
+        id: 'de-abr2',
+        emoji: '🟰',
+        prompt: 'En un diccionario, ¿qué significa la abreviatura «SIN»?',
+        options: [
+          { text: 'Sinónimo', correct: true },
+          { text: 'Singular' },
+          { text: 'Sin clasificar' },
+        ],
+        explanation:
+          'Después de «SIN» el diccionario lista los sinónimos: palabras que significan algo parecido (ej: «lindo. SIN: bello, hermoso»).',
+      },
+      {
+        id: 'de-abr3',
+        emoji: '↔️',
+        prompt: 'En un diccionario, ¿qué significa la abreviatura «ANT»?',
+        options: [
+          { text: 'Antónimo', correct: true },
+          { text: 'Anterior' },
+          { text: 'Antártico' },
+        ],
+        explanation:
+          'Después de «ANT» el diccionario lista los antónimos: palabras que significan lo contrario (ej: «lindo. ANT: feo»).',
+      },
+      {
+        id: 'de-abr4',
+        prompt: '¿Cuál es la abreviatura de «sustantivo» en el diccionario?',
+        options: [
+          { text: 's.', correct: true },
+          { text: 'sn.' },
+          { text: 'st.' },
+        ],
+        explanation:
+          'El sustantivo se abrevia «s.». Ej: «perro. s. m.» = sustantivo masculino.',
+      },
+      {
+        id: 'de-abr5',
+        prompt: '¿Cuál es la abreviatura de «adjetivo» en el diccionario?',
+        options: [
+          { text: 'adj.', correct: true },
+          { text: 'ad.' },
+          { text: 'aj.' },
+        ],
+        explanation:
+          'El adjetivo se abrevia «adj.». Ej: «feliz. adj.» = adjetivo.',
+      },
+      {
+        id: 'de-abr6',
+        prompt: '¿Cuál es la abreviatura de «verbo» en el diccionario?',
+        options: [
+          { text: 'v.', correct: true },
+          { text: 'vr.' },
+          { text: 've.' },
+        ],
+        explanation:
+          'El verbo se abrevia «v.». Ej: «correr. v.» = verbo (y va siempre en infinitivo).',
+      },
+      {
+        id: 'de-abr7',
+        prompt: '¿Cuál es la abreviatura de «masculino» en el diccionario?',
+        options: [
+          { text: 'm.', correct: true },
+          { text: 'mc.' },
+          { text: 'ms.' },
+        ],
+        explanation:
+          'El masculino se abrevia «m.». Ej: «árbol. s. m.» = sustantivo masculino.',
+      },
+      {
+        id: 'de-abr8',
+        prompt: '¿Cuál es la abreviatura de «femenino» en el diccionario?',
+        options: [
+          { text: 'f.', correct: true },
+          { text: 'fm.' },
+          { text: 'fe.' },
+        ],
+        explanation:
+          'El femenino se abrevia «f.». Ej: «silla. s. f.» = sustantivo femenino.',
+      },
+      // --- Palabras con más de una definición (choice) ---
+      {
+        id: 'de-def1',
+        emoji: '🔢',
+        prompt:
+          '¿Cómo te das cuenta de que una palabra tiene más de una definición?',
+        options: [
+          {
+            text: 'Porque las definiciones aparecen numeradas o separadas por barras',
+            correct: true,
+          },
+          { text: 'Porque la palabra es más larga' },
+          { text: 'Porque la palabra aparece en plural' },
+        ],
+        explanation:
+          'Cuando una palabra tiene varios significados, el diccionario los numera (1., 2., 3.) o los separa con barras (||). Ej: «banco» es el asiento y también el lugar donde se guarda la plata.',
+      },
+      // --- Qué es cada obra de consulta (choice) ---
+      {
+        id: 'de-af1',
+        emoji: '📕',
+        prompt: '¿Qué es un diccionario?',
+        options: [
+          {
+            text: 'Un libro o herramienta digital que nos ayuda a conocer el significado de las palabras',
+            correct: true,
+          },
+          { text: 'Un libro que cuenta una historia inventada, con personajes' },
+          { text: 'Un libro con las noticias del día' },
+        ],
+        explanation:
+          'El diccionario es un libro (o una herramienta digital) donde buscamos qué significa cada palabra.',
+      },
+      {
+        id: 'de-af2',
+        emoji: '🔤',
+        prompt:
+          'En un diccionario de papel las palabras están en orden alfabético. Si buscás «tigre», ¿entre qué palabras la vas a encontrar?',
+        options: [
+          { text: 'Entre «tienda» y «tijera»', correct: true },
+          { text: 'Entre «taza» y «techo»' },
+          { text: 'Entre «tomate» y «tuna»' },
+        ],
+        explanation:
+          'Las tres empiezan con «ti», así que decide la tercera letra: tie → tig → tij. «Tigre» va entre «tienda» y «tijera».',
+      },
+      {
+        id: 'de-af3',
+        emoji: '📗',
+        prompt: '¿Qué es una enciclopedia?',
+        options: [
+          {
+            text: 'Una obra de consulta que brinda información sobre distintos temas: historia, animales, geografía o literatura',
+            correct: true,
+          },
+          { text: 'Una lista de palabras con sus sinónimos y antónimos' },
+          { text: 'Un cuaderno donde anotamos las palabras que no sabemos' },
+        ],
+        explanation:
+          'La enciclopedia es una obra de consulta: se organiza por temas y los desarrolla con información completa.',
+      },
+      {
+        id: 'de-af4',
+        emoji: '🖼️',
+        prompt: '¿Cuál es la diferencia entre una enciclopedia y un diccionario?',
+        options: [
+          {
+            text: 'La enciclopedia da información más completa sobre cada tema y puede incluir imágenes, dibujos o diagramas',
+            correct: true,
+          },
+          { text: 'La enciclopedia es igual, pero con las palabras desordenadas' },
+          { text: 'La enciclopedia solo sirve para buscar sinónimos' },
+        ],
+        explanation:
+          'El diccionario da definiciones breves; la enciclopedia desarrolla el tema y suele acompañarlo con imágenes, dibujos o diagramas.',
+      },
+      {
+        id: 'de-af5',
+        kind: 'drag',
+        prompt:
+          'Completá la regla: el diccionario explica ____ y la enciclopedia explica ____.',
+        segments: ['El diccionario explica ', ' y la enciclopedia explica ', '.'],
+        blanks: ['palabras', 'temas'],
+        bank: ['palabras', 'temas', 'números', 'cuentos'],
+        explanation:
+          'Para acordarse: diccionario → explica PALABRAS. Enciclopedia → explica TEMAS.',
+      },
+      // --- Acróstico de gentilicios (acrostic) ---
+      {
+        id: 'de-acro1',
+        kind: 'acrostic',
+        emoji: '✍️',
+        prompt:
+          'Completá el acróstico con los adjetivos gentilicios derivados de cada lugar.',
+        hint: 'El gentilicio dice de dónde es alguien o algo. Las letras que ya están puestas, leídas de arriba hacia abajo, forman una palabra.',
+        rows: [
+          { clue: 'LA PLATA', answer: 'PLATENSE', given: 1 },
+          { clue: 'FORMOSA', answer: 'FORMOSEÑO', given: 6 },
+          { clue: 'LA RIOJA', answer: 'RIOJANO', given: 2 },
+          { clue: 'MISIONES', answer: 'MISIONERO', given: 5 },
+          { clue: 'LA PAMPA', answer: 'PAMPEANO', given: 5 },
+        ],
+        explanation:
+          'Las letras que ya venían puestas forman LEONA. Los gentilicios son: platense, formoseño, riojano, misionero y pampeano.',
       },
     ],
   },
