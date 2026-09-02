@@ -17,6 +17,8 @@
   --wrong: #dc2626;
   --wrong-bg: #fee2e2;
   --radius: 18px;
+  /* Contorno de los números gigantes de "NUMBERS" (1er grado). */
+  --num-stroke: #1f2937;
   --shadow: 0 6px 20px rgba(20, 24, 40, 0.08);
   --max-width: 880px;
   color-scheme: light;
@@ -38,6 +40,7 @@
   --correct-bg: #14432a;
   --wrong-bg: #451c1c;
   --neutral-bg: #262932;
+  --num-stroke: #0b0d12;
   --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
   }
@@ -52,6 +55,7 @@
   --correct-bg: #14432a;
   --wrong-bg: #451c1c;
   --neutral-bg: #262932;
+  --num-stroke: #0b0d12;
   --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
 }
@@ -911,6 +915,9 @@ button {
 .app--exercise .word-tag {
   font-size: max(0.7rem, calc(0.95rem * var(--fit)));
 }
+.app--exercise .word-slot__word--number {
+  font-size: max(2rem, calc(3.2rem * var(--fit)));
+}
 
 /* Ejercicios de arrastrar / clasificar. */
 .app--exercise .drag-paragraph {
@@ -1744,6 +1751,68 @@ button {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   font-size: 0.95rem;
+}
+
+/* ---- NUMBERS (1er grado) ----
+   Mismo ejercicio de casilleros, pero arriba de cada uno va el número gigante
+   y de colores de la fotocopia: cinco por fila (tres en pantallas chicas) y
+   los cartelitos ONE, TWO, THREE... salen mezclados en el banco. */
+.word-analysis--numbers {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-items: center;
+  gap: 16px 8px;
+  max-width: 660px;
+  margin-inline: auto;
+}
+
+.word-analysis--numbers .word-box {
+  min-width: 88px;
+}
+
+.word-slot__word--number {
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--num, var(--text));
+  -webkit-text-stroke: 2px var(--num-stroke);
+  paint-order: stroke fill;
+}
+
+/* Los colores son los mismos de la fotocopia, número por número. */
+.word-slot__word--number[data-num='1'] { --num: #ef3e36; }
+.word-slot__word--number[data-num='2'] { --num: #f68b1f; }
+.word-slot__word--number[data-num='3'] { --num: #f5d547; }
+.word-slot__word--number[data-num='4'] { --num: #3faa4a; }
+.word-slot__word--number[data-num='5'] { --num: #7fd3f0; }
+.word-slot__word--number[data-num='6'] { --num: #3f7fd0; }
+.word-slot__word--number[data-num='7'] { --num: #9b6fd0; }
+.word-slot__word--number[data-num='8'] { --num: #f48fb1; }
+.word-slot__word--number[data-num='9'] { --num: #8dc63f; }
+.word-slot__word--number[data-num='10'] { --num: #f68b1f; }
+
+@media (max-width: 560px) {
+  .word-analysis--numbers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .word-slot__word--number {
+    font-size: 2.6rem;
+  }
+  /* Los cartelitos van más chicos para que entren tres casilleros por fila. */
+  .word-analysis--numbers .word-box {
+    min-width: 76px;
+  }
+  .word-analysis--numbers .word-tag {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+/* En los celulares más angostos, de a dos por fila. */
+@media (max-width: 380px) {
+  .word-analysis--numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* ---- Armar la oración (kind 'sentence') ----

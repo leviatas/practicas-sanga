@@ -5,6 +5,7 @@ import {
   grade1BodyLabelPractices,
 } from './grade1BodyParts'
 import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
+import { grade1NumbersPractices } from './grade1Numbers'
 import { grade4Practices } from './grade4'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
@@ -198,6 +199,7 @@ export const grades: Grade[] = [
       ...grade1BodyPartsPractices,
       ...grade1BodyLabelPractices,
       ...grade1ThereIsThereArePractices,
+      ...grade1NumbersPractices,
     ]),
   },
   {

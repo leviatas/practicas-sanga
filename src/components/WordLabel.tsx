@@ -22,6 +22,10 @@ import type { Question } from '../types'
 // Los cartelitos se repiten (hay varios MD), así que cada uno tiene identidad
 // propia por su ÍNDICE en el banco y la corrección compara el TEXTO: un MD es
 // correcto en cualquiera de los casilleros que llevan MD.
+//
+// Con `bigNumbers` el mismo mecanismo sirve para "NUMBERS" (1er grado): arriba
+// de cada casillero va un número gigante de colores y los cartelitos son ONE,
+// TWO, THREE...
 
 // Baraja un array devolviendo una copia nueva (Fisher-Yates).
 function shuffle<T>(items: readonly T[]): T[] {
@@ -66,6 +70,7 @@ function WordSlot({
   tagText,
   state,
   disabled,
+  big,
 }: {
   index: number
   word: string
@@ -73,11 +78,17 @@ function WordSlot({
   tagText: string | null
   state: '' | 'is-correct' | 'is-wrong'
   disabled: boolean
+  big?: boolean
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `slot:${index}`, disabled })
   return (
     <div className="word-slot">
-      <span className="word-slot__word">{word}</span>
+      <span
+        className={`word-slot__word${big ? ' word-slot__word--number' : ''}`}
+        data-num={big ? word : undefined}
+      >
+        {word}
+      </span>
       <span
         ref={setNodeRef}
         className={`word-box ${state} ${isOver ? 'is-over' : ''}`}
@@ -105,6 +116,9 @@ export default function WordLabel({
 }) {
   const words = question.words ?? []
   const labels = question.labels ?? []
+  // 'bigNumbers': arriba de cada casillero va un número gigante de colores
+  // (ejercicio "NUMBERS" de 1er grado) en vez de una palabra de la oración.
+  const big = question.bigNumbers === true
 
   // Un cartelito por palabra, barajados una sola vez al montar el ejercicio.
   const [tags] = useState(() =>
@@ -177,7 +191,7 @@ export default function WordLabel({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="word-analysis">
+      <div className={`word-analysis${big ? ' word-analysis--numbers' : ''}`}>
         {words.map((word, i) => (
           <WordSlot
             key={i}
@@ -187,6 +201,7 @@ export default function WordLabel({
             tagText={textOf(assign[i])}
             state={stateFor(i)}
             disabled={locked}
+            big={big}
           />
         ))}
       </div>
