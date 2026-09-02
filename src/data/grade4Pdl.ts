@@ -648,8 +648,7 @@ export const grade4PdlPractices: Practice[] = [
 
   // ========================= 4. EL DICCIONARIO Y LA ENCICLOPEDIA ============
   // Cuándo usar cada obra de consulta, orden alfabético (arrastrando a los seis
-  // casilleros), abreviaturas de la entrada (s., adj., v., m., f., SIN, ANT) y
-  // el acróstico de gentilicios.
+  // casilleros) y abreviaturas de la entrada (s., adj., v., m., f., SIN, ANT).
   {
     id: 'diccionario-enciclopedia',
     title: 'El diccionario y la enciclopedia',
@@ -982,28 +981,12 @@ export const grade4PdlPractices: Practice[] = [
         explanation:
           'Para acordarse: diccionario → explica PALABRAS. Enciclopedia → explica TEMAS.',
       },
-      // --- Acróstico de gentilicios (acrostic) ---
-      {
-        id: 'de-acro1',
-        kind: 'acrostic',
-        emoji: '✍️',
-        prompt:
-          'Completá el acróstico con los adjetivos gentilicios derivados de cada lugar.',
-        hint: 'El gentilicio dice de dónde es alguien o algo. Las letras que ya están puestas, leídas de arriba hacia abajo, forman una palabra.',
-        rows: [
-          { clue: 'LA PLATA', answer: 'PLATENSE', given: 1 },
-          { clue: 'FORMOSA', answer: 'FORMOSEÑO', given: 6 },
-          { clue: 'LA RIOJA', answer: 'RIOJANO', given: 2 },
-          { clue: 'MISIONES', answer: 'MISIONERO', given: 5 },
-          { clue: 'LA PAMPA', answer: 'PAMPEANO', given: 5 },
-        ],
-        explanation:
-          'Las letras que ya venían puestas forman LEONA. Los gentilicios son: platense, formoseño, riojano, misionero y pampeano.',
-      },
     ],
   },
 
   // ========================= 5. CLASIFICACIÓN SEMÁNTICA DE LOS ADJETIVOS ====
+  // Calificativos, numerales, posesivos, demostrativos y gentilicios, y el
+  // acróstico para escribir los gentilicios de cada lugar.
   {
     id: 'clasificacion-semantica-adjetivos',
     title: 'Clasificación semántica de los adjetivos',
@@ -1215,6 +1198,24 @@ export const grade4PdlPractices: Practice[] = [
         ],
         explanation:
           'Los demostrativos señalan la distancia: este/esta (cerca), ese/esa (a distancia media) y aquel/aquella (lejos).',
+      },
+      // --- Acróstico de gentilicios (acrostic) ---
+      {
+        id: 'csa-acro1',
+        kind: 'acrostic',
+        emoji: '✍️',
+        prompt:
+          'Completá el acróstico con los adjetivos gentilicios derivados de cada lugar.',
+        hint: 'El gentilicio dice de dónde es alguien o algo. Las letras que ya están puestas, leídas de arriba hacia abajo, forman una palabra.',
+        rows: [
+          { clue: 'LA PLATA', answer: 'PLATENSE', given: 1 },
+          { clue: 'FORMOSA', answer: 'FORMOSEÑO', given: 6 },
+          { clue: 'LA RIOJA', answer: 'RIOJANO', given: 2 },
+          { clue: 'MISIONES', answer: 'MISIONERO', given: 5 },
+          { clue: 'LA PAMPA', answer: 'PAMPEANO', given: 5 },
+        ],
+        explanation:
+          'Las letras que ya venían puestas forman LEONA. Los gentilicios son: platense, formoseño, riojano, misionero y pampeano.',
       },
     ],
   },
