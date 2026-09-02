@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { getSubject } from '../data/grades'
+import { showsNewBadge } from '../lib/badges'
 import NotFoundPage from './NotFoundPage'
 
 // Dentro de una materia el alumno elige el PERÍODO (ej: 1st Midterms).
@@ -41,7 +42,12 @@ export default function SubjectPage() {
                   {term.emoji}
                 </span>
                 <span className="practice-card__body">
-                  <span className="practice-card__title">{term.name}</span>
+                  <span className="practice-card__title-row">
+                    <span className="practice-card__title">{term.name}</span>
+                    {showsNewBadge(term.newUntil) && (
+                      <span className="badge-new">NEW</span>
+                    )}
+                  </span>
                   {term.description && (
                     <span className="practice-card__desc">
                       {term.description}
