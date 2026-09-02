@@ -739,29 +739,6 @@ export const grade4PdlPractices: Practice[] = [
         explanation:
           'Los adjetivos gentilicios indican de dónde es alguien o algo: argentino, español, porteño, etc.',
       },
-      // --- Completar con el adjetivo correcto (drag) ---
-      {
-        id: 'csa-drag1',
-        kind: 'drag',
-        prompt:
-          'Completá: «____ casa tiene ____ ventanas ____».',
-        segments: ['', ' casa tiene ', ' ventanas ', '.'],
-        blanks: ['Nuestra', 'cuatro', 'grandes'],
-        bank: ['Nuestra', 'cuatro', 'grandes', 'corrió', 'lejos'],
-        explanation:
-          '«Nuestra» es posesivo, «cuatro» es numeral y «grandes» es calificativo.',
-      },
-      {
-        id: 'csa-drag2',
-        kind: 'drag',
-        prompt:
-          'Completá: «____ jugador ____ metió el ____ gol».',
-        segments: ['', ' jugador ', ' metió el ', ' gol.'],
-        blanks: ['Aquel', 'uruguayo', 'primer'],
-        bank: ['Aquel', 'uruguayo', 'primer', 'rápido', 'corre'],
-        explanation:
-          '«Aquel» es demostrativo, «uruguayo» es gentilicio y «primer» es numeral.',
-      },
       // --- Más identificación (choice) ---
       {
         id: 'csa7',
@@ -786,6 +763,62 @@ export const grade4PdlPractices: Practice[] = [
         ],
         explanation:
           'Los posesivos indican posesión o pertenencia: mi libro, tu casa, su perro, nuestro equipo.',
+      },
+      {
+        id: 'csa9',
+        prompt: 'Los adjetivos calificativos son aquellos que...',
+        options: [
+          {
+            text: 'Indican una cualidad del sustantivo (grande, rojo, suave)',
+            correct: true,
+          },
+          { text: 'Indican a quién pertenece el sustantivo (mi, tu, su)' },
+          { text: 'Indican el lugar de origen del sustantivo (argentino, español)' },
+        ],
+        explanation:
+          'Los calificativos describen cualidades: color, tamaño, forma o carácter. Ej.: una casa grande, un perro manso.',
+      },
+      {
+        id: 'csa10',
+        prompt: 'Los adjetivos gentilicios son aquellos que...',
+        options: [
+          {
+            text: 'Indican el lugar de origen del sustantivo (argentino, español, porteño)',
+            correct: true,
+          },
+          { text: 'Señalan la distancia del sustantivo (este, ese, aquel)' },
+          { text: 'Indican la cantidad o el orden del sustantivo (dos, primero)' },
+        ],
+        explanation:
+          'Los gentilicios dicen de dónde es alguien o algo: la comida mexicana, un turista chileno, una calle cordobesa.',
+      },
+      {
+        id: 'csa11',
+        prompt: 'Los adjetivos numerales son aquellos que...',
+        options: [
+          {
+            text: 'Indican la cantidad o el orden del sustantivo (dos, tres, primero, segundo)',
+            correct: true,
+          },
+          { text: 'Indican una cualidad del sustantivo (alto, dulce, veloz)' },
+          { text: 'Indican a quién pertenece el sustantivo (mi, tu, nuestro)' },
+        ],
+        explanation:
+          'Los numerales indican cantidad (cardinales: dos, tres, diez) u orden (ordinales: primero, segundo, quinto).',
+      },
+      {
+        id: 'csa12',
+        prompt: 'Los adjetivos demostrativos son aquellos que...',
+        options: [
+          {
+            text: 'Señalan a qué distancia está el sustantivo (este, ese, aquel)',
+            correct: true,
+          },
+          { text: 'Indican el lugar de origen del sustantivo (cordobés, brasileño)' },
+          { text: 'Indican una cualidad del sustantivo (brillante, pequeño)' },
+        ],
+        explanation:
+          'Los demostrativos señalan la distancia: este/esta (cerca), ese/esa (a distancia media) y aquel/aquella (lejos).',
       },
     ],
   },
