@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { grades, gradePractices } from '../data/grades'
+import { gameGrade } from '../data/game'
 import { showsNewBadge } from '../lib/badges'
 
 export default function HomePage() {
@@ -36,6 +37,20 @@ export default function HomePage() {
             </li>
           )
         })}
+        {/* "En construcción": no es un grado con prácticas, es el juego. */}
+        <li>
+          <Link
+            to="/juego"
+            className="grade-card grade-card--game"
+            style={{ ['--accent' as string]: gameGrade.color }}
+          >
+            <span className="grade-card__emoji" aria-hidden="true">
+              {gameGrade.emoji}
+            </span>
+            <span className="grade-card__name">{gameGrade.name}</span>
+            <span className="grade-card__meta">{gameGrade.description}</span>
+          </Link>
+        </li>
       </ul>
     </section>
   )

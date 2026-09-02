@@ -8,6 +8,8 @@ import GradePage from './pages/GradePage'
 import SubjectPage from './pages/SubjectPage'
 import TermPage from './pages/TermPage'
 import PracticePage from './pages/PracticePage'
+import GameMapPage from './pages/GameMapPage'
+import GameLevelPage from './pages/GameLevelPage'
 import PrivacyPage from './pages/PrivacyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -25,6 +27,9 @@ const router = createBrowserRouter([
         path: 'grado/:gradeId/:subjectId/:termId/:practiceId',
         element: <PracticePage />,
       },
+      // "En construcción": el juego de aprender a leer (mapa y niveles).
+      { path: 'juego', element: <GameMapPage /> },
+      { path: 'juego/nivel/:levelId', element: <GameLevelPage /> },
       { path: 'privacidad', element: <PrivacyPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
