@@ -16,6 +16,7 @@ import SentenceBuilder from '../components/SentenceBuilder'
 import VersePick from '../components/VersePick'
 import WordPick from '../components/WordPick'
 import WordLabel from '../components/WordLabel'
+import AcrosticFill from '../components/AcrosticFill'
 import PrepositionScene from '../components/PrepositionScene'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
@@ -657,6 +658,14 @@ function Quiz({
                 correct={dragCorrect}
                 onValidate={handleDragValidate}
               />
+            ) : question.kind === 'acrostic' ? (
+              <AcrosticFill
+                key={question.id}
+                question={question}
+                locked={answered}
+                correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
             ) : question.kind === 'reveal' ? (
               <RevealChoices
                 key={question.id}
@@ -746,7 +755,10 @@ function Quiz({
             </div>
           )}
 
-          {answered && (question.kind === 'words' || question.kind === 'analyze') && (
+          {answered &&
+            (question.kind === 'words' ||
+              question.kind === 'analyze' ||
+              question.kind === 'acrostic') && (
             <div
               className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
               role="status"

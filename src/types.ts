@@ -39,6 +39,19 @@ export interface SentenceColumn {
   answer: string
 }
 
+export interface AcrosticRow {
+  /** Lugar del que deriva el gentilicio (ej: 'LA PLATA'). */
+  clue: string
+  /** Gentilicio completo, en MAYÚSCULAS (ej: 'PLATENSE'). */
+  answer: string
+  /**
+   * Índice (base 0) de la letra de `answer` que ya viene escrita y que forma,
+   * con la de las demás filas, la palabra vertical del acróstico. Ej: en
+   * 'PLATENSE' el 1 deja fija la «L».
+   */
+  given: number
+}
+
 export interface Question {
   /** Identificador único dentro de la práctica. */
   id: string
@@ -68,9 +81,9 @@ export interface Question {
   /** Aclaración opcional que se muestra después de responder. */
   explanation?: string
   /**
-   * Pista opcional (kind 'reveal'): una ayuda para pensar ANTES de tocar una
-   * opción. Aparece plegada en un botón "Pista"; el alumno la abre solo si la
-   * necesita. No revela la respuesta: la orienta.
+   * Pista opcional (kinds 'reveal' y 'acrostic'): una ayuda para pensar ANTES
+   * de responder. Aparece plegada en un botón "Pista"; el alumno la abre solo
+   * si la necesita. No revela la respuesta: la orienta.
    */
   hint?: string
   /**
@@ -106,6 +119,11 @@ export interface Question {
    *    arrastra los cartelitos al casillero que corresponda: los MD, NÚCLEO,
    *    ... de una construcción sustantiva, o —con `bigNumbers`— la palabra
    *    ONE, TWO, THREE... debajo del número que le toca.
+   *  - 'acrostic': completar un acróstico escribiendo. Cada fila muestra una
+   *    consigna (ej: 'LA PLATA') y una hilera de casilleros, uno por letra de
+   *    la respuesta. La letra del acróstico ya viene puesta y resaltada, y las
+   *    filas quedan alineadas por esa columna; el alumno escribe las demás y
+   *    con 'Validar' se corrige fila por fila.
    */
   kind?:
   | 'choice'
@@ -119,6 +137,7 @@ export interface Question {
   | 'verses'
   | 'words'
   | 'analyze'
+  | 'acrostic'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -208,6 +227,11 @@ export interface Question {
    * No hace falta incluir `answer`: ya se acepta por defecto.
    */
   accept?: string[]
+  /**
+   * Para kind 'acrostic': las filas del acróstico, de arriba hacia abajo. Las
+   * letras `given` de cada fila, leídas en orden, forman la palabra vertical.
+   */
+  rows?: AcrosticRow[]
 }
 
 export interface Practice {
