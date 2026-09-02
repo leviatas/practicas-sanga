@@ -152,6 +152,24 @@ export const grade4PdlPractices: Practice[] = [
           { text: 'chocolate dulce', category: 'Gustativa' },
         ],
       },
+      // --- Clasificar rimas (classify) ---
+      {
+        id: 'is-clas3',
+        kind: 'classify',
+        prompt: 'Clasificá las parejas de palabras según cómo riman.',
+        categories: ['Rima consonante', 'Rima asonante', 'No riman'],
+        items: [
+          { text: 'gato – pato', category: 'Rima consonante' },
+          { text: 'canción – corazón', category: 'Rima consonante' },
+          { text: 'estrella – bella', category: 'Rima consonante' },
+          { text: 'ventana – mañana', category: 'Rima consonante' },
+          { text: 'mesa – pera', category: 'Rima asonante' },
+          { text: 'luna – ruta', category: 'Rima asonante' },
+          { text: 'camino – vestido', category: 'Rima asonante' },
+          { text: 'perro – árbol', category: 'No riman' },
+          { text: 'mariposa – jardín', category: 'No riman' },
+        ],
+      },
       // --- Poesía: verso y estrofa (choice) ---
       {
         id: 'po1',
