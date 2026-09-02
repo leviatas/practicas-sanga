@@ -71,7 +71,7 @@ function grade4Subjects(): Subject[] {
       id: 'pdl',
       name: 'Prácticas del Lenguaje',
       emoji: '📚',
-      isNew: true,
+      newUntil: '2026-09-15',
       description: 'Poesía, gramática, diccionario y tildación.',
       terms: [
         {
@@ -79,7 +79,7 @@ function grade4Subjects(): Subject[] {
           name: '2do Trimestre',
           emoji: '📚',
           description:
-            'Poesía, artículos y adjetivos, diccionario, clasificación semántica y tildación.',
+            'Poesía, artículos y adjetivos, construcción sustantiva, diccionario, clasificación semántica y tildación.',
           practices: grade4PdlPractices,
         },
       ],
@@ -190,6 +190,7 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
+    newUntil: '2026-09-15',
     subjects: grade1English(grade1Practices, [
       ...grade1BodyPartsPractices,
       ...grade1BodyLabelPractices,
@@ -201,6 +202,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
+    newUntil: '2026-09-15',
     subjects: grade4Subjects(),
   },
 ]

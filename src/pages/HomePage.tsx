@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { grades, gradePractices } from '../data/grades'
+import { showsNewBadge } from '../lib/badges'
 
 export default function HomePage() {
   return (
@@ -21,6 +22,9 @@ export default function HomePage() {
                 className="grade-card"
                 style={{ ['--accent' as string]: grade.color }}
               >
+                {showsNewBadge(grade.newUntil) && (
+                  <span className="badge-new grade-card__badge">NEW</span>
+                )}
                 <span className="grade-card__emoji" aria-hidden="true">
                   {grade.emoji}
                 </span>

@@ -2,15 +2,16 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → cinco prácticas:
+// 2do Trimestre → seis prácticas:
 //
 // 1) La poesía y las imágenes sensoriales
 // 2) Los artículos y los adjetivos — La construcción sustantiva
-// 3) El diccionario y la enciclopedia
-// 4) Clasificación semántica de los adjetivos
-// 5) Separación en sílabas y reglas de tildación
+// 3) Construcción sustantiva (núcleo y modificadores directos e indirectos)
+// 4) El diccionario y la enciclopedia
+// 5) Clasificación semántica de los adjetivos
+// 6) Separación en sílabas y reglas de tildación
 //
-// Formatos usados: choice, drag, classify, reveal.
+// Formatos usados: choice, drag, classify, reveal, words, analyze.
 // Consignas y explicaciones en castellano.
 // ============================================================================
 
@@ -376,7 +377,244 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 3. EL DICCIONARIO Y LA ENCICLOPEDIA ============
+  // ========================= 3. CONSTRUCCIÓN SUSTANTIVA ====================
+  // Señalar el núcleo, señalar los modificadores (directos e indirectos) y
+  // analizar la construcción entera poniendo un cartelito debajo de cada
+  // palabra. Cierra con las definiciones, para repasar la teoría.
+  {
+    id: 'construccion-sustantiva',
+    title: 'Construcción sustantiva',
+    description:
+      'Señalá el núcleo y los modificadores directos e indirectos, y analizá la construcción palabra por palabra.',
+    emoji: '🧩',
+    questions: [
+      // --- Tocá el núcleo (words) ---
+      {
+        id: 'cs-nu1',
+        kind: 'words',
+        prompt: 'Tocá el núcleo.',
+        words: ['La', 'pequeña', 'mariposa', 'azul'],
+        pick: [2],
+        explanation:
+          'El núcleo de la construcción sustantiva es el sustantivo: «mariposa». «La», «pequeña» y «azul» solo la acompañan.',
+      },
+      {
+        id: 'cs-nu2',
+        kind: 'words',
+        prompt: 'Tocá el núcleo.',
+        words: ['Los', 'altos', 'árboles', 'verdes'],
+        pick: [2],
+        explanation:
+          'El núcleo es el sustantivo «árboles»: es la palabra más importante y de la que hablan las demás.',
+      },
+
+      // --- Tocá los modificadores directos (words) ---
+      {
+        id: 'cs-md1',
+        kind: 'words',
+        prompt: 'Tocá los modificadores directos.',
+        words: ['Las', 'altas', 'montañas', 'nevadas'],
+        pick: [0, 1, 3],
+        explanation:
+          'Los modificadores directos son «las», «altas» y «nevadas»: acompañan al núcleo «montañas» sin ninguna palabra en el medio.',
+      },
+      {
+        id: 'cs-md2',
+        kind: 'words',
+        prompt: 'Tocá los modificadores directos.',
+        words: ['El', 'pequeño', 'barco', 'pesquero'],
+        pick: [0, 1, 3],
+        explanation:
+          'El artículo «el» y los adjetivos «pequeño» y «pesquero» modifican directamente al núcleo «barco».',
+      },
+
+      // --- Analizar la construcción entera (analyze) ---
+      {
+        id: 'cs-an1',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['Las', 'altas', 'montañas', 'nevadas'],
+        labels: ['MD', 'MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «montañas» y los tres modificadores directos son «Las», «altas» y «nevadas».',
+      },
+      {
+        id: 'cs-an2',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['El', 'gato', 'negro'],
+        labels: ['MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «gato»; «El» y «negro» son sus modificadores directos.',
+      },
+      {
+        id: 'cs-an3',
+        kind: 'analyze',
+        prompt: 'Arrastrá cada cartelito al casillero que corresponda.',
+        words: ['La', 'pequeña', 'mariposa', 'azul'],
+        labels: ['MD', 'MD', 'NÚCLEO', 'MD'],
+        explanation:
+          'El núcleo es «mariposa» y «La», «pequeña» y «azul» son modificadores directos.',
+      },
+
+      // --- Tocá el modificador indirecto (words) ---
+      {
+        id: 'cs-mi1',
+        kind: 'words',
+        prompt: 'Tocá el modificador indirecto.',
+        words: ['La', 'casa', 'de', 'madera'],
+        pick: [2, 3],
+        explanation:
+          'El modificador indirecto es «de madera»: es un grupo de palabras que se une al núcleo «casa» por medio de la preposición «de».',
+      },
+      {
+        id: 'cs-mi2',
+        kind: 'words',
+        prompt: 'Tocá el nexo que une el modificador indirecto con el núcleo.',
+        words: ['Un', 'libro', 'sobre', 'dinosaurios'],
+        pick: [2],
+        explanation:
+          'El nexo es la preposición «sobre»: conecta el núcleo «libro» con el modificador indirecto.',
+      },
+
+      // --- Analizar con modificador indirecto (analyze) ---
+      {
+        id: 'cs-mi-an1',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «Los zapatos nuevos de Juan están junto a la puerta».',
+        words: ['Los', 'zapatos', 'nuevos', 'de Juan'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'MI'],
+        explanation:
+          'Núcleo: «zapatos». MD: «Los» y «nuevos». MI: «de Juan», unido al núcleo por la preposición «de».',
+      },
+      {
+        id: 'cs-mi-an2',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «Una tortuga pequeña con manchas caminaba por el jardín».',
+        words: ['Una', 'tortuga', 'pequeña', 'con manchas'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'MI'],
+        explanation:
+          'Núcleo: «tortuga». MD: «Una» y «pequeña». MI: «con manchas», unido al núcleo por la preposición «con».',
+      },
+      {
+        id: 'cs-mi-an3',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «El enorme árbol del parque tiene muchas ramas».',
+        words: ['El', 'enorme', 'árbol', 'del parque'],
+        labels: ['MD', 'MD', 'NÚCLEO', 'MI'],
+        explanation:
+          'Núcleo: «árbol». MD: «El» y «enorme». MI: «del parque», unido al núcleo por la preposición «de» («del» = de + el).',
+      },
+      {
+        id: 'cs-mi-an4',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «La caja misteriosa sin tapa estaba debajo de la cama».',
+        words: ['La', 'caja', 'misteriosa', 'sin tapa'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'MI'],
+        explanation:
+          'Núcleo: «caja». MD: «La» y «misteriosa». MI: «sin tapa», unido al núcleo por la preposición «sin».',
+      },
+      {
+        id: 'cs-mi-an5',
+        kind: 'analyze',
+        prompt:
+          'Analizá la construcción sustantiva de «Los libros interesantes sobre animales están en la biblioteca».',
+        words: ['Los', 'libros', 'interesantes', 'sobre animales'],
+        labels: ['MD', 'NÚCLEO', 'MD', 'MI'],
+        explanation:
+          'Núcleo: «libros». MD: «Los» e «interesantes». MI: «sobre animales», unido al núcleo por la preposición «sobre».',
+      },
+
+      // --- Las definiciones (choice) ---
+      {
+        id: 'cs-def1',
+        prompt: 'Una construcción sustantiva es...',
+        options: [
+          {
+            text: 'Un grupo de palabras cuya palabra principal es un sustantivo, acompañado por otras que lo modifican',
+            correct: true,
+          },
+          { text: 'Un grupo de palabras cuya palabra principal es un verbo' },
+          { text: 'Una oración completa, con sujeto y predicado' },
+        ],
+        explanation:
+          'La construcción sustantiva tiene un sustantivo como palabra principal (el núcleo) y otras palabras que lo acompañan y lo modifican.',
+      },
+      {
+        id: 'cs-def2',
+        prompt: 'El modificador directo es...',
+        options: [
+          {
+            text: 'El artículo o el adjetivo que acompaña al sustantivo sin ninguna palabra en el medio',
+            correct: true,
+          },
+          {
+            text: 'Un grupo de palabras que se une al sustantivo con una preposición',
+          },
+          { text: 'La palabra principal de la construcción sustantiva' },
+        ],
+        explanation:
+          'En «el perro manso», «el» y «manso» son modificadores directos: acompañan al núcleo sin ninguna palabra en el medio.',
+      },
+      {
+        id: 'cs-def3',
+        prompt: 'El modificador directo concuerda con el núcleo en...',
+        options: [
+          { text: 'Género y número', correct: true },
+          { text: 'Solo en género' },
+          { text: 'Solo en número' },
+        ],
+        explanation:
+          'Si el núcleo cambia, el modificador directo cambia con él: «la casa blanca» → «las casas blancas».',
+      },
+      {
+        id: 'cs-def4',
+        prompt:
+          '¿En cuál de estas construcciones el modificador directo concuerda bien con el núcleo?',
+        options: [
+          { text: 'Las ventanas abiertas', correct: true },
+          { text: 'Las ventanas abierto' },
+          { text: 'Los ventanas abiertas' },
+        ],
+        explanation:
+          '«Ventanas» es femenino plural, así que el artículo y el adjetivo también van en femenino plural: «Las ventanas abiertas».',
+      },
+      {
+        id: 'cs-def5',
+        prompt: 'El modificador indirecto es...',
+        options: [
+          {
+            text: 'Un grupo de palabras que acompaña al sustantivo y se une a él mediante una preposición',
+            correct: true,
+          },
+          {
+            text: 'Un adjetivo que acompaña al sustantivo sin nada en el medio',
+          },
+          { text: 'El sustantivo principal de la construcción' },
+        ],
+        explanation:
+          'En «la casa de madera», el modificador indirecto es «de madera»: se une al núcleo por medio de la preposición «de».',
+      },
+      {
+        id: 'cs-def6',
+        prompt:
+          'En «la casa de madera», ¿qué palabra conecta el modificador indirecto con el núcleo?',
+        options: [
+          { text: '«de», que es una preposición', correct: true },
+          { text: '«la», que es un artículo' },
+          { text: '«madera», que es un sustantivo' },
+        ],
+        explanation:
+          'El modificador indirecto siempre tiene un nexo que lo conecta con el núcleo, y ese nexo es una preposición: de, con, sin, sobre, para, entre otras.',
+      },
+    ],
+  },
+
+  // ========================= 4. EL DICCIONARIO Y LA ENCICLOPEDIA ============
   {
     id: 'diccionario-enciclopedia',
     title: 'El diccionario y la enciclopedia',
@@ -574,7 +812,7 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 4. CLASIFICACIÓN SEMÁNTICA DE LOS ADJETIVOS ====
+  // ========================= 5. CLASIFICACIÓN SEMÁNTICA DE LOS ADJETIVOS ====
   {
     id: 'clasificacion-semantica-adjetivos',
     title: 'Clasificación semántica de los adjetivos',
@@ -790,7 +1028,7 @@ export const grade4PdlPractices: Practice[] = [
     ],
   },
 
-  // ========================= 5. SEPARACIÓN EN SÍLABAS Y REGLAS DE TILDACIÓN =
+  // ========================= 6. SEPARACIÓN EN SÍLABAS Y REGLAS DE TILDACIÓN =
   {
     id: 'silabas-tildacion',
     title: 'Separación en sílabas y reglas de tildación',

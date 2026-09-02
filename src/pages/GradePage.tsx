@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getGrade } from '../data/grades'
 import { loadName, saveName } from '../lib/profile'
+import { showsNewBadge } from '../lib/badges'
 import NotFoundPage from './NotFoundPage'
 
 // Dentro de un grado el alumno elige primero la MATERIA (ej: English).
@@ -113,7 +114,9 @@ export default function GradePage() {
                 <span className="practice-card__body">
                   <span className="practice-card__title-row">
                     <span className="practice-card__title">{subject.name}</span>
-                    {subject.isNew && <span className="badge-new">NEW</span>}
+                    {showsNewBadge(subject.newUntil) && (
+                      <span className="badge-new">NEW</span>
+                    )}
                   </span>
                   {/* La descripción de la materia no se muestra: ocupaba
                       demasiado lugar en la lista (sigue en los datos). */}
