@@ -26,13 +26,15 @@ import { jardinPractices } from './jardin'
 // ============================================================================
 
 // Helper: arma la materia "English" para 1er grado con los períodos
-// "1st Midterms" y "2nd Midterms".
+// "1st Midterms" y "2nd Midterms". La materia y el "2nd Midterms" llevan
+// etiqueta NEW (vence sola en la fecha de `newUntil`).
 function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices: Practice[]): Subject[] {
   return [
     {
       id: 'english',
       name: 'English',
       emoji: '📖',
+      newUntil: '2026-09-15',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -46,6 +48,7 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
           id: '2nd-midterms',
           name: '2nd Midterms',
           emoji: '📝',
+          newUntil: '2026-09-15',
           description: 'Todas las prácticas para el segundo parcial.',
           practices: secondMidtermPractices,
         },

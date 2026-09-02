@@ -223,6 +223,8 @@ export interface Term {
   emoji: string
   /** Descripción corta (opcional). */
   description?: string
+  /** Hasta qué día se muestra la etiqueta "NEW" ('AAAA-MM-DD', inclusive). */
+  newUntil?: string
   /** Prácticas de este período. */
   practices: Practice[]
 }
