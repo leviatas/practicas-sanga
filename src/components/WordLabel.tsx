@@ -19,6 +19,11 @@ import type { Question } from '../types'
 // abajo un banco de cartelitos (MD, NÚCLEO, ...) para arrastrar al casillero
 // que corresponda. Con "Validar" se corrige todo junto.
 //
+// Además de arrastrar, se puede TOCAR un cartelito del banco (queda elegido) y
+// después tocar el casillero donde va: más cómodo en celular y para los más
+// chicos. Tocar un casillero ya lleno (sin nada elegido) devuelve su cartelito
+// al banco.
+//
 // Los cartelitos se repiten (hay varios MD), así que cada uno tiene identidad
 // propia por su ÍNDICE en el banco y la corrección compara el TEXTO: un MD es
 // correcto en cualquiera de los casilleros que llevan MD.
@@ -37,24 +42,27 @@ function shuffle<T>(items: readonly T[]): T[] {
   return arr
 }
 
+/** Cartelito del banco: se arrastra o se toca para elegirlo. */
 function Tag({
   id,
   text,
-  disabled,
+  picked,
+  onPick,
 }: {
   id: string
   text: string
-  disabled?: boolean
+  picked: boolean
+  onPick: () => void
 }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id,
-    disabled,
-  })
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id })
   return (
     <button
       ref={setNodeRef}
       type="button"
-      className={`drag-chip word-tag${isDragging ? ' is-dragging' : ''}`}
+      className={`drag-chip word-tag${isDragging ? ' is-dragging' : ''}${
+        picked ? ' is-picked' : ''
+      }`}
+      onClick={onPick}
       {...listeners}
       {...attributes}
     >
@@ -71,6 +79,7 @@ function WordSlot({
   state,
   disabled,
   big,
+  onTap,
 }: {
   index: number
   word: string
@@ -79,8 +88,16 @@ function WordSlot({
   state: '' | 'is-correct' | 'is-wrong'
   disabled: boolean
   big?: boolean
+  onTap: () => void
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `slot:${index}`, disabled })
+  // El cartelito ya puesto se puede arrastrar a otro casillero (o de vuelta al
+  // banco) y también sacar con un toque, ver `onTap`. El casillero vacío es un
+  // botón igual, así se puede tocar para soltar ahí el cartelito elegido.
+  const drag = useDraggable({
+    id: tagId !== null ? `tag:${tagId}` : `empty:${index}`,
+    disabled: disabled || tagId === null,
+  })
   return (
     <div className="word-slot">
       <span
@@ -93,11 +110,20 @@ function WordSlot({
         ref={setNodeRef}
         className={`word-box ${state} ${isOver ? 'is-over' : ''}`}
       >
-        {tagId !== null && tagText !== null ? (
-          <Tag id={`tag:${tagId}`} text={tagText} disabled={disabled} />
-        ) : (
-          <span className="word-box__ph">⬚</span>
-        )}
+        <button
+          ref={drag.setNodeRef}
+          type="button"
+          className={
+            tagText !== null
+              ? `drag-chip word-tag${drag.isDragging ? ' is-dragging' : ''}`
+              : 'word-box__btn'
+          }
+          onClick={onTap}
+          {...drag.listeners}
+          {...drag.attributes}
+        >
+          {tagText ?? <span className="word-box__ph">⬚</span>}
+        </button>
       </span>
     </div>
   )
@@ -130,6 +156,8 @@ export default function WordLabel({
     words.map(() => null),
   )
   const [activeId, setActiveId] = useState<number | null>(null)
+  // Cartelito elegido con un toque (esperando que toquen un casillero).
+  const [picked, setPicked] = useState<number | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -150,7 +178,34 @@ export default function WordLabel({
     return tagId === null ? null : (tags[tagId]?.text ?? null)
   }
 
+  /** Pone el cartelito en ese casillero (sacándolo de donde estuviera). */
+  function place(tagId: number, index: number) {
+    setAssign((prev) => {
+      const next = prev.map((v) => (v === tagId ? null : v))
+      next[index] = tagId // (si estaba ocupado, el anterior vuelve al banco)
+      return next
+    })
+    setPicked(null)
+  }
+
+  // Toque en un cartelito del banco: queda elegido, y tocarlo de nuevo lo
+  // deselecciona.
+  function handleTagTap(tagId: number) {
+    if (locked) return
+    setPicked((prev) => (prev === tagId ? null : tagId))
+  }
+
+  // Toque en un casillero: si hay un cartelito elegido lo coloca ahí; si no,
+  // devuelve al banco el que estuviera puesto.
+  function handleSlotTap(index: number) {
+    if (locked) return
+    if (picked !== null) place(picked, index)
+    else if (assign[index] !== null)
+      setAssign((prev) => prev.map((v, i) => (i === index ? null : v)))
+  }
+
   function handleDragStart(e: DragStartEvent) {
+    setPicked(null)
     setActiveId(tagIdFromDndId(String(e.active.id)))
   }
 
@@ -161,14 +216,12 @@ export default function WordLabel({
     if (tagId === null) return
     const overId = e.over ? String(e.over.id) : null
 
-    setAssign((prev) => {
-      const next = prev.map((v) => (v === tagId ? null : v)) // sacarlo de donde estaba
-      if (overId && overId.startsWith('slot:')) {
-        const idx = Number(overId.slice(5))
-        next[idx] = tagId // (si estaba ocupado, el anterior vuelve al banco)
-      }
-      return next
-    })
+    if (overId && overId.startsWith('slot:')) {
+      place(tagId, Number(overId.slice(5)))
+    } else {
+      // Lo soltó fuera de todo casillero: vuelve al banco.
+      setAssign((prev) => prev.map((v) => (v === tagId ? null : v)))
+    }
   }
 
   // Cada casillero está bien si su cartelito dice lo que corresponde a esa
@@ -202,6 +255,7 @@ export default function WordLabel({
             state={stateFor(i)}
             disabled={locked}
             big={big}
+            onTap={() => handleSlotTap(i)}
           />
         ))}
       </div>
@@ -215,10 +269,21 @@ export default function WordLabel({
               </span>
             ) : (
               bankTags.map((t) => (
-                <Tag key={t.id} id={`tag:${t.id}`} text={t.text} />
+                <Tag
+                  key={t.id}
+                  id={`tag:${t.id}`}
+                  text={t.text}
+                  picked={picked === t.id}
+                  onPick={() => handleTagTap(t.id)}
+                />
               ))
             )}
           </div>
+          <p className="drag-hint">
+            {picked !== null
+              ? `Ahora tocá el casillero donde va ${textOf(picked)} 👇`
+              : 'Podés arrastrar el cartelito, o tocarlo y después tocar el casillero.'}
+          </p>
           <div className="quiz-actions">
             <button
               type="button"

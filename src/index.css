@@ -1762,6 +1762,29 @@ button {
   font-size: 0.95rem;
 }
 
+/* Cartelito elegido con un toque (esperando que toquen un casillero). */
+.word-tag.is-picked {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+/* El casillero vacío es un botón que ocupa toda la caja, así se puede tocar
+   en cualquier parte para soltar ahí el cartelito elegido. */
+.word-box__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 /* ---- Completar el acróstico (kind 'acrostic') ----
    Cada fila es una consigna ('LA PLATA ☞') más una hilera de casilleros, uno
    por letra. La letra del acróstico viene puesta y resaltada, y las filas se
