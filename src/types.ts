@@ -226,6 +226,8 @@ export interface Grade {
   emoji: string
   /** Color de acento (cualquier valor CSS válido). */
   color: string
+  /** Muestra la etiqueta "NEW" en la pantalla de inicio. */
+  isNew?: boolean
   /** Materias del grado (ej: English). Cada una tiene sus períodos y prácticas. */
   subjects: Subject[]
 }

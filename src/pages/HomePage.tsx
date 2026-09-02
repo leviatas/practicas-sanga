@@ -21,6 +21,9 @@ export default function HomePage() {
                 className="grade-card"
                 style={{ ['--accent' as string]: grade.color }}
               >
+                {grade.isNew && (
+                  <span className="badge-new grade-card__badge">NEW</span>
+                )}
                 <span className="grade-card__emoji" aria-hidden="true">
                   {grade.emoji}
                 </span>

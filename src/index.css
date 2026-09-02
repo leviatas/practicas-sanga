@@ -456,6 +456,14 @@ button {
   transition: transform 0.12s ease, border-color 0.12s ease;
   border-top: 6px solid var(--accent);
   min-height: 150px;
+  position: relative;
+}
+
+/* La etiqueta "NEW" va en la esquina, para no correr el emoji ni el nombre. */
+.grade-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .grade-card:hover {

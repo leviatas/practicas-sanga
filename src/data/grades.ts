@@ -190,6 +190,7 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
+    isNew: true,
     subjects: grade1English(grade1Practices, [
       ...grade1BodyPartsPractices,
       ...grade1BodyLabelPractices,
@@ -201,6 +202,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
+    isNew: true,
     subjects: grade4Subjects(),
   },
 ]
