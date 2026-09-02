@@ -2,10 +2,9 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Prácticas del Lenguaje (PDL)
-// 2do Trimestre → seis prácticas:
+// 2do Trimestre → cinco prácticas:
 //
-// 1) La poesía y las imágenes sensoriales (todavía sin ejercicios)
-// 1 bis) La poesía y las imágenes sensoriales Extra
+// 1) La poesía y las imágenes sensoriales
 // 2) Los artículos y los adjetivos — La construcción sustantiva
 // 3) El diccionario y la enciclopedia
 // 4) Clasificación semántica de los adjetivos
@@ -17,23 +16,10 @@ import type { Practice } from '../types'
 
 export const grade4PdlPractices: Practice[] = [
   // ========================= 1. POESÍA E IMÁGENES SENSORIALES ==============
-  // Reconocer la forma del poema: estrofas y versos. Cada pregunta muestra el
-  // poema completo arriba de la consigna y se responde tocando un número.
+  // Identificar y clasificar imágenes sensoriales, más verso, estrofa y rima.
   {
     id: 'poesia-imagenes-sensoriales',
     title: 'La poesía y las imágenes sensoriales',
-    description: 'Contá las estrofas y los versos de un poema.',
-    emoji: '📜',
-    // Sin ejercicios por ahora: se van a cargar los nuevos.
-    questions: [],
-  },
-
-  // ============== 1 bis. POESÍA E IMÁGENES SENSORIALES — EXTRA ============
-  // Los ejercicios que antes estaban en "La poesía y las imágenes
-  // sensoriales".
-  {
-    id: 'poesia-imagenes-sensoriales-extra',
-    title: 'La poesía y las imágenes sensoriales Extra',
     description:
       'Identificá y clasificá imágenes sensoriales en fragmentos poéticos: visuales, auditivas, olfativas, gustativas y táctiles.',
     emoji: '📜',
@@ -90,7 +76,7 @@ export const grade4PdlPractices: Practice[] = [
       {
         id: 'is5',
         prompt:
-          '«Probé la miel dorada y dulce del panal.» ¿Qué tipo de imagen sensorial es?',
+          '«Probé la miel dulce del panal.» ¿Qué tipo de imagen sensorial es?',
         options: [
           { text: 'Gustativa', correct: true },
           { text: 'Olfativa' },
@@ -165,28 +151,6 @@ export const grade4PdlPractices: Practice[] = [
           { text: 'aroma a café', category: 'Olfativa' },
           { text: 'chocolate dulce', category: 'Gustativa' },
         ],
-      },
-      // --- Completar versos (drag) ---
-      {
-        id: 'is-drag1',
-        kind: 'drag',
-        prompt:
-          'Completá el verso con la imagen sensorial correcta.',
-        segments: ['El viento ', ' me acariciaba la cara.'],
-        blanks: ['helado'],
-        bank: ['helado', 'azul', 'amargo'],
-        explanation:
-          '«Helado» es una imagen táctil que completa el sentido del verso.',
-      },
-      {
-        id: 'is-drag2',
-        kind: 'drag',
-        prompt: 'Completá el verso con las palabras correctas.',
-        segments: ['El ', ' de los pájaros llenaba el ', '.'],
-        blanks: ['canto', 'bosque'],
-        bank: ['canto', 'bosque', 'sabor', 'color'],
-        explanation:
-          '«El canto de los pájaros llenaba el bosque» usa una imagen auditiva.',
       },
       // --- Poesía: verso y estrofa (choice) ---
       {
@@ -775,29 +739,6 @@ export const grade4PdlPractices: Practice[] = [
         explanation:
           'Los adjetivos gentilicios indican de dónde es alguien o algo: argentino, español, porteño, etc.',
       },
-      // --- Completar con el adjetivo correcto (drag) ---
-      {
-        id: 'csa-drag1',
-        kind: 'drag',
-        prompt:
-          'Completá: «____ casa tiene ____ ventanas ____».',
-        segments: ['', ' casa tiene ', ' ventanas ', '.'],
-        blanks: ['Nuestra', 'cuatro', 'grandes'],
-        bank: ['Nuestra', 'cuatro', 'grandes', 'corrió', 'lejos'],
-        explanation:
-          '«Nuestra» es posesivo, «cuatro» es numeral y «grandes» es calificativo.',
-      },
-      {
-        id: 'csa-drag2',
-        kind: 'drag',
-        prompt:
-          'Completá: «____ jugador ____ metió el ____ gol».',
-        segments: ['', ' jugador ', ' metió el ', ' gol.'],
-        blanks: ['Aquel', 'uruguayo', 'primer'],
-        bank: ['Aquel', 'uruguayo', 'primer', 'rápido', 'corre'],
-        explanation:
-          '«Aquel» es demostrativo, «uruguayo» es gentilicio y «primer» es numeral.',
-      },
       // --- Más identificación (choice) ---
       {
         id: 'csa7',
@@ -822,6 +763,62 @@ export const grade4PdlPractices: Practice[] = [
         ],
         explanation:
           'Los posesivos indican posesión o pertenencia: mi libro, tu casa, su perro, nuestro equipo.',
+      },
+      {
+        id: 'csa9',
+        prompt: 'Los adjetivos calificativos son aquellos que...',
+        options: [
+          {
+            text: 'Indican una cualidad del sustantivo (grande, rojo, suave)',
+            correct: true,
+          },
+          { text: 'Indican a quién pertenece el sustantivo (mi, tu, su)' },
+          { text: 'Indican el lugar de origen del sustantivo (argentino, español)' },
+        ],
+        explanation:
+          'Los calificativos describen cualidades: color, tamaño, forma o carácter. Ej.: una casa grande, un perro manso.',
+      },
+      {
+        id: 'csa10',
+        prompt: 'Los adjetivos gentilicios son aquellos que...',
+        options: [
+          {
+            text: 'Indican el lugar de origen del sustantivo (argentino, español, porteño)',
+            correct: true,
+          },
+          { text: 'Señalan la distancia del sustantivo (este, ese, aquel)' },
+          { text: 'Indican la cantidad o el orden del sustantivo (dos, primero)' },
+        ],
+        explanation:
+          'Los gentilicios dicen de dónde es alguien o algo: la comida mexicana, un turista chileno, una calle cordobesa.',
+      },
+      {
+        id: 'csa11',
+        prompt: 'Los adjetivos numerales son aquellos que...',
+        options: [
+          {
+            text: 'Indican la cantidad o el orden del sustantivo (dos, tres, primero, segundo)',
+            correct: true,
+          },
+          { text: 'Indican una cualidad del sustantivo (alto, dulce, veloz)' },
+          { text: 'Indican a quién pertenece el sustantivo (mi, tu, nuestro)' },
+        ],
+        explanation:
+          'Los numerales indican cantidad (cardinales: dos, tres, diez) u orden (ordinales: primero, segundo, quinto).',
+      },
+      {
+        id: 'csa12',
+        prompt: 'Los adjetivos demostrativos son aquellos que...',
+        options: [
+          {
+            text: 'Señalan a qué distancia está el sustantivo (este, ese, aquel)',
+            correct: true,
+          },
+          { text: 'Indican el lugar de origen del sustantivo (cordobés, brasileño)' },
+          { text: 'Indican una cualidad del sustantivo (brillante, pequeño)' },
+        ],
+        explanation:
+          'Los demostrativos señalan la distancia: este/esta (cerca), ese/esa (a distancia media) y aquel/aquella (lejos).',
       },
     ],
   },
