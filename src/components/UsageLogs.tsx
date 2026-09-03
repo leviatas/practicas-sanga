@@ -94,6 +94,8 @@ export default function UsageLogs({
   const s = data?.summary
   const acc = data?.access
   const days = acc?.lastDays ?? 7
+  // Cuántas IPs distintas entraron o lo intentaron alguna vez.
+  const uniqueIps = acc?.uniqueIps ?? acc?.byIp.length ?? 0
   const ips = acc ? recentIps(acc, days) : []
 
   return (
@@ -118,6 +120,41 @@ export default function UsageLogs({
               <div className="logs-tile"><strong>{s.pct}%</strong><span>Correctas</span></div>
             </div>
             <p className="logs-last">Última actividad: {fmt(s.last)}</p>
+
+            {acc && (
+              <>
+                {/* Quién entró (o lo intentó) desde cada IP: va primero porque
+                    es lo que se mira de una. */}
+                <h3>
+                  Accesos por IP{' '}
+                  <span className="logs-count">
+                    {uniqueIps} {uniqueIps === 1 ? 'IP distinta' : 'IPs distintas'}
+                  </span>
+                </h3>
+                <div className="logs-tablewrap">
+                  <table className="logs-table">
+                    <thead>
+                      <tr><th>IP</th><th>Intentos</th><th>Entró</th><th>Falló</th><th>Último</th></tr>
+                    </thead>
+                    <tbody>
+                      {acc.byIp.length === 0 ? (
+                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
+                      ) : (
+                        acc.byIp.map((r, i) => (
+                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
+                            <td><code>{r.ip || '(desconocida)'}</code></td>
+                            <td>{r.attempts}</td>
+                            <td>{r.ok}</td>
+                            <td>{r.failed}</td>
+                            <td>{fmt(r.last)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
 
             <h3>Accesos al panel 🔐</h3>
             {!acc ? (
@@ -188,29 +225,6 @@ export default function UsageLogs({
                   </table>
                 </div>
 
-                <h3>Accesos por IP</h3>
-                <div className="logs-tablewrap">
-                  <table className="logs-table">
-                    <thead>
-                      <tr><th>IP</th><th>Intentos</th><th>Entró</th><th>Falló</th><th>Último</th></tr>
-                    </thead>
-                    <tbody>
-                      {acc.byIp.length === 0 ? (
-                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
-                      ) : (
-                        acc.byIp.map((r, i) => (
-                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
-                            <td><code>{r.ip || '(desconocida)'}</code></td>
-                            <td>{r.attempts}</td>
-                            <td>{r.ok}</td>
-                            <td>{r.failed}</td>
-                            <td>{fmt(r.last)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
               </>
             )}
 
