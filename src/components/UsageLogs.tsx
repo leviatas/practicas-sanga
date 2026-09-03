@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
-import { fetchLogs, type AccessRecentIp, type LogsAccess, type LogsResponse } from '../lib/usage'
+import {
+  fetchLogs,
+  LOG_RANGES,
+  type AccessRecentIp,
+  type LogsAccess,
+  type LogsResponse,
+} from '../lib/usage'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
+// Arriba hay tres botones (7d / 14d / 1m) que acotan el uso a ese período: se
+// vuelve a pedir todo al backend con ?days=N.
 // Los datos vienen del backend: la columna "IP" es la del visitante, y la
 // sección "Accesos al panel" muestra la de quien entró o lo intentó, con la
 // lista de las IPs que entraron en los últimos días.
@@ -73,10 +81,14 @@ export default function UsageLogs({
 }) {
   const [data, setData] = useState<LogsResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // Período elegido con los botones 7d / 14d / 1m.
+  const [range, setRange] = useState<number>(LOG_RANGES[0].days)
 
   useEffect(() => {
     let alive = true
-    fetchLogs(password)
+    setData(null)
+    setError(null)
+    fetchLogs(password, range)
       .then((d) => alive && setData(d))
       .catch((e) =>
         alive &&
@@ -89,13 +101,11 @@ export default function UsageLogs({
     return () => {
       alive = false
     }
-  }, [password])
+  }, [password, range])
 
   const s = data?.summary
   const acc = data?.access
   const days = acc?.lastDays ?? 7
-  // Cuántas IPs distintas entraron o lo intentaron alguna vez.
-  const uniqueIps = acc?.uniqueIps ?? acc?.byIp.length ?? 0
   const ips = acc ? recentIps(acc, days) : []
 
   return (
@@ -106,6 +116,24 @@ export default function UsageLogs({
           <button className="btn btn--ghost btn--small" onClick={onClose}>
             ✕ Cerrar
           </button>
+        </div>
+
+        {/* Con estos botones el uso se acota a los últimos 7, 14 o 30 días. */}
+        <div className="logs-ranges" role="group" aria-label="Período">
+          {LOG_RANGES.map((r) => (
+            <button
+              key={r.days}
+              type="button"
+              className={`logs-range${range === r.days ? ' is-on' : ''}`}
+              onClick={() => setRange(r.days)}
+              aria-pressed={range === r.days}
+            >
+              {r.label}
+            </button>
+          ))}
+          <span className="logs-range__note">
+            {range === 30 ? 'último mes' : `últimos ${range} días`}
+          </span>
         </div>
 
         {error && <p className="logs-error">{error}</p>}
@@ -120,41 +148,43 @@ export default function UsageLogs({
               <div className="logs-tile"><strong>{s.pct}%</strong><span>Correctas</span></div>
             </div>
             <p className="logs-last">Última actividad: {fmt(s.last)}</p>
-
-            {acc && (
-              <>
-                {/* Quién entró (o lo intentó) desde cada IP: va primero porque
-                    es lo que se mira de una. */}
-                <h3>
-                  Accesos por IP{' '}
-                  <span className="logs-count">
-                    {uniqueIps} {uniqueIps === 1 ? 'IP distinta' : 'IPs distintas'}
-                  </span>
-                </h3>
-                <div className="logs-tablewrap">
-                  <table className="logs-table">
-                    <thead>
-                      <tr><th>IP</th><th>Intentos</th><th>Entró</th><th>Falló</th><th>Último</th></tr>
-                    </thead>
-                    <tbody>
-                      {acc.byIp.length === 0 ? (
-                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
-                      ) : (
-                        acc.byIp.map((r, i) => (
-                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
-                            <td><code>{r.ip || '(desconocida)'}</code></td>
-                            <td>{r.attempts}</td>
-                            <td>{r.ok}</td>
-                            <td>{r.failed}</td>
-                            <td>{fmt(r.last)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </>
+            {data!.days === undefined && (
+              <p className="logs-note">
+                El servidor todavía no filtra por período: estos números son de
+                siempre (actualizá el backend).
+              </p>
             )}
+
+            {/* Los visitantes del período elegido: es lo que se mira de una. */}
+            <h3>
+              Por IP{' '}
+              <span className="logs-count">
+                {s.uniqueIps} {s.uniqueIps === 1 ? 'IP distinta' : 'IPs distintas'}
+              </span>
+            </h3>
+            <div className="logs-tablewrap">
+              <table className="logs-table">
+                <thead>
+                  <tr><th>Nombre</th><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
+                </thead>
+                <tbody>
+                  {s.byIp.length === 0 ? (
+                    <tr><td colSpan={6}>Sin datos todavía.</td></tr>
+                  ) : (
+                    s.byIp.map((r) => (
+                      <tr key={r.ip}>
+                        <td>{r.name || '—'}</td>
+                        <td><code>{r.ip || '(desconocida)'}</code></td>
+                        <td>{r.opens}</td>
+                        <td>{r.answers}</td>
+                        <td>{r.correct}</td>
+                        <td>{fmt(r.last)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             <h3>Accesos al panel 🔐</h3>
             {!acc ? (
@@ -225,33 +255,31 @@ export default function UsageLogs({
                   </table>
                 </div>
 
+                <h3>Accesos por IP</h3>
+                <div className="logs-tablewrap">
+                  <table className="logs-table">
+                    <thead>
+                      <tr><th>IP</th><th>Intentos</th><th>Entró</th><th>Falló</th><th>Último</th></tr>
+                    </thead>
+                    <tbody>
+                      {acc.byIp.length === 0 ? (
+                        <tr><td colSpan={5}>Sin accesos registrados.</td></tr>
+                      ) : (
+                        acc.byIp.map((r, i) => (
+                          <tr key={i} className={r.ok ? '' : 'is-fail'}>
+                            <td><code>{r.ip || '(desconocida)'}</code></td>
+                            <td>{r.attempts}</td>
+                            <td>{r.ok}</td>
+                            <td>{r.failed}</td>
+                            <td>{fmt(r.last)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </>
             )}
-
-            <h3>Por IP</h3>
-            <div className="logs-tablewrap">
-              <table className="logs-table">
-                <thead>
-                  <tr><th>Nombre</th><th>IP</th><th>Aperturas</th><th>Resp.</th><th>OK</th><th>Última</th></tr>
-                </thead>
-                <tbody>
-                  {s.byIp.length === 0 ? (
-                    <tr><td colSpan={6}>Sin datos todavía.</td></tr>
-                  ) : (
-                    s.byIp.map((r) => (
-                      <tr key={r.ip}>
-                        <td>{r.name || '—'}</td>
-                        <td><code>{r.ip || '(desconocida)'}</code></td>
-                        <td>{r.opens}</td>
-                        <td>{r.answers}</td>
-                        <td>{r.correct}</td>
-                        <td>{fmt(r.last)}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
 
             <h3>Por práctica</h3>
             <div className="logs-tablewrap">
