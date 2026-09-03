@@ -7,8 +7,6 @@
 // vuelta y vuelven a entrar todas.
 // ============================================================================
 
-import type { GameWord } from '../data/game'
-
 const KEY = 'sanga:juego:vistas'
 
 type Seen = Record<number, string[]>
@@ -48,11 +46,11 @@ function shuffle<T>(items: readonly T[]): T[] {
  * de verdad se juega se anota después con `markWordsSeen` (así el modo
  * estricto de React, que renderiza dos veces, no consume la bolsa al doble).
  */
-export function pickWords(
-  all: GameWord[],
+export function pickWords<T extends { word: string }>(
+  all: T[],
   count: number,
   level: number,
-): GameWord[] {
+): T[] {
   const used = new Set(loadSeen()[level] ?? [])
   const pending = shuffle(all.filter((w) => !used.has(w.word)))
   if (pending.length >= count) return pending.slice(0, count)
