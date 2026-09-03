@@ -331,6 +331,39 @@ button {
   color: var(--wrong);
 }
 
+/* Botones de período (7d / 14d / 1m) arriba del panel. */
+.logs-ranges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.logs-range {
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.logs-range.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.logs-range__note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
 /* El número de IPs distintas, al lado del título de la sección. */
 .logs-count {
   font-size: 0.8rem;

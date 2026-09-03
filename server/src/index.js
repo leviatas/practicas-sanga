@@ -10,8 +10,9 @@
 // Endpoints:
 //   POST /api/event   -> registra un evento (open, practice_start, answer, complete)
 //   GET  /api/logs     -> devuelve eventos + resumen + accesos al panel
-//                         (incluye las IPs que entraron en los últimos 7 días;
-//                         requiere contraseña; anota el intento con la IP real)
+//                         (?days=7|14|30 acota el uso a ese período; incluye
+//                         las IPs que entraron en los últimos 7 días; requiere
+//                         contraseña; anota el intento con la IP real)
 //   GET  /api/health   -> 200 ok
 //
 // Variables de entorno:
@@ -197,15 +198,32 @@ function buildAccess() {
   return { ...totals, lastFail, byIp, recent, last7, lastDays: LAST_IPS_DAYS }
 }
 
-function buildSummary() {
-  const opens = db.prepare(`SELECT COUNT(*) n FROM events WHERE type='open'`).get().n
-  const answers = db.prepare(`SELECT COUNT(*) n FROM events WHERE type='answer'`).get().n
+// Rangos que acepta el panel: 7, 14 o 30 días (0 = todo).
+const ALLOWED_DAYS = new Set([7, 14, 30])
+
+/**
+ * Resumen de uso. `since` es la marca de tiempo desde la que se cuenta
+ * (0 = desde siempre), así el panel puede pedir los últimos 7, 14 o 30 días.
+ */
+function buildSummary(since = 0) {
+  const opens = db
+    .prepare(`SELECT COUNT(*) n FROM events WHERE type='open' AND ts >= ?`)
+    .get(since).n
+  const answers = db
+    .prepare(`SELECT COUNT(*) n FROM events WHERE type='answer' AND ts >= ?`)
+    .get(since).n
   const correct = db
-    .prepare(`SELECT COUNT(*) n FROM events WHERE type='answer' AND correct=1`)
-    .get().n
-  const completes = db.prepare(`SELECT COUNT(*) n FROM events WHERE type='complete'`).get().n
-  const uniqueIps = db.prepare(`SELECT COUNT(DISTINCT ip) n FROM events`).get().n
-  const last = db.prepare(`SELECT MAX(ts) t FROM events`).get().t || 0
+    .prepare(
+      `SELECT COUNT(*) n FROM events WHERE type='answer' AND correct=1 AND ts >= ?`,
+    )
+    .get(since).n
+  const completes = db
+    .prepare(`SELECT COUNT(*) n FROM events WHERE type='complete' AND ts >= ?`)
+    .get(since).n
+  const uniqueIps = db
+    .prepare(`SELECT COUNT(DISTINCT ip) n FROM events WHERE ts >= ?`)
+    .get(since).n
+  const last = db.prepare(`SELECT MAX(ts) t FROM events WHERE ts >= ?`).get(since).t || 0
 
   const byIp = db
     .prepare(
@@ -218,9 +236,9 @@ function buildSummary() {
               (SELECT e2.name FROM events e2
                  WHERE e2.ip = events.ip AND e2.name IS NOT NULL
                  ORDER BY e2.ts DESC LIMIT 1) name
-       FROM events GROUP BY ip ORDER BY last DESC LIMIT 200`,
+       FROM events WHERE ts >= ? GROUP BY ip ORDER BY last DESC LIMIT 200`,
     )
-    .all()
+    .all(since)
 
   const byPractice = db
     .prepare(
@@ -228,10 +246,10 @@ function buildSummary() {
               SUM(CASE WHEN type='practice_start' THEN 1 ELSE 0 END) starts,
               SUM(CASE WHEN type='answer' THEN 1 ELSE 0 END) answers,
               SUM(CASE WHEN type='answer' AND correct=1 THEN 1 ELSE 0 END) correct
-       FROM events WHERE practice IS NOT NULL
+       FROM events WHERE practice IS NOT NULL AND ts >= ?
        GROUP BY practice, grade ORDER BY answers DESC LIMIT 200`,
     )
-    .all()
+    .all(since)
 
   return {
     opens,
@@ -277,11 +295,21 @@ const server = createServer(async (req, res) => {
     const ok = pw === LOGS_PASSWORD
     recordAccess(req, ok) // queda anotado el intento, entre o no
     if (!ok) return send(res, 401, { error: 'unauthorized' })
+    // ?days=7|14|30 acota todo el uso a ese período (sin el parámetro, todo).
+    const asked = Number(url.searchParams.get('days'))
+    const days = ALLOWED_DAYS.has(asked) ? asked : 0
+    const since = days ? Date.now() - days * 24 * 60 * 60 * 1000 : 0
     const recent = db
       .prepare(`SELECT ts, ip, type, grade, title, practice, correct, name
-                FROM events ORDER BY ts DESC LIMIT 200`)
-      .all()
-    return send(res, 200, { summary: buildSummary(), recent, access: buildAccess() })
+                FROM events WHERE ts >= ? ORDER BY ts DESC LIMIT 200`)
+      .all(since)
+    return send(res, 200, {
+      summary: buildSummary(since),
+      recent,
+      access: buildAccess(),
+      // Le confirma al panel qué período aplicó (si falta, el backend es viejo).
+      days,
+    })
   }
 
   return send(res, 404, { error: 'not found' })

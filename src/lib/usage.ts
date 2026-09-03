@@ -114,11 +114,29 @@ export interface LogsResponse {
   recent: RecentEvent[]
   /** Accesos al panel. Puede faltar si el backend es más viejo que la app. */
   access?: LogsAccess
+  /**
+   * Período que aplicó el backend, en días (0 = todo). Si falta, el backend es
+   * más viejo que la app y devolvió todo sin filtrar.
+   */
+  days?: number
 }
 
-/** Trae los logs del backend. Lanza 'unauthorized' si la contraseña es incorrecta. */
-export async function fetchLogs(password: string): Promise<LogsResponse> {
-  const res = await fetch('/api/logs', {
+/** Períodos que ofrece el panel. */
+export const LOG_RANGES = [
+  { days: 7, label: '7d' },
+  { days: 14, label: '14d' },
+  { days: 30, label: '1m' },
+] as const
+
+/**
+ * Trae los logs del backend, acotados a los últimos `days` días.
+ * Lanza 'unauthorized' si la contraseña es incorrecta.
+ */
+export async function fetchLogs(
+  password: string,
+  days: number,
+): Promise<LogsResponse> {
+  const res = await fetch(`/api/logs?days=${days}`, {
     headers: { 'X-Logs-Password': password },
   })
   if (res.status === 401) throw new Error('unauthorized')
