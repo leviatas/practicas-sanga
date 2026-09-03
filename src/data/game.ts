@@ -42,12 +42,12 @@ export interface GameLevel {
 
 /** Los niveles del camino, de abajo hacia arriba del mapa. */
 export const gameLevels: GameLevel[] = [
-  { id: 1, title: 'EL SONIDO INICIAL', x: 51, y: 83, ready: true },
-  { id: 2, title: 'LA PRIMERA SÍLABA', x: 28, y: 64.5, ready: true },
-  { id: 3, title: 'PRÓXIMAMENTE', x: 66, y: 51.5, ready: false },
-  { id: 4, title: 'PRÓXIMAMENTE', x: 69, y: 41, ready: false },
-  { id: 5, title: 'PRÓXIMAMENTE', x: 35, y: 36, ready: false },
-  { id: 6, title: 'PRÓXIMAMENTE', x: 73, y: 27.5, ready: false },
+  { id: 1, title: 'EL SONIDO INICIAL', x: 51.8, y: 85, ready: true },
+  { id: 2, title: 'LA PRIMERA SÍLABA', x: 29, y: 65, ready: true },
+  { id: 3, title: 'PRÓXIMAMENTE', x: 67.3, y: 51.8, ready: false },
+  { id: 4, title: 'PRÓXIMAMENTE', x: 70, y: 41, ready: false },
+  { id: 5, title: 'PRÓXIMAMENTE', x: 35.7, y: 35.8, ready: false },
+  { id: 6, title: 'PRÓXIMAMENTE', x: 75, y: 27.4, ready: false },
 ]
 
 /** Cuántos ejercicios trae cada ronda (los bancos de palabras son más grandes). */
