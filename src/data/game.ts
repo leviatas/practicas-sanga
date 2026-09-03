@@ -6,6 +6,9 @@
 // ejercicio por nivel. Los niveles que todavía no tienen contenido se ven en
 // el camino con candado.
 //
+// Cada nivel tiene su propia lista de palabras. Las rondas son de cinco y, al
+// volver a jugar, salen las que todavía no habían tocado (src/lib/gameDeck.ts).
+//
 // Todos los textos del juego van en IMPRENTA MAYÚSCULA (además el CSS los
 // fuerza, por las dudas).
 // ============================================================================
@@ -47,127 +50,70 @@ export const gameLevels: GameLevel[] = [
   { id: 6, title: 'PRÓXIMAMENTE', x: 73, y: 27.5, ready: false },
 ]
 
-/** Cuántos ejercicios trae cada ronda (el banco de palabras es más grande). */
+/** Cuántos ejercicios trae cada ronda (los bancos de palabras son más grandes). */
 export const ROUND_SIZE = 5
 
 /**
- * El banco de palabras del juego. Los dos niveles usan las MISMAS imágenes:
- * el 1 pregunta por la letra inicial y el 2 por la primera sílaba. Cada ronda
- * toma cinco al azar y, al volver a jugar, salen las que todavía no tocaron
- * (ver `pickWords` en src/lib/gameDeck.ts).
+ * Nivel 1 — "¿con qué sonido empieza esta palabra?".
+ * La primera letra de `letters` es la correcta (los botones salen barajados) y
+ * las otras dos son del mismo tipo: a una vocal la acompañan vocales, a una
+ * consonante consonantes.
  */
-export interface GameWord {
+export interface SoundWord {
   /** La palabra, en mayúscula (se muestra y se lee en voz alta). */
   word: string
   /** El dibujo. */
   emoji: string
-  /** Nivel 1: la letra inicial y dos distractores (mismo tipo: vocal o consonante). */
   letters: [string, string, string]
-  /** Nivel 2: la primera sílaba y lo que queda de la palabra. */
-  syllable: string
-  rest: string
-  /** Nivel 2: la sílaba distractora, igual a `syllable` pero con otra inicial. */
-  otherSyllable: string
 }
 
-export const gameWords: GameWord[] = [
-  {
-    word: 'SOL',
-    emoji: '☀️',
-    letters: ['S', 'C', 'M'],
-    syllable: 'SOL',
-    rest: '',
-    otherSyllable: 'MOL',
-  },
-  {
-    word: 'LUNA',
-    emoji: '🌙',
-    letters: ['L', 'M', 'T'],
-    syllable: 'LU',
-    rest: 'NA',
-    otherSyllable: 'MU',
-  },
-  {
-    word: 'PATO',
-    emoji: '🦆',
-    letters: ['P', 'T', 'R'],
-    syllable: 'PA',
-    rest: 'TO',
-    otherSyllable: 'MA',
-  },
-  {
-    word: 'CASA',
-    emoji: '🏠',
-    letters: ['C', 'S', 'T'],
-    syllable: 'CA',
-    rest: 'SA',
-    otherSyllable: 'TA',
-  },
-  {
-    word: 'MANO',
-    emoji: '✋',
-    letters: ['M', 'P', 'S'],
-    syllable: 'MA',
-    rest: 'NO',
-    otherSyllable: 'NA',
-  },
-  {
-    word: 'AVIÓN',
-    emoji: '✈️',
-    letters: ['A', 'E', 'O'],
-    syllable: 'A',
-    rest: 'VIÓN',
-    otherSyllable: 'E',
-  },
-  {
-    word: 'ELEFANTE',
-    emoji: '🐘',
-    letters: ['E', 'A', 'I'],
-    syllable: 'E',
-    rest: 'LEFANTE',
-    otherSyllable: 'I',
-  },
-  {
-    word: 'ISLA',
-    emoji: '🏝️',
-    letters: ['I', 'E', 'A'],
-    syllable: 'IS',
-    rest: 'LA',
-    otherSyllable: 'AS',
-  },
-  {
-    word: 'OSO',
-    emoji: '🐻',
-    letters: ['O', 'U', 'A'],
-    syllable: 'O',
-    rest: 'SO',
-    otherSyllable: 'U',
-  },
-  {
-    word: 'UNICORNIO',
-    emoji: '🦄',
-    letters: ['U', 'O', 'I'],
-    syllable: 'U',
-    rest: 'NICORNIO',
-    otherSyllable: 'O',
-  },
-  {
-    word: 'TOMATE',
-    emoji: '🍅',
-    letters: ['T', 'P', 'C'],
-    syllable: 'TO',
-    rest: 'MATE',
-    otherSyllable: 'LO',
-  },
-  {
-    word: 'RATÓN',
-    emoji: '🐭',
-    letters: ['R', 'L', 'P'],
-    syllable: 'RA',
-    rest: 'TÓN',
-    otherSyllable: 'PA',
-  },
+export const level1Words: SoundWord[] = [
+  { word: 'SOL', emoji: '☀️', letters: ['S', 'C', 'M'] },
+  { word: 'LUNA', emoji: '🌙', letters: ['L', 'M', 'T'] },
+  { word: 'PATO', emoji: '🦆', letters: ['P', 'T', 'R'] },
+  { word: 'CASA', emoji: '🏠', letters: ['C', 'S', 'T'] },
+  { word: 'MANO', emoji: '✋', letters: ['M', 'P', 'S'] },
+  { word: 'AVIÓN', emoji: '✈️', letters: ['A', 'E', 'O'] },
+  { word: 'ELEFANTE', emoji: '🐘', letters: ['E', 'A', 'I'] },
+  { word: 'ISLA', emoji: '🏝️', letters: ['I', 'E', 'A'] },
+  { word: 'OSO', emoji: '🐻', letters: ['O', 'U', 'A'] },
+  { word: 'UNICORNIO', emoji: '🦄', letters: ['U', 'O', 'I'] },
+  { word: 'TOMATE', emoji: '🍅', letters: ['T', 'P', 'C'] },
+  { word: 'RATÓN', emoji: '🐭', letters: ['R', 'L', 'P'] },
 ]
+
+/**
+ * Nivel 2 — "completá la primera sílaba".
+ * Tiene su propia lista: todas empiezan con consonante + vocal, así la opción
+ * incorrecta puede ser la misma sílaba cambiando SOLO la inicial (LU / MU).
+ */
+export interface SyllableWord {
+  word: string
+  emoji: string
+  /** La primera sílaba (la respuesta) y lo que queda de la palabra. */
+  syllable: string
+  rest: string
+  /** La sílaba distractora: igual a `syllable` pero con otra inicial. */
+  other: string
+}
+
+export const level2Words: SyllableWord[] = [
+  { word: 'SAPO', emoji: '🐸', syllable: 'SA', rest: 'PO', other: 'LA' },
+  { word: 'LUNA', emoji: '🌙', syllable: 'LU', rest: 'NA', other: 'MU' },
+  { word: 'PATO', emoji: '🦆', syllable: 'PA', rest: 'TO', other: 'MA' },
+  { word: 'CASA', emoji: '🏠', syllable: 'CA', rest: 'SA', other: 'TA' },
+  { word: 'MANO', emoji: '✋', syllable: 'MA', rest: 'NO', other: 'NA' },
+  { word: 'TOMATE', emoji: '🍅', syllable: 'TO', rest: 'MATE', other: 'LO' },
+  { word: 'RATÓN', emoji: '🐭', syllable: 'RA', rest: 'TÓN', other: 'PA' },
+  { word: 'NIDO', emoji: '🪺', syllable: 'NI', rest: 'DO', other: 'MI' },
+  { word: 'DEDO', emoji: '☝️', syllable: 'DE', rest: 'DO', other: 'TE' },
+  { word: 'FOCA', emoji: '🦭', syllable: 'FO', rest: 'CA', other: 'SO' },
+]
+
+/** El banco de palabras de cada nivel. */
+export function wordBankSize(level: number): number {
+  return level === 2 ? level2Words.length : level1Words.length
+}
 
 /** Consigna de cada nivel (la dice el monstruito en su globo). */
 export const LEVEL_PROMPTS: Record<number, string> = {

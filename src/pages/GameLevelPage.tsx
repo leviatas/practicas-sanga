@@ -2,27 +2,29 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import {
   gameLevels,
-  gameWords,
+  level1Words,
+  level2Words,
   LEVEL_PROMPTS,
   ROUND_SIZE,
-  type GameWord,
+  wordBankSize,
 } from '../data/game'
 import { loadGameStars, saveGameStars } from '../lib/gameProgress'
 import { markWordsSeen, pickWords, shuffle } from '../lib/gameDeck'
 import { speak } from '../lib/speak'
 import Monster from '../components/Monster'
 
-// Los niveles del juego. Los dos usan las mismas imágenes y el mismo flujo:
-// se muestra un dibujo y, debajo, unos botones para elegir.
+// Los niveles del juego. Los dos comparten el mismo flujo: se muestra un
+// dibujo y, debajo, unos botones para elegir.
 //   Nivel 1: "¿con qué sonido empieza esta palabra?" → tres letras.
 //   Nivel 2: "completá la primera sílaba" → el hueco y el resto de la palabra
 //            (____NA) con dos sílabas que se diferencian solo en la inicial.
+// Cada uno tiene su propia lista de palabras (ver src/data/game.ts).
 // Si acierta, festeja y pasa solo al siguiente; si no, la opción se pone roja
 // y puede volver a intentar. Al terminar los cinco, da estrellas según cuántos
 // acertó al primer intento.
 //
-// Cada ronda toma cinco palabras del banco y, al volver a jugar, salen las que
-// todavía no habían tocado (ver src/lib/gameDeck.ts).
+// Cada ronda toma cinco palabras del banco del nivel y, al volver a jugar,
+// salen las que todavía no habían tocado (ver src/lib/gameDeck.ts).
 
 // Fondo suave de campo con un lago, para que el ejercicio se lea bien.
 function FieldBackground() {
@@ -75,24 +77,23 @@ interface Round {
   rest?: string
 }
 
-/** Arma los cinco ejercicios de una ronda del nivel pedido. */
+/** Arma los cinco ejercicios de una ronda, con el banco propio del nivel. */
 function buildRound(level: number): Round[] {
-  return pickWords(gameWords, ROUND_SIZE, level).map((w: GameWord) =>
-    level === 2
-      ? {
-          word: w.word,
-          emoji: w.emoji,
-          options: shuffle([w.syllable, w.otherSyllable]),
-          answer: w.syllable,
-          rest: w.rest,
-        }
-      : {
-          word: w.word,
-          emoji: w.emoji,
-          options: shuffle(w.letters),
-          answer: w.letters[0],
-        },
-  )
+  if (level === 2) {
+    return pickWords(level2Words, ROUND_SIZE, level).map((w) => ({
+      word: w.word,
+      emoji: w.emoji,
+      options: shuffle([w.syllable, w.other]),
+      answer: w.syllable,
+      rest: w.rest,
+    }))
+  }
+  return pickWords(level1Words, ROUND_SIZE, level).map((w) => ({
+    word: w.word,
+    emoji: w.emoji,
+    options: shuffle(w.letters),
+    answer: w.letters[0],
+  }))
 }
 
 export default function GameLevelPage() {
@@ -129,7 +130,7 @@ function Play({ level }: { level: number }) {
 
   // Anotamos las palabras de esta ronda para que la próxima traiga otras.
   useEffect(() => {
-    markWordsSeen(level, rounds.map((r) => r.word), gameWords.length)
+    markWordsSeen(level, rounds.map((r) => r.word), wordBankSize(level))
   }, [level, rounds])
 
   /** Otra ronda: cinco palabras nuevas del banco. */
