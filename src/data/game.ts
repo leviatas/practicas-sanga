@@ -115,6 +115,31 @@ export function wordBankSize(level: number): number {
   return level === 2 ? level2Words.length : level1Words.length
 }
 
+/**
+ * Cómo se PRONUNCIA cada letra cuando el monstruito dice lo que apretaste.
+ * No es el nombre de la letra ("ese") sino su sonido: para las que se pueden
+ * sostener se alarga (S → "sss"), y las demás quedan como están porque la voz
+ * del navegador no sabe decir el fonema suelto y termina diciendo el nombre.
+ * Si alguna suena mal, se cambia acá.
+ */
+export const LETTER_SOUNDS: Record<string, string> = {
+  S: 'sss',
+  L: 'lll',
+  M: 'mmm',
+  N: 'nnn',
+  R: 'rrr',
+  F: 'fff',
+}
+
+/**
+ * Lo que la voz tiene que decir para la opción que tocó el alumno: el sonido
+ * de la letra (nivel 1) o la sílaba tal cual (nivel 2, "lu" ya es un sonido).
+ */
+export function soundOf(option: string): string {
+  if (option.length > 1) return option.toLowerCase()
+  return LETTER_SOUNDS[option.toUpperCase()] ?? option.toLowerCase()
+}
+
 /** Consigna de cada nivel (la dice el monstruito en su globo). */
 export const LEVEL_PROMPTS: Record<number, string> = {
   1: '¿CON QUÉ SONIDO EMPIEZA ESTA PALABRA?',

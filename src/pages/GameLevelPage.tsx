@@ -6,6 +6,7 @@ import {
   level2Words,
   LEVEL_PROMPTS,
   ROUND_SIZE,
+  soundOf,
   wordBankSize,
 } from '../data/game'
 import { loadGameStars, saveGameStars } from '../lib/gameProgress'
@@ -19,9 +20,11 @@ import Monster from '../components/Monster'
 //   Nivel 2: "completá la primera sílaba" → el hueco y el resto de la palabra
 //            (____NA) con dos sílabas que se diferencian solo en la inicial.
 // Cada uno tiene su propia lista de palabras (ver src/data/game.ts).
-// Si acierta, festeja y pasa solo al siguiente; si no, la opción se pone roja
-// y puede volver a intentar. Al terminar los cinco, da estrellas según cuántos
-// acertó al primer intento.
+// En los dos, al tocar una opción el monstruito nombra lo que apretó con su
+// sonido: "Muy bien, apretaste sss" o "Apretaste mmm, probá otra vez". Si
+// acierta pasa solo al siguiente; si no, la opción se pone roja y puede volver
+// a intentar. Al terminar los cinco, da estrellas según cuántos acertó al
+// primer intento.
 //
 // Cada ronda toma cinco palabras del banco del nivel y, al volver a jugar,
 // salen las que todavía no habían tocado (ver src/lib/gameDeck.ts).
@@ -118,8 +121,9 @@ function Play({ level }: { level: number }) {
   const [firstTry, setFirstTry] = useState(0)
   const [missed, setMissed] = useState(false)
   const [finished, setFinished] = useState(false)
-  // Lo que dice el monstruito en su globo.
-  const [says, setSays] = useState<string | null>(null)
+  // Lo que dice el monstruito: `text` es lo que se lee en el globo (con la
+  // letra o sílaba tal cual) y `speech` lo que dice la voz (con su sonido).
+  const [says, setSays] = useState<{ text: string; speech: string } | null>(null)
   const timer = useRef<number | undefined>(undefined)
 
   const prompt = LEVEL_PROMPTS[level] ?? ''
@@ -153,13 +157,14 @@ function Play({ level }: { level: number }) {
   function choose(option: string) {
     if (solved) return
     setPicked(option)
+    // El monstruito nombra siempre lo que apretó, así escucha su sonido.
+    const sound = soundOf(option)
     if (option === ex.answer) {
       setSolved(true)
-      setSays('¡MUY BIEN!')
+      const speech = `Muy bien, apretaste ${sound}`
+      setSays({ text: `MUY BIEN, APRETASTE ${option}`, speech })
       if (!missed) setFirstTry((n) => n + 1)
-      speak(
-        `¡Muy bien! ${ex.word.toLowerCase()} empieza con ${ex.answer.toLowerCase()}`,
-      )
+      speak(speech)
       timer.current = window.setTimeout(() => {
         if (current + 1 >= total) {
           const got = !missed ? firstTry + 1 : firstTry
@@ -175,8 +180,9 @@ function Play({ level }: { level: number }) {
       }, TALK_MS)
     } else {
       setMissed(true)
-      setSays('PROBÁ OTRA VEZ')
-      speak('Probá otra vez')
+      const speech = `Apretaste ${sound}, probá otra vez`
+      setSays({ text: `APRETASTE ${option}, PROBÁ OTRA VEZ`, speech })
+      speak(speech)
     }
   }
 
@@ -231,11 +237,11 @@ function Play({ level }: { level: number }) {
           className={`game-bubble game-bubble--side${solved ? ' is-happy' : ''}`}
           role="status"
         >
-          <h1 className="game-bubble__text">{says ?? prompt}</h1>
+          <h1 className="game-bubble__text">{says?.text ?? prompt}</h1>
           <button
             type="button"
             className="game-speak game-speak--icon"
-            onClick={() => speak(says ?? prompt)}
+            onClick={() => speak(says?.speech ?? prompt)}
             aria-label="Escuchar lo que dice el monstruito"
           >
             🔊
