@@ -1,5 +1,31 @@
 # Notas para Claude — practicas-sanga
 
+## Autoría de los commits (IMPORTANTE)
+
+Todo lo que se sube a este repo va a nombre del dueño, no de Claude Code: ni
+los commits ni las descripciones de los PR llevan atribución de Claude.
+
+En las sesiones remotas la identidad de git viene de la config global del
+contenedor (suele ser `Claude <noreply@anthropic.com>`) y se pierde en cada
+sesión nueva, así que **antes de commitear** hay que dejarla local:
+
+```sh
+git config --local user.name "Eduardo Peluffo"
+git config --local user.email "leviatas@gmail.com"
+git config --local commit.gpgsign false
+```
+
+`commit.gpgsign false` es a propósito: la clave de firma del entorno del agente
+no es la del dueño del repo, así que un commit firmado con ella queda
+"Unverified" en GitHub y con la identidad mezclada.
+
+Esto se aplica solo en cada sesión con el hook `SessionStart` de
+`.claude/settings.json`, que además saca los trailers `Co-Authored-By: Claude`
+y `Claude-Session:` de los commits y el pie "Generated with Claude Code" de los
+PR (`attribution` + `includeCoAuthoredBy`). Si el hook no llegó a correr,
+conviene verificar con `git config --get-regexp '^(user|commit)\.'` antes del
+primer commit.
+
 ## Versionado (IMPORTANTE)
 
 Este proyecto usa versión semántica en `package.json`. La versión se muestra en
