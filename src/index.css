@@ -2813,6 +2813,181 @@ button {
   text-transform: none;
 }
 
+/* ---- Pantalla principal del juego ----
+   El fondo se ve ENTERO (la escena tiene su misma proporción) y encima van los
+   cuatro botones: el play en el centro, el cartel debajo y un personaje de
+   cada lado. Todo se mide con `cqh` (% del alto de la escena), así el dibujo
+   se arma igual en cualquier pantalla. */
+.start {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  aspect-ratio: 1511 / 704;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  container-type: size;
+}
+
+.start__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Los botones van en una fila: heroína · (play + cartel) · héroe. El relleno
+   de arriba baja el conjunto para que no se le suba al título del fondo. */
+.start__row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8cqh;
+  padding: 30cqh 3% 12cqh;
+}
+
+.start__middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3cqh;
+}
+
+.start__play {
+  border: 0;
+  background: none;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+  filter: drop-shadow(0 4px 8px rgba(20, 24, 40, 0.35));
+  animation: play-latir 1.6s ease-in-out infinite;
+}
+
+.start__play img {
+  height: 22cqh;
+  width: auto;
+}
+
+.start__play:hover,
+.start__play:focus-visible {
+  outline: none;
+  transform: scale(1.08);
+}
+
+.start__sign {
+  height: 19cqh;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(20, 24, 40, 0.25));
+}
+
+/* Cada personaje es un botón: el elegido se agranda y se enciende; el otro
+   queda apagado, para que se vea de una cuál eligió. */
+.hero-pick {
+  border: 0;
+  background: none;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+  filter: drop-shadow(0 5px 8px rgba(20, 24, 40, 0.3)) grayscale(0.45);
+  opacity: 0.75;
+}
+
+.hero-pick img {
+  height: 56cqh;
+  width: auto;
+}
+
+.hero-pick:hover,
+.hero-pick:focus-visible {
+  outline: none;
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+.hero-pick.is-picked {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px #ffd23f) drop-shadow(0 6px 8px rgba(20, 24, 40, 0.35));
+  transform: translateY(-4px) scale(1.06);
+  animation: hero-cheer 0.45s ease;
+}
+
+/* Aviso al tocar el play sin haber elegido personaje. */
+.start__warn {
+  position: absolute;
+  left: 50%;
+  bottom: 2cqh;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: 92%;
+  background: #fff;
+  color: #b91c1c;
+  border: 3px solid #b91c1c;
+  border-radius: 999px;
+  padding: 1.2cqh 3cqh;
+  font-size: max(0.7rem, 5.5cqh);
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  animation: warn-in 0.25s ease;
+}
+
+/* En el celular la escena es una franja (el fondo es apaisado y la pantalla
+   vertical): la estiramos a todo el ancho y agrandamos los botones, para que
+   se puedan tocar y leer. */
+@media (max-width: 700px) {
+  .start {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    border-radius: 0;
+  }
+  .start__row {
+    gap: 5cqh;
+    padding: 26cqh 2% 10cqh;
+  }
+  .start__play img {
+    height: 26cqh;
+  }
+  .start__sign {
+    height: 24cqh;
+  }
+  .hero-pick img {
+    height: 62cqh;
+  }
+}
+
+@keyframes warn-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes play-latir {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* Si el sistema pide menos movimiento, el juego se queda quieto. */
+@media (prefers-reduced-motion: reduce) {
+  .start__play,
+  .hero-pick.is-picked,
+  .start__warn,
+  .level__hero.is-cheering,
+  .game-hero.is-talking,
+  .level-btn:not(.is-locked) .level-btn__coin {
+    animation: none;
+  }
+}
+
 /* ---- Mapa ---- */
 .game {
   display: flex;
@@ -2833,17 +3008,17 @@ button {
   top: 84px;
 }
 
-.game-monster {
+.game-hero {
   width: 190px;
   height: auto;
   filter: drop-shadow(0 8px 10px rgba(20, 24, 40, 0.25));
 }
 
-.game-monster.is-talking {
-  animation: monster-talk 0.5s ease-in-out infinite alternate;
+.game-hero.is-talking {
+  animation: hero-talk 0.5s ease-in-out infinite alternate;
 }
 
-@keyframes monster-talk {
+@keyframes hero-talk {
   from { transform: translateY(0) rotate(-2deg); }
   to { transform: translateY(-6px) rotate(2deg); }
 }
@@ -3038,7 +3213,7 @@ button {
     align-items: flex-end;
     gap: 6px;
   }
-  .game-monster {
+  .game-hero {
     width: 110px;
   }
   .game-bubble {
@@ -3314,7 +3489,16 @@ button {
   gap: 14px;
 }
 
-.level__monster {
+.level__hero.is-cheering {
+  animation: hero-cheer 0.45s ease;
+}
+
+@keyframes hero-cheer {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-10px) scale(1.06); }
+}
+
+.level__hero {
   width: 130px;
   height: auto;
   filter: drop-shadow(0 6px 8px rgba(20, 24, 40, 0.25));
@@ -3368,7 +3552,7 @@ button {
   justify-content: center;
 }
 
-.level__card--end + .level__monster {
+.level__card--end + .level__hero {
   display: block;
   margin: 16px auto 0;
 }
@@ -3377,7 +3561,7 @@ button {
   .level {
     padding: 10px 10px 14px;
   }
-  .level__monster {
+  .level__hero {
     width: 84px;
   }
 }

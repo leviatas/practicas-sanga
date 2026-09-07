@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom'
 import { gameLevels, WELCOME } from '../data/game'
 import { loadGameStars } from '../lib/gameProgress'
 import { speak } from '../lib/speak'
-import Monster from '../components/Monster'
+import Hero from '../components/Hero'
 import mapImage from '../assets/game/mapa.jpg'
 
 // Pantalla principal del juego "En construcción": el mapa con el camino.
 // Cada nivel es un botón sobre el camino (tapa el botón que trae dibujado la
 // imagen, en la misma posición). Un nivel se puede jugar si tiene ejercicios
 // y el anterior ya está completado; los demás muestran candado.
-// Al costado está el personaje con su globo de bienvenida, que se puede
-// escuchar con el botón del altavoz.
+// Al costado está el personaje elegido con su globo de bienvenida, que se
+// puede escuchar con el botón del altavoz.
 
 function isUnlocked(levelId: number, stars: Record<number, number>): boolean {
   if (levelId === 1) return true
@@ -42,7 +42,7 @@ export default function GameMapPage() {
             🔊 ESCUCHAR
           </button>
         </div>
-        <Monster className={`game-monster${speaking ? ' is-talking' : ''}`} />
+        <Hero className={`game-hero${speaking ? ' is-talking' : ''}`} />
       </div>
 
       <div className="game-map">
