@@ -2813,20 +2813,21 @@ button {
   text-transform: none;
 }
 
-/* ---- Primera pantalla del juego: elegí tu personaje ----
-   El fondo (que ya trae el título "APRENDER A LEER 1") ocupa toda la tarjeta y
-   encima van el cartel, los dos personajes y el play. */
+/* ---- Pantalla principal del juego ----
+   El fondo se ve ENTERO (la escena tiene su misma proporción) y encima van los
+   cuatro botones: el play en el centro, el cartel debajo y un personaje de
+   cada lado. Todo se mide con `cqh` (% del alto de la escena), así el dibujo
+   se arma igual en cualquier pantalla. */
 .start {
   position: relative;
-  /* La escena es vertical, como la del mapa: así se ve igual en el celular y
-     en la compu, y el título del fondo nunca queda tapado por el cartel. */
-  width: min(100%, 460px);
-  aspect-ratio: 5 / 7;
+  width: 100%;
+  max-width: 1100px;
   margin-inline: auto;
+  aspect-ratio: 1511 / 704;
   border-radius: 18px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  display: flex;
+  container-type: size;
 }
 
 .start__bg {
@@ -2835,102 +2836,139 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 39% center;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.start__content {
-  position: relative;
-  z-index: 1;
-  flex: 1;
+/* Los botones van en una fila: heroína · (play + cartel) · héroe. El relleno
+   de arriba baja el conjunto para que no se le suba al título del fondo. */
+.start__row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8cqh;
+  padding: 30cqh 3% 12cqh;
+}
+
+.start__middle {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 2%;
-  padding: 3.5%;
-}
-
-/* El cartel se corre hacia abajo para no taparle el título al fondo. */
-.start__sign {
-  width: 37%;
-  height: auto;
-  margin-top: auto;
-  filter: drop-shadow(0 6px 10px rgba(20, 24, 40, 0.25));
-}
-
-.start__heroes {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 6%;
-}
-
-/* Cada personaje es un botón: el elegido queda más grande y con un resplandor. */
-.hero-pick {
-  border: 0;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  line-height: 0;
-  border-radius: 50%;
-  transition: transform 0.15s ease, filter 0.15s ease;
-  filter: drop-shadow(0 6px 8px rgba(20, 24, 40, 0.3)) grayscale(0.45);
-  opacity: 0.75;
-  width: 28%;
-}
-
-.hero-pick img {
-  width: 100%;
-  height: auto;
-}
-
-.hero-pick:hover,
-.hero-pick:focus-visible {
-  outline: none;
-  transform: translateY(-4px);
-}
-
-.hero-pick.is-picked {
-  opacity: 1;
-  transform: translateY(-6px) scale(1.08);
-  filter: drop-shadow(0 0 14px #ffd23f) drop-shadow(0 8px 10px rgba(20, 24, 40, 0.35));
-  animation: hero-cheer 0.45s ease;
+  gap: 3cqh;
 }
 
 .start__play {
   border: 0;
   background: none;
   padding: 0;
-  cursor: pointer;
   line-height: 0;
+  cursor: pointer;
   border-radius: 50%;
   transition: transform 0.15s ease;
-  filter: drop-shadow(0 6px 10px rgba(20, 24, 40, 0.35));
-  width: 15%;
+  filter: drop-shadow(0 4px 8px rgba(20, 24, 40, 0.35));
+  animation: play-latir 1.6s ease-in-out infinite;
 }
 
 .start__play img {
-  width: 100%;
-  height: auto;
+  height: 22cqh;
+  width: auto;
 }
 
-.start__play:hover:not(:disabled),
-.start__play:focus-visible:not(:disabled) {
+.start__play:hover,
+.start__play:focus-visible {
   outline: none;
   transform: scale(1.08);
 }
 
-/* Sin personaje elegido, el play espera apagado. */
-.start__play:disabled {
-  cursor: default;
-  opacity: 0.45;
-  filter: grayscale(0.7);
+.start__sign {
+  height: 19cqh;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(20, 24, 40, 0.25));
 }
 
-.start__play:not(:disabled) {
-  animation: play-latir 1.6s ease-in-out infinite;
+/* Cada personaje es un botón: el elegido se agranda y se enciende; el otro
+   queda apagado, para que se vea de una cuál eligió. */
+.hero-pick {
+  border: 0;
+  background: none;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+  filter: drop-shadow(0 5px 8px rgba(20, 24, 40, 0.3)) grayscale(0.45);
+  opacity: 0.75;
+}
+
+.hero-pick img {
+  height: 56cqh;
+  width: auto;
+}
+
+.hero-pick:hover,
+.hero-pick:focus-visible {
+  outline: none;
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+.hero-pick.is-picked {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px #ffd23f) drop-shadow(0 6px 8px rgba(20, 24, 40, 0.35));
+  transform: translateY(-4px) scale(1.06);
+  animation: hero-cheer 0.45s ease;
+}
+
+/* Aviso al tocar el play sin haber elegido personaje. */
+.start__warn {
+  position: absolute;
+  left: 50%;
+  bottom: 2cqh;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: 92%;
+  background: #fff;
+  color: #b91c1c;
+  border: 3px solid #b91c1c;
+  border-radius: 999px;
+  padding: 1.2cqh 3cqh;
+  font-size: max(0.7rem, 5.5cqh);
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  animation: warn-in 0.25s ease;
+}
+
+/* En el celular la escena es una franja (el fondo es apaisado y la pantalla
+   vertical): la estiramos a todo el ancho y agrandamos los botones, para que
+   se puedan tocar y leer. */
+@media (max-width: 700px) {
+  .start {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    border-radius: 0;
+  }
+  .start__row {
+    gap: 5cqh;
+    padding: 26cqh 2% 10cqh;
+  }
+  .start__play img {
+    height: 26cqh;
+  }
+  .start__sign {
+    height: 24cqh;
+  }
+  .hero-pick img {
+    height: 62cqh;
+  }
+}
+
+@keyframes warn-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 @keyframes play-latir {
@@ -2940,8 +2978,9 @@ button {
 
 /* Si el sistema pide menos movimiento, el juego se queda quieto. */
 @media (prefers-reduced-motion: reduce) {
-  .start__play:not(:disabled),
+  .start__play,
   .hero-pick.is-picked,
+  .start__warn,
   .level__hero.is-cheering,
   .game-hero.is-talking,
   .level-btn:not(.is-locked) .level-btn__coin {
