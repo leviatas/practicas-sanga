@@ -12,7 +12,7 @@ import {
 import { loadGameStars, saveGameStars } from '../lib/gameProgress'
 import { markWordsSeen, pickWords, shuffle } from '../lib/gameDeck'
 import { speak } from '../lib/speak'
-import Monster from '../components/Monster'
+import Hero from '../components/Hero'
 
 // Los niveles del juego. Los dos comparten el mismo flujo: se muestra un
 // dibujo y, debajo, unos botones para elegir.
@@ -20,7 +20,7 @@ import Monster from '../components/Monster'
 //   Nivel 2: "completá la primera sílaba" → el hueco y el resto de la palabra
 //            (____NA) con dos sílabas que se diferencian solo en la inicial.
 // Cada uno tiene su propia lista de palabras (ver src/data/game.ts).
-// En los dos, al tocar una opción el monstruito nombra lo que apretó con su
+// En los dos, al tocar una opción el personaje nombra lo que apretó con su
 // sonido: "Muy bien, apretaste sss" o "Apretaste mmm, probá otra vez". Si
 // acierta pasa solo al siguiente; si no, la opción se pone roja y puede volver
 // a intentar. Al terminar los cinco, da estrellas según cuántos acertó al
@@ -121,7 +121,7 @@ function Play({ level }: { level: number }) {
   const [firstTry, setFirstTry] = useState(0)
   const [missed, setMissed] = useState(false)
   const [finished, setFinished] = useState(false)
-  // Lo que dice el monstruito: `text` es lo que se lee en el globo (con la
+  // Lo que dice el personaje: `text` es lo que se lee en el globo (con la
   // letra o sílaba tal cual) y `speech` lo que dice la voz (con su sonido).
   const [says, setSays] = useState<{ text: string; speech: string } | null>(null)
   const timer = useRef<number | undefined>(undefined)
@@ -212,7 +212,7 @@ function Play({ level }: { level: number }) {
             </button>
           </div>
         </div>
-        <Monster className="level__monster" />
+        <Hero className="level__hero" />
       </section>
     )
   }
@@ -229,10 +229,10 @@ function Play({ level }: { level: number }) {
         </span>
       </header>
 
-      {/* La consigna la dice el monstruito en su globo (y también lo que
+      {/* La consigna la dice el personaje en su globo (y también lo que
           comenta al acertar o errar). El altavoz de al lado la lee. */}
       <div className="level__buddy">
-        <Monster className="level__monster" waving={solved} />
+        <Hero className="level__hero" cheering={solved} />
         <div
           className={`game-bubble game-bubble--side${solved ? ' is-happy' : ''}`}
           role="status"
@@ -242,7 +242,7 @@ function Play({ level }: { level: number }) {
             type="button"
             className="game-speak game-speak--icon"
             onClick={() => speak(says?.speech ?? prompt)}
-            aria-label="Escuchar lo que dice el monstruito"
+            aria-label="Escuchar lo que dice el personaje"
           >
             🔊
           </button>

@@ -2813,6 +2813,142 @@ button {
   text-transform: none;
 }
 
+/* ---- Primera pantalla del juego: elegí tu personaje ----
+   El fondo (que ya trae el título "APRENDER A LEER 1") ocupa toda la tarjeta y
+   encima van el cartel, los dos personajes y el play. */
+.start {
+  position: relative;
+  /* La escena es vertical, como la del mapa: así se ve igual en el celular y
+     en la compu, y el título del fondo nunca queda tapado por el cartel. */
+  width: min(100%, 460px);
+  aspect-ratio: 5 / 7;
+  margin-inline: auto;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+}
+
+.start__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 39% center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.start__content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2%;
+  padding: 3.5%;
+}
+
+/* El cartel se corre hacia abajo para no taparle el título al fondo. */
+.start__sign {
+  width: 37%;
+  height: auto;
+  margin-top: auto;
+  filter: drop-shadow(0 6px 10px rgba(20, 24, 40, 0.25));
+}
+
+.start__heroes {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6%;
+}
+
+/* Cada personaje es un botón: el elegido queda más grande y con un resplandor. */
+.hero-pick {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 50%;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  filter: drop-shadow(0 6px 8px rgba(20, 24, 40, 0.3)) grayscale(0.45);
+  opacity: 0.75;
+  width: 28%;
+}
+
+.hero-pick img {
+  width: 100%;
+  height: auto;
+}
+
+.hero-pick:hover,
+.hero-pick:focus-visible {
+  outline: none;
+  transform: translateY(-4px);
+}
+
+.hero-pick.is-picked {
+  opacity: 1;
+  transform: translateY(-6px) scale(1.08);
+  filter: drop-shadow(0 0 14px #ffd23f) drop-shadow(0 8px 10px rgba(20, 24, 40, 0.35));
+  animation: hero-cheer 0.45s ease;
+}
+
+.start__play {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+  filter: drop-shadow(0 6px 10px rgba(20, 24, 40, 0.35));
+  width: 15%;
+}
+
+.start__play img {
+  width: 100%;
+  height: auto;
+}
+
+.start__play:hover:not(:disabled),
+.start__play:focus-visible:not(:disabled) {
+  outline: none;
+  transform: scale(1.08);
+}
+
+/* Sin personaje elegido, el play espera apagado. */
+.start__play:disabled {
+  cursor: default;
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+.start__play:not(:disabled) {
+  animation: play-latir 1.6s ease-in-out infinite;
+}
+
+@keyframes play-latir {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* Si el sistema pide menos movimiento, el juego se queda quieto. */
+@media (prefers-reduced-motion: reduce) {
+  .start__play:not(:disabled),
+  .hero-pick.is-picked,
+  .level__hero.is-cheering,
+  .game-hero.is-talking,
+  .level-btn:not(.is-locked) .level-btn__coin {
+    animation: none;
+  }
+}
+
 /* ---- Mapa ---- */
 .game {
   display: flex;
@@ -2833,17 +2969,17 @@ button {
   top: 84px;
 }
 
-.game-monster {
+.game-hero {
   width: 190px;
   height: auto;
   filter: drop-shadow(0 8px 10px rgba(20, 24, 40, 0.25));
 }
 
-.game-monster.is-talking {
-  animation: monster-talk 0.5s ease-in-out infinite alternate;
+.game-hero.is-talking {
+  animation: hero-talk 0.5s ease-in-out infinite alternate;
 }
 
-@keyframes monster-talk {
+@keyframes hero-talk {
   from { transform: translateY(0) rotate(-2deg); }
   to { transform: translateY(-6px) rotate(2deg); }
 }
@@ -3038,7 +3174,7 @@ button {
     align-items: flex-end;
     gap: 6px;
   }
-  .game-monster {
+  .game-hero {
     width: 110px;
   }
   .game-bubble {
@@ -3314,7 +3450,16 @@ button {
   gap: 14px;
 }
 
-.level__monster {
+.level__hero.is-cheering {
+  animation: hero-cheer 0.45s ease;
+}
+
+@keyframes hero-cheer {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-10px) scale(1.06); }
+}
+
+.level__hero {
   width: 130px;
   height: auto;
   filter: drop-shadow(0 6px 8px rgba(20, 24, 40, 0.25));
@@ -3368,7 +3513,7 @@ button {
   justify-content: center;
 }
 
-.level__card--end + .level__monster {
+.level__card--end + .level__hero {
   display: block;
   margin: 16px auto 0;
 }
@@ -3377,7 +3522,7 @@ button {
   .level {
     padding: 10px 10px 14px;
   }
-  .level__monster {
+  .level__hero {
     width: 84px;
   }
 }

@@ -116,7 +116,7 @@ export function wordBankSize(level: number): number {
 }
 
 /**
- * Cómo se PRONUNCIA cada letra cuando el monstruito dice lo que apretaste.
+ * Cómo se PRONUNCIA cada letra cuando el personaje dice lo que apretaste.
  * No es el nombre de la letra ("ese") sino su sonido: para las que se pueden
  * sostener se alarga (S → "sss"), y las demás quedan como están porque la voz
  * del navegador no sabe decir el fonema suelto y termina diciendo el nombre.
@@ -140,7 +140,7 @@ export function soundOf(option: string): string {
   return LETTER_SOUNDS[option.toUpperCase()] ?? option.toLowerCase()
 }
 
-/** Consigna de cada nivel (la dice el monstruito en su globo). */
+/** Consigna de cada nivel (la dice el personaje en su globo). */
 export const LEVEL_PROMPTS: Record<number, string> = {
   1: '¿CON QUÉ SONIDO EMPIEZA ESTA PALABRA?',
   2: 'COMPLETÁ LA PRIMERA SÍLABA',
