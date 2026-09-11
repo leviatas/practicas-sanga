@@ -99,6 +99,48 @@ export interface LogsAccess {
   lastDays?: number
 }
 
+/** Un ❤️ / 👎 puesto en un ejercicio. */
+export interface FeedbackRow {
+  ts: number
+  ip: string | null
+  name: string | null
+  grade: string | null
+  title: string | null
+  practice: string | null
+  question: string | null
+  vote: 'like' | 'dislike' | null
+}
+
+export interface FeedbackByPractice {
+  title: string
+  grade: string | null
+  likes: number
+  dislikes: number
+  last: number
+}
+
+export interface FeedbackByQuestion extends FeedbackByPractice {
+  question: string
+}
+
+export interface FeedbackByName {
+  name: string
+  likes: number
+  dislikes: number
+  last: number
+}
+
+/** Todo lo que el panel necesita para la ventana de ❤️ / 👎. */
+export interface LogsFeedback {
+  likes: number
+  dislikes: number
+  voters: number
+  byPractice: FeedbackByPractice[]
+  byQuestion: FeedbackByQuestion[]
+  byName: FeedbackByName[]
+  recent: FeedbackRow[]
+}
+
 export interface LogsResponse {
   summary: {
     opens: number
@@ -114,6 +156,11 @@ export interface LogsResponse {
   recent: RecentEvent[]
   /** Accesos al panel. Puede faltar si el backend es más viejo que la app. */
   access?: LogsAccess
+  /**
+   * ❤️ / 👎 de los ejercicios. Puede faltar si el backend es más viejo que la
+   * app (en ese caso la ventana avisa que hay que actualizarlo).
+   */
+  feedback?: LogsFeedback
   /**
    * Período que aplicó el backend, en días (0 = todo). Si falta, el backend es
    * más viejo que la app y devolvió todo sin filtrar.

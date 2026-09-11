@@ -6,6 +6,7 @@ import {
   type LogsAccess,
   type LogsResponse,
 } from '../lib/usage'
+import FeedbackLogs from './FeedbackLogs'
 
 // Panel de logs de uso (oculto). Se abre desde el footer con contraseña.
 // Arriba hay tres botones (7d / 14d / 1m) que acotan el uso a ese período: se
@@ -13,6 +14,8 @@ import {
 // Los datos vienen del backend: la columna "IP" es la del visitante, y la
 // sección "Accesos al panel" muestra la de quien entró o lo intentó, con la
 // lista de las IPs que entraron en los últimos días.
+// Los ❤️ / 👎 que los chicos les ponen a los ejercicios se ven en una VENTANA
+// APARTE, que se abre con el botón de arriba (componente FeedbackLogs).
 
 function fmt(t: number) {
   return t ? new Date(t).toLocaleString('es-AR') : '—'
@@ -83,6 +86,8 @@ export default function UsageLogs({
   const [error, setError] = useState<string | null>(null)
   // Período elegido con los botones 7d / 14d / 1m.
   const [range, setRange] = useState<number>(LOG_RANGES[0].days)
+  // Ventana aparte con los ❤️ / 👎 de los ejercicios.
+  const [showFeedback, setShowFeedback] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -113,9 +118,19 @@ export default function UsageLogs({
       <div className="logs-panel">
         <div className="logs-header">
           <h2>Logs de uso</h2>
-          <button className="btn btn--ghost btn--small" onClick={onClose}>
-            ✕ Cerrar
-          </button>
+          <div className="logs-header__actions">
+            {/* Los votos de los ejercicios van en su propia ventana. */}
+            <button
+              className="btn btn--ghost btn--small"
+              onClick={() => setShowFeedback(true)}
+              disabled={!data}
+            >
+              ❤️ 👎🏼 Ejercicios
+            </button>
+            <button className="btn btn--ghost btn--small" onClick={onClose}>
+              ✕ Cerrar
+            </button>
+          </div>
         </div>
 
         {/* Con estos botones el uso se acota a los últimos 7, 14 o 30 días. */}
@@ -328,6 +343,14 @@ export default function UsageLogs({
           </>
         )}
       </div>
+
+      {showFeedback && (
+        <FeedbackLogs
+          feedback={data?.feedback}
+          rangeLabel={range === 30 ? 'último mes' : `últimos ${range} días`}
+          onClose={() => setShowFeedback(false)}
+        />
+      )}
     </div>
   )
 }

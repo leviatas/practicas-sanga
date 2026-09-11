@@ -59,7 +59,7 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
   ]
 }
 
-// 4to: cuatro materias. Prácticas del Lenguaje va primera y con etiqueta NEW.
+// 4to: cuatro materias. Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
 //  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
 //    diccionario, clasificación semántica y tildación.
 //  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
@@ -76,7 +76,6 @@ function grade4Subjects(): Subject[] {
       id: 'pdl',
       name: 'Prácticas del Lenguaje',
       emoji: '📚',
-      newUntil: '2026-09-15',
       description: 'Poesía, gramática, diccionario y tildación.',
       terms: [
         {

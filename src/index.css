@@ -433,6 +433,31 @@ button {
   margin-top: 16px;
 }
 
+/* La cabecera del panel puede tener más de un botón (abrir la ventana de
+   votos y cerrar). */
+.logs-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* La ventana de ❤️ / 👎 se abre ENCIMA del panel de logs. */
+.logs-overlay--top {
+  z-index: 110;
+  background: rgba(10, 12, 20, 0.65);
+}
+
+.fb-likes {
+  color: var(--correct);
+  font-weight: 700;
+}
+
+.fb-dislikes {
+  color: var(--wrong);
+  font-weight: 700;
+}
+
 .logs-error {
   color: var(--wrong);
   font-weight: 700;
@@ -474,6 +499,13 @@ button {
 .breadcrumb [aria-current='page'] {
   color: var(--text);
   font-weight: 700;
+}
+
+/* Envuelve "Inicio › Grado ›" sin cambiar el layout (los hijos siguen siendo
+   ítems del flex del breadcrumb). En el ejercicio en celular se oculta entero,
+   con separador y todo. */
+.breadcrumb__wide {
+  display: contents;
 }
 
 /* ---- Botones ---- */
@@ -785,8 +817,8 @@ button {
 }
 
 /* En el ejercicio recuperamos alto: header más compacto, footer oculto y
-   (en pantallas bajas) sin breadcrumb. Así la tarjeta tiene más lugar y no hay
-   que achicar tanto el contenido. */
+   (en pantallas bajas) breadcrumb compacto. Así la tarjeta tiene más lugar y
+   no hay que achicar tanto el contenido. */
 .app--exercise .app-header {
   padding-top: max(6px, env(safe-area-inset-top));
   padding-bottom: 6px;
@@ -796,8 +828,43 @@ button {
   display: none;
 }
 
+/* En el celular el breadcrumb SE VE igual (hay que saber de qué materia y
+   lección es el ejercicio), pero compacto y en dos renglones cortos:
+     1) Materia › Período   (sin "Inicio › 4to Grado ›", que no aportan acá)
+     2) Título de la práctica
+   Si algo no entra a lo ancho se corta con puntos suspensivos, nunca empuja
+   la tarjeta ni suma un tercer renglón. */
 @media (max-height: 760px) {
   .app--exercise .breadcrumb {
+    gap: 2px 5px;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+
+  .app--exercise .breadcrumb__wide {
+    display: none;
+  }
+
+  .app--exercise .breadcrumb > a,
+  .app--exercise .breadcrumb > [aria-current='page'] {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app--exercise .breadcrumb > a {
+    flex: 0 1 auto;
+  }
+
+  /* El título de la práctica arranca siempre en el segundo renglón (y por eso
+     el separador que lo precede sobra: quedaría colgado al final del primero). */
+  .app--exercise .breadcrumb > [aria-current='page'] {
+    flex: 1 0 100%;
+  }
+
+  .app--exercise .breadcrumb > [aria-hidden='true']:nth-last-child(2) {
     display: none;
   }
 }
@@ -836,6 +903,24 @@ button {
 
 .app--exercise .quiz-topbar {
   margin-bottom: calc(8px * var(--fit));
+}
+
+/* En el ejercicio la barra de arriba no se achica, pero los botones de voto
+   sí se ajustan un poco para no comerle ancho al "Reiniciar". */
+.app--exercise .vote-bar {
+  --vote-w: calc(38px * var(--fit));
+  --vote-h: calc(34px * var(--fit));
+}
+
+.app--exercise .vote-btn {
+  font-size: max(0.85rem, calc(1rem * var(--fit)));
+}
+
+@media (max-width: 430px) {
+  .app--exercise .vote-bar {
+    --vote-w: calc(34px * var(--fit));
+    --vote-h: calc(32px * var(--fit));
+  }
 }
 
 .app--exercise .quiz-progress {
@@ -1086,6 +1171,101 @@ button {
 
 .quiz-reset {
   flex-shrink: 0;
+}
+
+/* ---- ❤️ / 👎 de cada ejercicio ----
+   Van en la barra de arriba (fuera de la tarjeta) para que estén en todos los
+   ejercicios sin quitarle lugar a la consigna. Sin nombre cargado se ven
+   apagados: el voto se guarda con el nombre, si no, no sirve. */
+.vote-bar {
+  /* El tamaño de los dos botones se ajusta desde acá (ver ejercicio y celular
+     angosto más abajo): así siempre gana la regla más específica sobre la
+     medida, y no hay que repetir el botón entero. */
+  --vote-w: 40px;
+  --vote-h: 36px;
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.vote-btn {
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0;
+  width: var(--vote-w);
+  height: var(--vote-h);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.vote-btn:active {
+  transform: scale(0.92);
+}
+
+.vote-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.vote-btn--like.is-on {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.vote-btn--dislike.is-on {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+/* El voto que NO está elegido se apaga un poco, para que se vea cuál eligió. */
+.vote-bar:has(.is-on) .vote-btn:not(.is-on) {
+  opacity: 0.45;
+}
+
+/* Celular angosto: que "Dominadas", los votos y "Reiniciar" entren en un solo
+   renglón (si no, la barra se parte en dos y se come alto de la tarjeta). */
+@media (max-width: 430px) {
+  .quiz-topbar {
+    gap: 8px;
+  }
+
+  .quiz-mastery {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .vote-bar {
+    --vote-w: 34px;
+    --vote-h: 34px;
+    gap: 4px;
+  }
+
+  .vote-btn {
+    font-size: 0.95rem;
+  }
+}
+
+/* Celular MUY angosto (320px): además de la letra chica, "Reiniciar" va más
+   ajustado y "Dominadas" puede partirse en dos líneas. Es preferible eso a que
+   el botón se salga de la pantalla. */
+@media (max-width: 360px) {
+  .quiz-mastery {
+    font-size: 0.78rem;
+    white-space: normal;
+  }
+
+  .quiz-reset {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 0.88rem;
+  }
 }
 
 .quiz-progress {

@@ -8,7 +8,8 @@
 // correcta: sirve para ver quién entró o quién lo está probando.
 //
 // Endpoints:
-//   POST /api/event   -> registra un evento (open, practice_start, answer, complete)
+//   POST /api/event   -> registra un evento (open, practice_start, answer,
+//                        complete, feedback: ❤️ / 👎 de un ejercicio)
 //   GET  /api/logs     -> devuelve eventos + resumen + accesos al panel
 //                         (?days=7|14|30 acota el uso a ese período; incluye
 //                         las IPs que entraron en los últimos 7 días; requiere
@@ -47,7 +48,9 @@ db.exec(`
     practice TEXT,
     title    TEXT,
     correct  INTEGER,
-    name     TEXT
+    name     TEXT,
+    question TEXT,
+    vote     TEXT
   );
   CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);
 `)
@@ -68,15 +71,19 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_admin_access_ts ON admin_access(ts);
 `)
 
-// Para bases ya existentes (creadas antes de la columna 'name'): agregarla.
-try {
-  db.exec(`ALTER TABLE events ADD COLUMN name TEXT`)
-} catch {
-  // la columna ya existe
+// Para bases ya existentes (creadas antes de estas columnas): agregarlas.
+// `question` y `vote` son del ❤️ / 👎 de cada ejercicio.
+for (const col of ['name TEXT', 'question TEXT', 'vote TEXT']) {
+  try {
+    db.exec(`ALTER TABLE events ADD COLUMN ${col}`)
+  } catch {
+    // la columna ya existe
+  }
 }
 const insertEvent = db.prepare(
-  `INSERT INTO events (ts, ip, ua, type, grade, practice, title, correct, name)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  `INSERT INTO events (ts, ip, ua, type, grade, practice, title, correct, name,
+                       question, vote)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 )
 
 // --- Helpers ---
@@ -119,7 +126,16 @@ function readBody(req) {
   })
 }
 
-const ALLOWED_TYPES = new Set(['open', 'practice_start', 'answer', 'complete'])
+const ALLOWED_TYPES = new Set([
+  'open',
+  'practice_start',
+  'answer',
+  'complete',
+  'feedback',
+])
+
+// Votos que acepta el evento 'feedback' (❤️ / 👎 de un ejercicio).
+const ALLOWED_VOTES = new Set(['like', 'dislike'])
 
 // --- Accesos al panel ---
 const LAST_IPS_DAYS = 7 // ventana de "últimas IPs que entraron"
@@ -264,6 +280,67 @@ function buildSummary(since = 0) {
   }
 }
 
+/**
+ * ❤️ / 👎 de los ejercicios (eventos 'feedback'), acotados al mismo período que
+ * el resto del panel. Se muestra en una ventana aparte del panel de logs.
+ */
+function buildFeedback(since = 0) {
+  const totals = db
+    .prepare(
+      `SELECT COALESCE(SUM(CASE WHEN vote='like' THEN 1 ELSE 0 END), 0) likes,
+              COALESCE(SUM(CASE WHEN vote='dislike' THEN 1 ELSE 0 END), 0) dislikes,
+              COUNT(DISTINCT name) voters
+       FROM events WHERE type='feedback' AND ts >= ?`,
+    )
+    .get(since)
+
+  const byPractice = db
+    .prepare(
+      `SELECT COALESCE(title, practice) title, grade,
+              SUM(CASE WHEN vote='like' THEN 1 ELSE 0 END) likes,
+              SUM(CASE WHEN vote='dislike' THEN 1 ELSE 0 END) dislikes,
+              MAX(ts) last
+       FROM events WHERE type='feedback' AND ts >= ?
+       GROUP BY practice, grade ORDER BY dislikes DESC, likes DESC LIMIT 200`,
+    )
+    .all(since)
+
+  // Los ejercicios puntuales: sirve para ver CUÁL no gustó dentro de una
+  // práctica (la columna `question` es el id de la pregunta).
+  const byQuestion = db
+    .prepare(
+      `SELECT question, COALESCE(title, practice) title, grade,
+              SUM(CASE WHEN vote='like' THEN 1 ELSE 0 END) likes,
+              SUM(CASE WHEN vote='dislike' THEN 1 ELSE 0 END) dislikes,
+              MAX(ts) last
+       FROM events WHERE type='feedback' AND question IS NOT NULL AND ts >= ?
+       GROUP BY question, practice, grade
+       ORDER BY dislikes DESC, likes DESC LIMIT 200`,
+    )
+    .all(since)
+
+  const byName = db
+    .prepare(
+      `SELECT name,
+              SUM(CASE WHEN vote='like' THEN 1 ELSE 0 END) likes,
+              SUM(CASE WHEN vote='dislike' THEN 1 ELSE 0 END) dislikes,
+              MAX(ts) last
+       FROM events WHERE type='feedback' AND name IS NOT NULL AND ts >= ?
+       GROUP BY name ORDER BY last DESC LIMIT 100`,
+    )
+    .all(since)
+
+  const recent = db
+    .prepare(
+      `SELECT ts, ip, name, grade, title, practice, question, vote
+       FROM events WHERE type='feedback' AND ts >= ?
+       ORDER BY ts DESC LIMIT 200`,
+    )
+    .all(since)
+
+  return { ...totals, byPractice, byQuestion, byName, recent }
+}
+
 // --- Servidor ---
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost')
@@ -276,6 +353,10 @@ const server = createServer(async (req, res) => {
     const body = await readBody(req)
     const type = String(body.type || '')
     if (!ALLOWED_TYPES.has(type)) return send(res, 400, { error: 'bad type' })
+    // El ❤️ / 👎 sin voto válido no se guarda: ensuciaría las estadísticas.
+    if (type === 'feedback' && !ALLOWED_VOTES.has(body.vote)) {
+      return send(res, 400, { error: 'bad vote' })
+    }
     insertEvent.run(
       Date.now(),
       clientIp(req) || null,
@@ -286,6 +367,8 @@ const server = createServer(async (req, res) => {
       body.title ? String(body.title).slice(0, 120) : null,
       body.correct === true ? 1 : body.correct === false ? 0 : null,
       body.name ? String(body.name).slice(0, 40) : null,
+      body.question ? String(body.question).slice(0, 80) : null,
+      ALLOWED_VOTES.has(body.vote) ? String(body.vote) : null,
     )
     return send(res, 204, null)
   }
@@ -307,6 +390,7 @@ const server = createServer(async (req, res) => {
       summary: buildSummary(since),
       recent,
       access: buildAccess(),
+      feedback: buildFeedback(since),
       // Le confirma al panel qué período aplicó (si falta, el backend es viejo).
       days,
     })

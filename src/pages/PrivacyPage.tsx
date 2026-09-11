@@ -40,6 +40,10 @@ export default function PrivacyPage() {
         <ul>
           <li>El <strong>nombre</strong> que cargues (opcional), para saludar y dar ánimo.</li>
           <li>El <strong>progreso</strong> de cada práctica (qué preguntas ya dominaste).</li>
+          <li>
+            El <strong>❤️ o 👎</strong> que le hayas puesto a cada ejercicio,
+            para que el botón quede marcado si volvés.
+          </li>
         </ul>
         <p>
           Podés borrar todo esto en cualquier momento limpiando los datos del
@@ -49,8 +53,9 @@ export default function PrivacyPage() {
         <h2>Qué se guarda en el servidor</h2>
         <p>
           Para saber cuánto se usa la app, el servidor registra eventos simples
-          de uso (aperturas, inicios de práctica y respuestas correctas o
-          incorrectas). Junto a cada evento se guarda:
+          de uso (aperturas, inicios de práctica, respuestas correctas o
+          incorrectas y el ❤️ o 👎 que se le pone a un ejercicio). Junto a cada
+          evento se guarda:
         </p>
         <ul>
           <li>El <strong>nombre</strong> que hayas cargado, si cargaste uno.</li>
@@ -78,6 +83,10 @@ export default function PrivacyPage() {
           <li>Mostrar mensajes de ánimo con el nombre del niño o la niña.</li>
           <li>Guardar el progreso para no repetir lo ya aprendido.</li>
           <li>Ver de forma general cuánto y cómo se usa la app para mejorarla.</li>
+          <li>
+            Saber qué ejercicios gustan y cuáles no (el ❤️ / 👎), para
+            corregirlos o cambiarlos.
+          </li>
         </ul>
         <p>
           <strong>No</strong> vendemos ni compartimos estos datos con terceros,{' '}
@@ -105,7 +114,7 @@ export default function PrivacyPage() {
         <h2>Cambios</h2>
         <p>
           Si cambiamos qué datos se guardan, actualizaremos esta página. Última
-          actualización: <strong>agosto de 2026</strong>.
+          actualización: <strong>septiembre de 2026</strong>.
         </p>
       </div>
 
