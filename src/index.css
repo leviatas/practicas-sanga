@@ -1011,6 +1011,7 @@ button {
 
 /* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
 .app--exercise .school-photo,
+.app--exercise .outdoor-photo,
 .app--exercise .body-photo,
 .app--exercise .sentence-scene,
 .app--exercise .family-photo,
@@ -1346,6 +1347,19 @@ button {
   margin: 0 auto 12px;
   border-radius: 14px;
   background: #fff; /* los dibujos son linea negra sobre blanco */
+  box-shadow: var(--shadow);
+}
+
+/* ---- Foto del vocabulario "The great outdoors" (4to grado) ---- */
+.outdoor-photo {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto 12px;
+  /* El recorte viene de una foto de la lámina, con las esquinas redondeadas:
+     el radio tapa el papel blanco que queda en las puntas. */
+  border-radius: 16px;
   box-shadow: var(--shadow);
 }
 
