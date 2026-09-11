@@ -137,10 +137,15 @@ export default function PracticePage() {
   return (
     <section className="practice-view" style={{ ['--accent' as string]: grade.color }}>
       <nav className="breadcrumb" aria-label="Migas de pan">
-        <Link to="/">Inicio</Link>
-        <span aria-hidden="true">›</span>
-        <Link to={`/grado/${grade.id}`}>{grade.name}</Link>
-        <span aria-hidden="true">›</span>
+        {/* En el celular (pantalla baja) estos dos primeros se ocultan por CSS:
+            así entran en una sola línea la materia, el período y la práctica,
+            que es lo que hace falta para saber en qué se está trabajando. */}
+        <span className="breadcrumb__wide">
+          <Link to="/">Inicio</Link>
+          <span aria-hidden="true">›</span>
+          <Link to={`/grado/${grade.id}`}>{grade.name}</Link>
+          <span aria-hidden="true">›</span>
+        </span>
         <Link to={`/grado/${grade.id}/${subject.id}`}>{subject.name}</Link>
         <span aria-hidden="true">›</span>
         <Link to={termPath} state={{ jumpToNext: true }}>
