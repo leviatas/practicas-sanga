@@ -101,6 +101,14 @@ export default function DragCloze({
   // En ese caso queremos las cajas en una única línea (compactas).
   const isLetters = blanks.length > 1 && blanks.every((b) => b.length === 1)
 
+  // Ejercicio de "ordenar las palabras": no hay texto entre los huecos (a lo
+  // sumo el punto o el signo de pregunta del final). Las cajas van entonces
+  // una al lado de la otra, centradas y bajando de renglón si no entran.
+  const isOrder =
+    !isLetters &&
+    blanks.length > 1 &&
+    segments.every((seg, i) => seg === '' || (i === blanks.length && seg.length <= 1))
+
   // Índice de la ficha asignada a cada hueco (o null).
   const [assign, setAssign] = useState<(number | null)[]>(() =>
     blanks.map(() => null),
@@ -183,7 +191,11 @@ export default function DragCloze({
       {question.map === 'city2' && <CityMapBig />}
       {question.map === 'city' && <CityMap />}
 
-      <p className={`drag-paragraph${isLetters ? ' drag-paragraph--letters' : ''}`}>
+      <p
+        className={`drag-paragraph${isLetters ? ' drag-paragraph--letters' : ''}${
+          isOrder ? ' drag-paragraph--order' : ''
+        }`}
+      >
         {segments.map((seg, i) => (
           <span key={i}>
             {seg}
@@ -233,11 +245,18 @@ export default function DragCloze({
       </DragOverlay>
 
       {locked && (
-        <p className="drag-hint">
-          {correct
-            ? '¡Correcto! Quedó dominada 🎉'
-            : 'Revisá las que quedaron en rojo 🙊'}
-        </p>
+        <>
+          <p className="drag-hint">
+            {correct
+              ? '¡Correcto! Quedó dominada 🎉'
+              : 'Revisá las que quedaron en rojo 🙊'}
+          </p>
+          {/* La solución escrita: sirve sobre todo al ordenar las palabras de
+              una oración, donde las fichas mal puestas no dejan ver cómo era. */}
+          {question.explanation && (
+            <p className="drag-solution">{question.explanation}</p>
+          )}
+        </>
       )}
     </DndContext>
   )

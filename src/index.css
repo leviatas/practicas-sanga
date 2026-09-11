@@ -1316,6 +1316,26 @@ button {
   padding: 8px 6px;
 }
 
+/* Modo "ordenar las palabras": las cajas van seguidas, centradas y bajan de
+   renglón si no entran (el punto final queda pegado a la última). */
+.drag-paragraph--order {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.drag-paragraph--order > span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.drag-paragraph--order .drag-blank {
+  margin: 0;
+}
+
 .drag-blank.is-over {
   background: color-mix(in srgb, var(--accent) 18%, transparent);
 }
@@ -1393,6 +1413,13 @@ button {
   margin: 12px 0 0;
 }
 
+/* La solución escrita, debajo del aviso (ej: la oración ya ordenada). */
+.drag-solution {
+  text-align: center;
+  margin: 6px 0 0;
+  color: var(--text-muted);
+}
+
 /* ---- Clasificar en columnas (drag & drop) ---- */
 .classify-bins {
   display: grid;
@@ -1433,6 +1460,14 @@ button {
   font-size: 0.95rem;
   margin-bottom: 8px;
   color: var(--accent);
+}
+
+/* Categoría que es un DIBUJO (el título es solo emojis): se muestra grande,
+   como la imagen que hay que relacionar con su oración. */
+.classify-bin__title--emoji {
+  font-size: calc(2.6rem * var(--fit, 1));
+  line-height: 1.1;
+  margin-bottom: 4px;
 }
 
 .classify-bin__items {

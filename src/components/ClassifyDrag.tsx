@@ -47,6 +47,12 @@ function Chip({
   )
 }
 
+// Una categoría puede ser un DIBUJO: el título es solo emojis (ej: '🔥'). En
+// ese caso se muestra grande, como la imagen que hay que relacionar.
+function isEmojiOnly(title: string): boolean {
+  return /^[\p{Extended_Pictographic}\uFE0F\u200D]+$/u.test(title)
+}
+
 function Zone({
   id,
   title,
@@ -61,7 +67,15 @@ function Zone({
   const { setNodeRef, isOver } = useDroppable({ id, disabled })
   return (
     <div className={`classify-bin ${isOver ? 'is-over' : ''}`} ref={setNodeRef}>
-      {title && <span className="classify-bin__title">{title}</span>}
+      {title && (
+        <span
+          className={`classify-bin__title${
+            isEmojiOnly(title) ? ' classify-bin__title--emoji' : ''
+          }`}
+        >
+          {title}
+        </span>
+      )}
       <div className="classify-bin__items">{children}</div>
     </div>
   )
