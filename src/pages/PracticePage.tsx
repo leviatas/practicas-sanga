@@ -24,6 +24,7 @@ import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
 import { bodyPartsImages } from '../components/bodyPartsImages'
 import { sentenceImages } from '../components/sentenceImages'
+import { outdoorImages } from '../components/outdoorImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -574,6 +575,13 @@ function Quiz({
                 className="sentence-scene"
                 src={sentenceImages[question.image]}
                 alt="Mirá la escena y armá la oración que la describe"
+              />
+            )}
+            {question.image && outdoorImages[question.image] && (
+              <img
+                className="outdoor-photo"
+                src={outdoorImages[question.image]}
+                alt="Mirá la foto y elegí la palabra"
               />
             )}
             {question.image && bodyPartsImages[question.image] && (

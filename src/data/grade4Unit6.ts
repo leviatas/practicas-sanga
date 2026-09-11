@@ -35,9 +35,14 @@ function order(id: string, words: string[], end = '.'): Question {
   }
 }
 
-/** Pregunta de "armar la palabra" letra por letra (misma forma que Unit 1-4). */
+/**
+ * Pregunta de "armar la palabra" letra por letra (misma forma que Unit 1-4).
+ *
+ * Las fichas que se arrastran van en IMPRENTA MAYÚSCULA, como lo pidió la
+ * seño: a esta edad les resulta más fácil reconocer la letra suelta así.
+ */
 function spell(id: string, clue: string, word: string): Question {
-  const letters = word.split('')
+  const letters = word.toUpperCase().split('')
   return {
     id,
     kind: 'drag',
@@ -45,7 +50,7 @@ function spell(id: string, clue: string, word: string): Question {
     segments: letters.map(() => ''),
     blanks: letters,
     bank: [...letters],
-    explanation: `The word is "${word}".`,
+    explanation: `The word is "${letters.join('')}".`,
   }
 }
 
@@ -80,29 +85,29 @@ export const grade4Unit6Practices: Practice[] = [
     description: 'Read the definition and choose the correct word. (Unit 6)',
     emoji: '🌿',
     questions: [
-      { id: 'u6v1', prompt: 'Birds build this for their eggs.',
+      { id: 'u6v1', image: 'nest', prompt: 'Birds build this for their eggs.',
         options: [{ text: 'a nest', correct: true }, { text: 'a field' }, { text: 'a campfire' }] },
-      { id: 'u6v2', prompt: 'A part of a tree with leaves on.',
+      { id: 'u6v2', image: 'branch', prompt: 'A part of a tree with leaves on.',
         options: [{ text: 'a branch', correct: true }, { text: 'a stream' }, { text: 'a nest' }] },
-      { id: 'u6v3', prompt: 'A special thing you can see in the sky at night.',
+      { id: 'u6v3', image: 'shooting-star', prompt: 'A special thing you can see in the sky at night.',
         options: [{ text: 'a shooting star', correct: true }, { text: 'the ground' }, { text: 'a stream' }] },
-      { id: 'u6v4', prompt: 'A big place with grass, where cows and sheep eat.',
+      { id: 'u6v4', image: 'field', prompt: 'A big place with grass, where cows and sheep eat.',
         options: [{ text: 'a field', correct: true }, { text: 'a branch' }, { text: 'a nest' }] },
-      { id: 'u6v5', prompt: 'A small river.',
+      { id: 'u6v5', image: 'stream', prompt: 'A small river.',
         options: [{ text: 'a stream', correct: true }, { text: 'a field' }, { text: 'the world' }] },
-      { id: 'u6v6', prompt: 'The place where we all live.',
+      { id: 'u6v6', image: 'world', prompt: 'The place where we all live.',
         options: [{ text: 'the world', correct: true }, { text: 'the ground' }, { text: 'a field' }] },
-      { id: 'u6v7', prompt: 'What we walk on.',
+      { id: 'u6v7', image: 'ground', prompt: 'What we walk on.',
         options: [{ text: 'the ground', correct: true }, { text: 'the world' }, { text: 'a branch' }] },
-      { id: 'u6v8', prompt: 'You have this near your tent. You use it for cooking.',
+      { id: 'u6v8', image: 'campfire', prompt: 'You have this near your tent. You use it for cooking.',
         options: [{ text: 'a campfire', correct: true }, { text: 'a stream' }, { text: 'a nest' }] },
-      { id: 'u6v9', prompt: 'They are usually green and they grow on the branches of a tree.',
+      { id: 'u6v9', image: 'leaves', prompt: 'They are usually green and they grow on the branches of a tree.',
         options: [{ text: 'leaves', correct: true }, { text: 'nests' }, { text: 'streams' }] },
-      { id: 'u6v10', prompt: 'Green plants that cover the ground in a park or in a garden.',
+      { id: 'u6v10', image: 'grass', prompt: 'Green plants that cover the ground in a park or in a garden.',
         options: [{ text: 'grass', correct: true }, { text: 'a campfire' }, { text: 'a shooting star' }] },
-      { id: 'u6v11', prompt: 'One of them is green and it grows on a branch. What is it?',
+      { id: 'u6v11', image: 'leaves', prompt: 'One of them is green and it grows on a branch. What is it?',
         options: [{ text: 'a leaf', correct: true }, { text: 'a leafs' }, { text: 'a leaves' }] },
-      { id: 'u6v12', prompt: 'You are in your tent at night and you want to see the shooting stars. Where do you look?',
+      { id: 'u6v12', image: 'shooting-star', prompt: 'You are in your tent at night and you want to see the shooting stars. Where do you look?',
         options: [{ text: 'at the sky', correct: true }, { text: 'at the ground' }, { text: 'at the grass' }] },
     ],
   },
@@ -122,61 +127,6 @@ export const grade4Unit6Practices: Practice[] = [
       spell('u6s7', 'green plants that cover the ground.', 'grass'),
       spell('u6s8', 'you use it for cooking near your tent.', 'campfire'),
       spell('u6s9', 'they are green and they grow on the branches.', 'leaves'),
-    ],
-  },
-
-  {
-    id: 'u6-vocab-grupos',
-    title: 'Vocabulario: agrupar las palabras',
-    description: 'Drag each word to the group where it belongs. (Unit 6)',
-    emoji: '🗂️',
-    questions: [
-      {
-        id: 'u6g1',
-        kind: 'classify',
-        prompt: 'Where does each word go?',
-        categories: ['Parts of a tree', 'You can stand on it', 'You see it well in the dark'],
-        items: [
-          { text: 'a branch', category: 'Parts of a tree' },
-          { text: 'leaves', category: 'Parts of a tree' },
-          { text: 'the grass', category: 'You can stand on it' },
-          { text: 'the ground', category: 'You can stand on it' },
-          { text: 'a field', category: 'You can stand on it' },
-          { text: 'a shooting star', category: 'You see it well in the dark' },
-          { text: 'a campfire', category: 'You see it well in the dark' },
-        ],
-      },
-      {
-        id: 'u6g2',
-        kind: 'classify',
-        prompt: 'In the sky, on the ground or on a tree?',
-        categories: ['In the sky', 'On the ground', 'On a tree'],
-        items: [
-          { text: 'a shooting star', category: 'In the sky' },
-          { text: 'the moon', category: 'In the sky' },
-          { text: 'a campfire', category: 'On the ground' },
-          { text: 'a stream', category: 'On the ground' },
-          { text: 'the grass', category: 'On the ground' },
-          { text: 'a nest', category: 'On a tree' },
-          { text: 'a branch', category: 'On a tree' },
-          { text: 'leaves', category: 'On a tree' },
-        ],
-      },
-      {
-        id: 'u6g3',
-        kind: 'classify',
-        prompt: 'Nature makes it or people make it?',
-        categories: ['Nature makes it', 'People make it'],
-        items: [
-          { text: 'a stream', category: 'Nature makes it' },
-          { text: 'the grass', category: 'Nature makes it' },
-          { text: 'a shooting star', category: 'Nature makes it' },
-          { text: 'a branch', category: 'Nature makes it' },
-          { text: 'a campfire', category: 'People make it' },
-          { text: 'a tent', category: 'People make it' },
-          { text: 'a helmet', category: 'People make it' },
-        ],
-      },
     ],
   },
 
