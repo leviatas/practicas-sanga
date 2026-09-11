@@ -7,6 +7,7 @@ import {
 import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
 import { grade1NumbersPractices } from './grade1Numbers'
 import { grade4Practices } from './grade4'
+import { grade4Unit6Practices } from './grade4Unit6'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
@@ -92,6 +93,7 @@ function grade4Subjects(): Subject[] {
       id: 'english',
       name: 'English',
       emoji: '🌍',
+      newUntil: '2026-09-30',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -100,6 +102,15 @@ function grade4Subjects(): Subject[] {
           emoji: '📝',
           description: 'Todas las prácticas para el primer parcial.',
           practices: grade4Practices,
+        },
+        {
+          id: '2nd-midterms',
+          name: '2nd Midterms',
+          emoji: '📝',
+          newUntil: '2026-09-30',
+          description:
+            'Vocabulario de la unidad 6 y past continuous: afirmativo, negativo y preguntas.',
+          practices: grade4Unit6Practices,
         },
         {
           id: 'midterms-oral',
