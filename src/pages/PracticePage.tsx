@@ -4,6 +4,7 @@ import { getPractice } from '../data/grades'
 import type { Practice, Question } from '../types'
 import { loadMastered, saveMastered, resetMastered } from '../lib/progress'
 import { loadName } from '../lib/profile'
+import { loadVotes, saveVote, type Vote } from '../lib/votes'
 import { logEvent } from '../lib/usage'
 import CityMap from '../components/CityMap'
 import DragCloze from '../components/DragCloze'
@@ -18,6 +19,7 @@ import WordPick from '../components/WordPick'
 import WordLabel from '../components/WordLabel'
 import AcrosticFill from '../components/AcrosticFill'
 import PrepositionScene from '../components/PrepositionScene'
+import VoteBar from '../components/VoteBar'
 import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
 import { bodyPartsImages } from '../components/bodyPartsImages'
@@ -193,6 +195,8 @@ function Quiz({
 
   // Nombre del niño (si lo cargaron en la pantalla del grado).
   const [childName] = useState(() => loadName(gradeId))
+  // Votos (❤️ / 👎) de cada pregunta de esta práctica, por si vuelve a salir.
+  const [votes, setVotes] = useState(() => loadVotes(gradeId, practiceId))
 
   // Refs para ajustar el tamaño del contenido (--fit) y que todo entre sin scroll.
   const cardRef = useRef<HTMLDivElement>(null)
@@ -309,6 +313,24 @@ function Quiz({
       title: practice.title,
       correct,
       name: childName || undefined,
+    })
+  }
+
+  // ❤️ / 👎 del ejercicio. Solo con el nombre cargado: el voto viaja con él a
+  // los logs. Se puede cambiar de opinión (tocar el otro botón); tocar el que
+  // ya está elegido no hace nada.
+  function handleVote(questionId: string, vote: Vote) {
+    if (!childName) return
+    if (votes[questionId] === vote) return
+    setVotes((prev) => ({ ...prev, [questionId]: vote }))
+    saveVote(gradeId, practiceId, questionId, vote)
+    logEvent('feedback', {
+      grade: gradeId,
+      practice: practiceId,
+      title: practice.title,
+      question: questionId,
+      vote,
+      name: childName,
     })
   }
 
@@ -503,6 +525,11 @@ function Quiz({
         <span className="quiz-mastery">
           Dominadas: {masteredCount}/{total}
         </span>
+        <VoteBar
+          vote={votes[question.id] ?? null}
+          hasName={!!childName}
+          onVote={(v) => handleVote(question.id, v)}
+        />
         <button
           className="btn btn--ghost btn--small quiz-reset"
           onClick={handleReset}

@@ -433,6 +433,31 @@ button {
   margin-top: 16px;
 }
 
+/* La cabecera del panel puede tener más de un botón (abrir la ventana de
+   votos y cerrar). */
+.logs-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* La ventana de ❤️ / 👎 se abre ENCIMA del panel de logs. */
+.logs-overlay--top {
+  z-index: 110;
+  background: rgba(10, 12, 20, 0.65);
+}
+
+.fb-likes {
+  color: var(--correct);
+  font-weight: 700;
+}
+
+.fb-dislikes {
+  color: var(--wrong);
+  font-weight: 700;
+}
+
 .logs-error {
   color: var(--wrong);
   font-weight: 700;
@@ -838,6 +863,14 @@ button {
   margin-bottom: calc(8px * var(--fit));
 }
 
+/* En el ejercicio la barra de arriba no se achica, pero los botones de voto
+   sí se ajustan un poco para no comerle ancho al "Reiniciar". */
+.app--exercise .vote-btn {
+  width: calc(38px * var(--fit));
+  height: calc(34px * var(--fit));
+  font-size: max(0.85rem, calc(1rem * var(--fit)));
+}
+
 .app--exercise .quiz-progress {
   margin-bottom: calc(6px * var(--fit));
 }
@@ -1086,6 +1119,57 @@ button {
 
 .quiz-reset {
   flex-shrink: 0;
+}
+
+/* ---- ❤️ / 👎 de cada ejercicio ----
+   Van en la barra de arriba (fuera de la tarjeta) para que estén en todos los
+   ejercicios sin quitarle lugar a la consigna. Sin nombre cargado se ven
+   apagados: el voto se guarda con el nombre, si no, no sirve. */
+.vote-bar {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.vote-btn {
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0;
+  width: 40px;
+  height: 36px;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.vote-btn:active {
+  transform: scale(0.92);
+}
+
+.vote-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.vote-btn--like.is-on {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.vote-btn--dislike.is-on {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+/* El voto que NO está elegido se apaga un poco, para que se vea cuál eligió. */
+.vote-bar:has(.is-on) .vote-btn:not(.is-on) {
+  opacity: 0.45;
 }
 
 .quiz-progress {
