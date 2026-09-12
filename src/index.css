@@ -892,6 +892,25 @@ button {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  /* Ocupa TODO el ancho disponible. Sin esto, el `margin: 0 auto` de `.quiz`
+     dentro de una columna flex la dejaba del ancho de su contenido más ancho
+     (la barra de "Dominadas / ❤️ 👎 / Reiniciar"), así que en la compu la
+     tarjeta quedaba angosta y con mucho blanco al costado. */
+  width: 100%;
+  max-width: 620px;
+  align-self: center;
+}
+
+/* En la compu la tarjeta se ensancha: hay lugar de sobra y así las oraciones
+   largas (ordenar palabras, armar la oración) entran en menos renglones. */
+@media (min-width: 1000px) {
+  .app--exercise .app-main > .container {
+    max-width: 1040px;
+  }
+
+  .app--exercise .quiz {
+    max-width: 900px;
+  }
 }
 
 /* La cabecera del quiz (progreso, contador) no se achica. */
@@ -1012,6 +1031,7 @@ button {
 /* Las imágenes/mapas escalan por alto para no comerse la pantalla. */
 .app--exercise .school-photo,
 .app--exercise .outdoor-photo,
+.app--exercise .scene-photo,
 .app--exercise .body-photo,
 .app--exercise .sentence-scene,
 .app--exercise .family-photo,
@@ -1026,6 +1046,17 @@ button {
   max-width: 100%;
   width: auto;
   margin-bottom: calc(10px * var(--fit));
+}
+
+/* Los dibujos también CRECEN con --fit: en la compu sobra lugar y una lámina
+   de 420px en una pantalla grande se ve chiquita. Nunca más anchos que la
+   tarjeta (el `min()` con 100%) ni más altos que el tope de arriba. */
+.app--exercise .scene-photo {
+  max-width: min(100%, calc(420px * var(--fit, 1)));
+}
+
+.app--exercise .outdoor-photo {
+  max-width: min(100%, calc(300px * var(--fit, 1)));
 }
 
 /* Armar la oración: las columnas y sus fichas escalan con --fit. */
@@ -1108,6 +1139,18 @@ button {
 .app--exercise .drag-chip {
   font-size: calc(1rem * var(--fit));
   padding: calc(8px * var(--fit)) calc(14px * var(--fit));
+}
+
+/* Los huecos acompañan el tamaño de las fichas (si no, en la compu quedaban
+   casilleros chiquitos con fichas grandes). Los de "armar la palabra" son de
+   una sola letra, así que escalan desde su propia medida. */
+.app--exercise .drag-blank {
+  min-width: calc(96px * var(--fit));
+  min-height: calc(40px * var(--fit));
+}
+
+.app--exercise .drag-paragraph--letters .drag-blank {
+  min-width: calc(2.4rem * var(--fit));
 }
 .app--exercise .drag-bank {
   gap: calc(10px * var(--fit));
@@ -1359,6 +1402,19 @@ button {
   margin: 0 auto 12px;
   /* El recorte viene de una foto de la lámina, con las esquinas redondeadas:
      el radio tapa el papel blanco que queda en las puntas. */
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* ---- Lámina de "Elegir la oración correcta" (4to grado) ----
+   Va más ancha que la foto del vocabulario: es una escena con varios
+   personajes y hay que poder ver qué está haciendo cada uno. */
+.scene-photo {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 0 auto 12px;
   border-radius: 16px;
   box-shadow: var(--shadow);
 }

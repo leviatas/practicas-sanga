@@ -25,6 +25,7 @@ import { familyImages } from '../components/familyImages'
 import { bodyPartsImages } from '../components/bodyPartsImages'
 import { sentenceImages } from '../components/sentenceImages'
 import { outdoorImages } from '../components/outdoorImages'
+import { pastContinuousImages } from '../components/pastContinuousImages'
 import NotFoundPage from './NotFoundPage'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
@@ -86,6 +87,10 @@ function speak(text: string, lang = 'es-AR') {
 function listenableAnswer(q: Question): string | null {
   if (q.listen) return q.listen.trim() || null
   if (!q.image) return null
+  // Las láminas de "elegir la oración correcta" no llevan el botón: acá la
+  // respuesta es una oración entera y escucharla sería regalar la respuesta
+  // (en las fotos de vocabulario, en cambio, sirve para oír la palabra).
+  if (pastContinuousImages[q.image]) return null
   if (q.kind != null && q.kind !== 'choice') return null
   const correct = (q.options ?? []).filter((o) => o.correct)
   if (correct.length !== 1) return null
@@ -265,10 +270,13 @@ function Quiz({
   // texto se encogía justo mientras el alumno lo estaba leyendo.)
   const noFit = subjectId === 'matematica'
 
-  // Ajusta --fit para que el contenido de la tarjeta entre sin scroll.
-  // Mide el alto natural del contenido vs el alto disponible y, si no entra,
-  // achica proporcionalmente (letra, cuadros e imagen). Adaptativo a la
-  // pantalla; en desktop, donde sobra alto, --fit queda en 1.
+  // Ajusta --fit para que el contenido de la tarjeta use bien la pantalla.
+  // Mide el alto natural del contenido vs el alto disponible y:
+  //  - si no entra, lo achica proporcionalmente (letra, cuadros e imagen);
+  //  - si sobra lugar y la pantalla es grande (compu), lo AGRANDA hasta llenar
+  //    la tarjeta, con un tope para que no quede desproporcionado.
+  // En el celular el contenido ya ocupa la pantalla, así que ahí el tope de
+  // crecimiento es 1 y todo sigue igual que antes.
   useLayoutEffect(() => {
     const card = cardRef.current
     const inner = fitRef.current
@@ -281,24 +289,65 @@ function Quiz({
     }
 
     function fit() {
-      quiz!.style.setProperty('--fit', '1')
-      const avail = card!.clientHeight
-      if (!avail) return
-      // Itera achicando hasta que entre (o hasta el piso de legibilidad).
-      const MIN = 0.45
+      // Se mide SIN la barra de scroll de la tarjeta: si aparece, el contenido
+      // queda más angosto, el texto se parte en más renglones y la medición da
+      // más alto del real (y el ejercicio terminaba más chico de lo que podía).
+      const prevOverflow = card!.style.overflowY
+      card!.style.overflowY = 'hidden'
+      try {
+        fitInner()
+      } finally {
+        card!.style.overflowY = prevOverflow
+      }
+    }
+
+    function fitInner() {
+      const MIN = 0.45 // piso de legibilidad
+      // Techo de crecimiento: solo en pantallas anchas (compu o tablet), donde
+      // la tarjeta queda con mucho aire de sobra. En el celular el contenido ya
+      // la llena, así que ahí el techo es 1 y todo queda como estaba.
+      const MAX = window.innerWidth >= 900 ? 1.7 : 1
       let k = 1
-      for (let i = 0; i < 6; i++) {
+      quiz!.style.setProperty('--fit', String(k))
+
+      // OJO: el alto disponible NO es fijo. La barra de arriba, la barra de
+      // progreso y el contador también escalan con --fit, así que al agrandar
+      // el contenido la tarjeta se achica un poco. Por eso se vuelven a medir
+      // las dos cosas (disponible y contenido) en cada vuelta.
+      let fits = 0 // el --fit más grande que se vio entrar entero
+      for (let i = 0; i < 8; i++) {
+        const avail = card!.clientHeight
         const content = inner!.offsetHeight
-        if (content <= avail) break
-        k = Math.max(MIN, k * (avail / content) * 0.98)
+        if (!avail || !content) return
+        if (content > avail) {
+          const next = Math.max(MIN, k * (avail / content) * 0.98)
+          if (next >= k) break // ya no puede achicar más
+          k = next
+        } else {
+          fits = Math.max(fits, k)
+          // El 0.94 deja un margen para que el último paso no se pase de largo.
+          const next = Math.min(MAX, k * ((avail * 0.94) / content))
+          if (next <= k + 0.02) break // ya usa bien el lugar (o llegó al techo)
+          k = next
+        }
         quiz!.style.setProperty('--fit', String(k))
-        if (k <= MIN) break
+      }
+
+      // Si quedó pasado de largo (puede pasar si creció y achicó alternando),
+      // vuelve al último tamaño que entraba entero.
+      if (inner!.offsetHeight > card!.clientHeight && fits && fits < k) {
+        quiz!.style.setProperty('--fit', String(fits))
       }
     }
 
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(card)
+    // También se observa el contenido: las fotos de los ejercicios cargan
+    // después del primer render y, hasta que no están, el alto medido es el de
+    // la tarjeta vacía. Sin esto la imagen entraba tarde y dejaba el ejercicio
+    // más largo que la pantalla (con scroll dentro de la tarjeta).
+    ro.observe(inner)
     window.addEventListener('resize', fit)
     window.addEventListener('orientationchange', fit)
     return () => {
@@ -582,6 +631,13 @@ function Quiz({
                 className="outdoor-photo"
                 src={outdoorImages[question.image]}
                 alt="Mirá la foto y elegí la palabra"
+              />
+            )}
+            {question.image && pastContinuousImages[question.image] && (
+              <img
+                className="scene-photo"
+                src={pastContinuousImages[question.image]}
+                alt="Mirá el dibujo y elegí la oración que lo describe"
               />
             )}
             {question.image && bodyPartsImages[question.image] && (
