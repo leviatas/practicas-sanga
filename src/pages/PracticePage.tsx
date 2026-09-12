@@ -79,18 +79,22 @@ function speak(text: string, lang = 'es-AR') {
   }
 }
 
+// Fotos de 1er grado donde escuchar es parte de la ayuda: el chico ve el
+// dibujo y oye cómo se dice ("ARM", "PEN"), que es justo lo que está
+// aprendiendo. En 4to, en cambio, el botón NO va: ahí la palabra o la oración
+// en inglés ES la respuesta de la pregunta, así que oírla la regala.
+const LISTENABLE_IMAGES = [schoolImages, bodyPartsImages, familyImages]
+
 // Respuesta que se puede escuchar como AYUDA (botón "📢 ESCUCHA"): la de las
-// preguntas con imagen y una única opción correcta (ej: la foto de un brazo →
-// "ARM"), o la que se pida a mano con `listen` (ej: el número 7 → "SEVEN").
-// Escucharla no responde la pregunta: el alumno igual tiene que elegir la
-// opción correcta, y puede tocar el botón las veces que quiera.
+// preguntas con una de esas fotos y una única opción correcta (ej: la foto de
+// un brazo → "ARM"), o la que se pida a mano con `listen` (ej: el número 7 →
+// "SEVEN"). Escucharla no responde la pregunta: el alumno igual tiene que
+// elegir la opción correcta, y puede tocar el botón las veces que quiera.
 function listenableAnswer(q: Question): string | null {
   if (q.listen) return q.listen.trim() || null
   if (!q.image) return null
-  // Las láminas de "elegir la oración correcta" no llevan el botón: acá la
-  // respuesta es una oración entera y escucharla sería regalar la respuesta
-  // (en las fotos de vocabulario, en cambio, sirve para oír la palabra).
-  if (pastContinuousImages[q.image]) return null
+  const image = q.image
+  if (!LISTENABLE_IMAGES.some((images) => images[image])) return null
   if (q.kind != null && q.kind !== 'choice') return null
   const correct = (q.options ?? []).filter((o) => o.correct)
   if (correct.length !== 1) return null
