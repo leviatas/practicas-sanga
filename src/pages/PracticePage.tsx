@@ -18,6 +18,7 @@ import VersePick from '../components/VersePick'
 import WordPick from '../components/WordPick'
 import WordLabel from '../components/WordLabel'
 import AcrosticFill from '../components/AcrosticFill'
+import MatchLines from '../components/MatchLines'
 import PrepositionScene from '../components/PrepositionScene'
 import VoteBar from '../components/VoteBar'
 import { schoolImages } from '../components/schoolImages'
@@ -777,6 +778,13 @@ function Quiz({
                 correct={dragCorrect}
                 onValidate={handleDragValidate}
               />
+            ) : question.kind === 'match' ? (
+              <MatchLines
+                key={question.id}
+                question={question}
+                locked={answered}
+                onValidate={handleDragValidate}
+              />
             ) : question.kind === 'reveal' ? (
               <RevealChoices
                 key={question.id}
@@ -899,6 +907,12 @@ function Quiz({
           )}
 
           {answered && question.kind === 'tap' && (
+            <div className="quiz-feedback is-correct tap-cheer" role="status">
+              <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
+            </div>
+          )}
+
+          {answered && question.kind === 'match' && (
             <div className="quiz-feedback is-correct tap-cheer" role="status">
               <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
             </div>

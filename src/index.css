@@ -1733,6 +1733,104 @@ button {
   margin-top: 0;
 }
 
+/* ---- Unir con una línea (kind 'match') ----
+   Dos columnas: fotos a la izquierda, palabras (barajadas) a la derecha. El
+   SVG de las líneas va POR ENCIMA, absoluto y del tamaño del contenedor;
+   `pointer-events: none` para que no tape los toques de los botones. */
+.match {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: clamp(24px, 12vw, 96px);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.match-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.match-svg line {
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.match-svg line.is-correct {
+  stroke: var(--correct);
+}
+
+.match-svg line.is-wrong {
+  stroke: var(--wrong);
+}
+
+.match-col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(14px * var(--fit, 1));
+  flex: 1;
+  min-width: 0;
+  /* Las dos columnas quedan de la misma altura (la de las fotos, que es la
+     más alta) por el `align-items: stretch` de .match. Repartir las palabras
+     parejo en ese alto, en vez de apilarlas arriba, hace que las líneas salgan
+     más derechas y no se amontonen todas contra el primer renglón. */
+  justify-content: space-between;
+}
+
+.match-item {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+}
+
+.match-item:disabled {
+  cursor: default;
+}
+
+.match-item--image {
+  padding: calc(6px * var(--fit, 1));
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.match-item--image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.match-item--word {
+  padding: calc(10px * var(--fit, 1)) calc(14px * var(--fit, 1));
+  font-weight: 700;
+  font-size: calc(1rem * var(--fit, 1));
+  color: var(--text);
+}
+
+.match-item.is-selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  transform: scale(0.97);
+}
+
+.match-item.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.match-item.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
 /* ---- Señalar partes de un dibujo (drag & drop sobre flechas) ---- */
 /* El escenario tiene una relación de aspecto fija: el dibujo ocupa el 54%
    central del ancho y las dos columnas de casilleros los costados. El SVG de
