@@ -130,6 +130,38 @@ export const grade4Unit6Practices: Practice[] = [
     ],
   },
 
+  {
+    id: 'u6-vocab-unir',
+    title: 'Vocabulario: unir con una línea',
+    description: 'Tap a picture and then its word to draw a line between them. (Unit 6)',
+    emoji: '🔗',
+    questions: [
+      // Tandas cortas (2 o 3 pares) para que las líneas no se amontonen.
+      { id: 'u6mt1', kind: 'match', prompt: 'Match each picture with its word.',
+        pairs: [
+          { image: 'world', word: 'world' },
+          { image: 'field', word: 'field' },
+          { image: 'grass', word: 'grass' },
+        ] },
+      { id: 'u6mt2', kind: 'match', prompt: 'Match each picture with its word.',
+        pairs: [
+          { image: 'ground', word: 'ground' },
+          { image: 'campfire', word: 'campfire' },
+          { image: 'stream', word: 'stream' },
+        ] },
+      { id: 'u6mt3', kind: 'match', prompt: 'Match each picture with its word.',
+        pairs: [
+          { image: 'shooting-star', word: 'shooting star' },
+          { image: 'branch', word: 'branch' },
+        ] },
+      { id: 'u6mt4', kind: 'match', prompt: 'Match each picture with its word.',
+        pairs: [
+          { image: 'nest', word: 'nest' },
+          { image: 'leaves', word: 'leaves' },
+        ] },
+    ],
+  },
+
   // ===================================================== PAST CONTINUOUS ====
 
   {
@@ -372,58 +404,6 @@ export const grade4Unit6Practices: Practice[] = [
     ],
   },
 
-  {
-    id: 'u6-pc-relacionar',
-    title: 'Relacionar imagen y oración',
-    description: 'Drag each sentence to the picture that shows it.',
-    emoji: '🔗',
-    questions: [
-      {
-        id: 'u6m1',
-        kind: 'classify',
-        prompt: 'Which picture goes with each sentence?',
-        categories: ['🥣', '🎮', '📺'],
-        items: [
-          { text: 'He was eating cereal.', category: '🥣' },
-          { text: 'He was playing a computer game.', category: '🎮' },
-          { text: 'She was watching TV.', category: '📺' },
-        ],
-      },
-      {
-        id: 'u6m2',
-        kind: 'classify',
-        prompt: 'Which picture goes with each sentence?',
-        categories: ['🚴', '🚶', '⚽'],
-        items: [
-          { text: 'They were cycling to school.', category: '🚴' },
-          { text: 'They were walking to school.', category: '🚶' },
-          { text: 'They were playing football.', category: '⚽' },
-        ],
-      },
-      {
-        id: 'u6m3',
-        kind: 'classify',
-        prompt: 'Which picture goes with each sentence?',
-        categories: ['🔥', '🌠', '🏊'],
-        items: [
-          { text: 'We were cooking on the campfire.', category: '🔥' },
-          { text: 'We were looking at a shooting star.', category: '🌠' },
-          { text: 'We were swimming in the stream.', category: '🏊' },
-        ],
-      },
-      {
-        id: 'u6m4',
-        kind: 'classify',
-        prompt: 'Which picture goes with each sentence?',
-        categories: ['📖', '💃', '😴'],
-        items: [
-          { text: 'She was reading a book.', category: '📖' },
-          { text: 'He was dancing.', category: '💃' },
-          { text: 'The baby was sleeping.', category: '😴' },
-        ],
-      },
-    ],
-  },
 
   {
     id: 'u6-pc-error',

@@ -39,6 +39,13 @@ export interface SentenceColumn {
   answer: string
 }
 
+export interface MatchPair {
+  /** Clave de la imagen (ver los mapas de imágenes en src/components, ej: outdoorImages). */
+  image: string
+  /** Palabra que corresponde a esa imagen (la ficha del otro lado). */
+  word: string
+}
+
 export interface AcrosticRow {
   /** Lugar del que deriva el gentilicio (ej: 'LA PLATA'). */
   clue: string
@@ -137,6 +144,12 @@ export interface Question {
    *    la respuesta. La letra del acróstico ya viene puesta y resaltada, y las
    *    filas quedan alineadas por esa columna; el alumno escribe las demás y
    *    con 'Validar' se corrige fila por fila.
+   *  - 'match': unir con una línea cada imagen con su palabra. Las imágenes
+   *    van en una columna y las palabras (barajadas) en la otra; el alumno
+   *    toca una imagen y después su palabra (o al revés) para trazar la
+   *    línea. Si el par es correcto queda unido en verde; si no, se marca un
+   *    instante en rojo y se puede reintentar sin penalizar. Se usa en tandas
+   *    cortas (hasta 3 pares) para no saturar la pantalla.
    */
   kind?:
   | 'choice'
@@ -151,6 +164,7 @@ export interface Question {
   | 'words'
   | 'analyze'
   | 'acrostic'
+  | 'match'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -245,6 +259,8 @@ export interface Question {
    * letras `given` de cada fila, leídas en orden, forman la palabra vertical.
    */
   rows?: AcrosticRow[]
+  /** Para kind 'match': los pares imagen-palabra a unir (hasta 3 por tanda). */
+  pairs?: MatchPair[]
 }
 
 export interface Practice {
