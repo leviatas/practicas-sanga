@@ -19,6 +19,7 @@ import WordPick from '../components/WordPick'
 import WordLabel from '../components/WordLabel'
 import AcrosticFill from '../components/AcrosticFill'
 import MatchLines from '../components/MatchLines'
+import MemoryGame from '../components/MemoryGame'
 import PrepositionScene from '../components/PrepositionScene'
 import VoteBar from '../components/VoteBar'
 import { schoolImages } from '../components/schoolImages'
@@ -785,6 +786,13 @@ function Quiz({
                 locked={answered}
                 onValidate={handleDragValidate}
               />
+            ) : question.kind === 'memory' ? (
+              <MemoryGame
+                key={question.id}
+                question={question}
+                locked={answered}
+                onValidate={handleDragValidate}
+              />
             ) : question.kind === 'reveal' ? (
               <RevealChoices
                 key={question.id}
@@ -913,6 +921,12 @@ function Quiz({
           )}
 
           {answered && question.kind === 'match' && (
+            <div className="quiz-feedback is-correct tap-cheer" role="status">
+              <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
+            </div>
+          )}
+
+          {answered && question.kind === 'memory' && (
             <div className="quiz-feedback is-correct tap-cheer" role="status">
               <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
             </div>

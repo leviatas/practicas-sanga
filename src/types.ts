@@ -150,6 +150,12 @@ export interface Question {
    *    línea. Si el par es correcto queda unido en verde; si no, se marca un
    *    instante en rojo y se puede reintentar sin penalizar. Se usa en tandas
    *    cortas (hasta 3 pares) para no saturar la pantalla.
+   *  - 'memory': memotest. Todas las fichas empiezan boca abajo, mezcladas:
+   *    una por cada imagen y otra por cada palabra de `pairs`. El alumno
+   *    toca dos fichas; si forman un par (una imagen y su palabra) quedan
+   *    boca arriba para siempre, si no, se dan vuelta solas después de un
+   *    instante (sin penalizar). No hay tope de pares: al no mostrarse todo
+   *    junto (como en 'match'), no hay líneas que se crucen ni se amontonen.
    */
   kind?:
   | 'choice'
@@ -165,6 +171,7 @@ export interface Question {
   | 'analyze'
   | 'acrostic'
   | 'match'
+  | 'memory'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -259,7 +266,10 @@ export interface Question {
    * letras `given` de cada fila, leídas en orden, forman la palabra vertical.
    */
   rows?: AcrosticRow[]
-  /** Para kind 'match': los pares imagen-palabra a unir (hasta 3 por tanda). */
+  /**
+   * Para kinds 'match' (hasta 3 por tanda) y 'memory' (sin tope): los pares
+   * imagen-palabra del ejercicio.
+   */
   pairs?: MatchPair[]
 }
 

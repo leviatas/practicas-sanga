@@ -1,25 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { Question } from '../types'
-import { outdoorImages } from './outdoorImages'
-import { pastContinuousImages } from './pastContinuousImages'
-import { schoolImages } from './schoolImages'
-import { bodyPartsImages } from './bodyPartsImages'
-import { familyImages } from './familyImages'
-
-// Todos los mapas de imágenes disponibles para kind 'match' (se busca la clave
-// en cada uno, así el ejercicio sirve para cualquier vocabulario con fotos).
-const IMAGE_MAPS = [
-  outdoorImages,
-  pastContinuousImages,
-  schoolImages,
-  bodyPartsImages,
-  familyImages,
-]
-
-function imageSrc(key: string): string | undefined {
-  for (const map of IMAGE_MAPS) if (map[key]) return map[key]
-  return undefined
-}
+import { matchImageSrc } from './vocabImages'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
 function shuffle<T>(items: readonly T[]): T[] {
@@ -163,7 +144,7 @@ export default function MatchLines({
         {pairs.map((pair, i) => {
           const isDone = matched.has(i)
           const isWrong = wrong?.image === i
-          const src = imageSrc(pair.image)
+          const src = matchImageSrc(pair.image)
           return (
             <button
               key={pair.image}
