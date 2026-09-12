@@ -162,6 +162,31 @@ export const grade4Unit6Practices: Practice[] = [
     ],
   },
 
+  {
+    id: 'u6-vocab-memotest',
+    title: 'Vocabulario: memotest',
+    description: 'Flip two tiles. If they match (a picture and its word), they stay face up. (Unit 6)',
+    emoji: '🧠',
+    questions: [
+      // Las diez palabras de la unidad, todas juntas: al no mostrarse a la
+      // vista (empiezan boca abajo), no hay problema de amontonarlas como en
+      // 'match' — acá el desafío es memoria, no espacio en pantalla.
+      { id: 'u6mm1', kind: 'memory', prompt: 'Flip two tiles to find each picture and its word.',
+        pairs: [
+          { image: 'world', word: 'world' },
+          { image: 'field', word: 'field' },
+          { image: 'grass', word: 'grass' },
+          { image: 'ground', word: 'ground' },
+          { image: 'campfire', word: 'campfire' },
+          { image: 'stream', word: 'stream' },
+          { image: 'shooting-star', word: 'shooting star' },
+          { image: 'branch', word: 'branch' },
+          { image: 'nest', word: 'nest' },
+          { image: 'leaves', word: 'leaves' },
+        ] },
+    ],
+  },
+
   // ===================================================== PAST CONTINUOUS ====
 
   {
