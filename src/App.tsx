@@ -57,7 +57,7 @@ export default function App() {
       <footer className="app-footer">
         <div className="container">
           <p>
-            Hecho con ❤️ por Edu ·{' '}
+            Hecho con ❤️ por Edu Peluffo ·{' '}
             <a
               href="https://dev.leviatas.com"
               target="_blank"

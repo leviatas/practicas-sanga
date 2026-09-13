@@ -26,7 +26,7 @@ import { schoolImages } from '../components/schoolImages'
 import { familyImages } from '../components/familyImages'
 import { bodyPartsImages } from '../components/bodyPartsImages'
 import { sentenceImages } from '../components/sentenceImages'
-import { outdoorImages } from '../components/outdoorImages'
+import { outdoorIcons } from '../components/outdoorIcons'
 import { pastContinuousImages } from '../components/pastContinuousImages'
 import NotFoundPage from './NotFoundPage'
 
@@ -632,10 +632,10 @@ function Quiz({
                 alt="Mirá la escena y armá la oración que la describe"
               />
             )}
-            {question.image && outdoorImages[question.image] && (
+            {question.image && outdoorIcons[question.image] && (
               <img
                 className="outdoor-photo"
-                src={outdoorImages[question.image]}
+                src={outdoorIcons[question.image]}
                 alt="Mirá la foto y elegí la palabra"
               />
             )}
