@@ -12,6 +12,12 @@ function shuffle<T>(items: readonly T[]): T[] {
   return arr
 }
 
+// Palabra como se MUESTRA: con la primera letra en mayúscula. El valor que se
+// compara sigue siendo el original en minúscula (`pair.word`).
+function displayWord(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1)
+}
+
 type Point = { x: number; y: number }
 type Line = { key: string; from: Point; to: Point; state: 'is-correct' | 'is-wrong' }
 
@@ -180,7 +186,7 @@ export default function MatchLines({
               disabled={locked || isDone}
               aria-pressed={selectedWord === word}
             >
-              {word}
+              {displayWord(word)}
             </button>
           )
         })}

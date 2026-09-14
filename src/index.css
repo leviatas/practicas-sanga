@@ -1808,8 +1808,21 @@ button {
   border-radius: 8px;
 }
 
+/* La palabra va en una caja del MISMO tamaño que la foto de enfrente: las dos
+   columnas miden igual de ancho y las dos cajas son cuadradas (aspect-ratio 1),
+   así los dos renglones quedan alineados y las líneas salen derechas. El texto
+   va centrado y parte en varios renglones si es largo ("shooting star"). */
 .match-item--word {
-  padding: calc(10px * var(--fit, 1)) calc(14px * var(--fit, 1));
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: calc(8px * var(--fit, 1));
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  line-height: 1.2;
   font-weight: 700;
   font-size: calc(1rem * var(--fit, 1));
   color: var(--text);
