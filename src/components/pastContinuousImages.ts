@@ -4,7 +4,7 @@
 // referencia): la oración la tiene que elegir el alumno.
 import awake from '../assets/past-continuous/awake.jpg'
 import cake from '../assets/past-continuous/cake.jpg'
-import campfire from '../assets/past-continuous/campfire.jpg'
+import campfireScene from '../assets/past-continuous/campfire.jpg'
 import carNight from '../assets/past-continuous/car-night.jpg'
 import computerGame from '../assets/past-continuous/computer-game.jpg'
 import cooking from '../assets/past-continuous/cooking.jpg'
@@ -19,7 +19,7 @@ import tvOff from '../assets/past-continuous/tv-off.jpg'
 export const pastContinuousImages: Record<string, string> = {
   awake,
   cake,
-  campfire,
+  'campfire-scene': campfireScene,
   'car-night': carNight,
   'computer-game': computerGame,
   cooking,

@@ -30,6 +30,28 @@ import { outdoorIcons } from '../components/outdoorIcons'
 import { pastContinuousImages } from '../components/pastContinuousImages'
 import NotFoundPage from './NotFoundPage'
 
+// Mapas de imágenes que pueden acompañar a una pregunta, en orden de
+// búsqueda. Se muestra SOLO la primera que tenga la clave: si dos mapas usan
+// el mismo nombre (pasaba con 'campfire') la pregunta dibujaba las dos
+// imágenes, una debajo de la otra.
+const QUESTION_IMAGES: { map: Record<string, string>; className: string; alt: string }[] = [
+  { map: schoolImages, className: 'school-photo', alt: '¿Qué objeto de la escuela es?' },
+  { map: familyImages, className: 'family-photo', alt: 'Árbol genealógico de la familia de Alison' },
+  { map: sentenceImages, className: 'sentence-scene', alt: 'Mirá la escena y armá la oración que la describe' },
+  { map: outdoorIcons, className: 'outdoor-photo', alt: 'Mirá el ícono y elegí la palabra' },
+  { map: pastContinuousImages, className: 'scene-photo', alt: 'Mirá el dibujo y elegí la oración que lo describe' },
+  { map: bodyPartsImages, className: 'body-photo', alt: '¿Qué parte del cuerpo es?' },
+]
+
+/** La imagen de la pregunta (una sola), o nada si el nombre no está en ningún mapa. */
+function QuestionImage({ name }: { name?: string }) {
+  if (!name) return null
+  for (const { map, className, alt } of QUESTION_IMAGES) {
+    if (map[name]) return <img className={className} src={map[name]} alt={alt} />
+  }
+  return null
+}
+
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
 function shuffle<T>(items: readonly T[]): T[] {
   const arr = items.slice()
@@ -611,48 +633,7 @@ function Quiz({
           <div className="quiz-card__scroll">
             {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
             {question.scene && <PrepositionScene name={question.scene} />}
-            {question.image && schoolImages[question.image] && (
-              <img
-                className="school-photo"
-                src={schoolImages[question.image]}
-                alt="¿Qué objeto de la escuela es?"
-              />
-            )}
-            {question.image && familyImages[question.image] && (
-              <img
-                className="family-photo"
-                src={familyImages[question.image]}
-                alt="Árbol genealógico de la familia de Alison"
-              />
-            )}
-            {question.image && sentenceImages[question.image] && (
-              <img
-                className="sentence-scene"
-                src={sentenceImages[question.image]}
-                alt="Mirá la escena y armá la oración que la describe"
-              />
-            )}
-            {question.image && outdoorIcons[question.image] && (
-              <img
-                className="outdoor-photo"
-                src={outdoorIcons[question.image]}
-                alt="Mirá el ícono y elegí la palabra"
-              />
-            )}
-            {question.image && pastContinuousImages[question.image] && (
-              <img
-                className="scene-photo"
-                src={pastContinuousImages[question.image]}
-                alt="Mirá el dibujo y elegí la oración que lo describe"
-              />
-            )}
-            {question.image && bodyPartsImages[question.image] && (
-              <img
-                className="body-photo"
-                src={bodyPartsImages[question.image]}
-                alt="¿Qué parte del cuerpo es?"
-              />
-            )}
+            <QuestionImage name={question.image} />
             {question.bigNumber && (
               <div
                 className="quiz-number"
