@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { Question } from '../types'
-import { matchImageSrc } from './vocabImages'
+import { vocabImageSrc } from './vocabImages'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
 function shuffle<T>(items: readonly T[]): T[] {
@@ -144,7 +144,7 @@ export default function MatchLines({
         {pairs.map((pair, i) => {
           const isDone = matched.has(i)
           const isWrong = wrong?.image === i
-          const src = matchImageSrc(pair.image)
+          const src = vocabImageSrc(pair.image)
           return (
             <button
               key={pair.image}

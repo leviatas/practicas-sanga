@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Question } from '../types'
-import { memoryImageSrc } from './vocabImages'
+import { vocabImageSrc } from './vocabImages'
 
 // Baraja un array (Fisher-Yates) devolviendo una copia nueva.
 function shuffle<T>(items: readonly T[]): T[] {
@@ -92,7 +92,7 @@ export default function MemoryGame({
         const up = isUp(i)
         const isSolved = solved.has(card.pairIndex)
         const isWrong = busy && flipped.includes(i)
-        const src = card.kind === 'image' ? memoryImageSrc(card.content) : undefined
+        const src = card.kind === 'image' ? vocabImageSrc(card.content) : undefined
         return (
           <button
             key={i}

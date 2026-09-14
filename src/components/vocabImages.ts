@@ -3,36 +3,26 @@
 // varios mapas, así sirven para cualquier vocabulario con fotos o íconos, sin
 // tener que tocar el componente al sumar uno nuevo.
 //
-// OJO: `outdoorIcons` y `outdoorImages` tienen las MISMAS claves (world,
-// field, campfire...), una con fotos y la otra con íconos vectoriales. Por
-// eso hay dos funciones con distinta prioridad: "unir con una línea" ya usa
-// las fotos (`matchImageSrc`) y el memotest usa los íconos (`memoryImageSrc`,
-// pensados para reconocerse de un vistazo al dar vuelta la ficha).
-import { outdoorImages } from './outdoorImages'
+// "The great outdoors" usa los íconos vectoriales (`outdoorIcons`): son los
+// que pasó la seño porque se ven más claros que las fotos originales, así que
+// van primeros en la búsqueda. El resto del vocabulario (objetos de la
+// escuela, partes del cuerpo, familia, las escenas de past continuous) sigue
+// con fotos, no tiene íconos propios.
 import { outdoorIcons } from './outdoorIcons'
 import { pastContinuousImages } from './pastContinuousImages'
 import { schoolImages } from './schoolImages'
 import { bodyPartsImages } from './bodyPartsImages'
 import { familyImages } from './familyImages'
 
-const OTHER_MAPS: Record<string, string>[] = [
+const IMAGE_MAPS: Record<string, string>[] = [
+  outdoorIcons,
   pastContinuousImages,
   schoolImages,
   bodyPartsImages,
   familyImages,
 ]
 
-function firstMatch(maps: Record<string, string>[], key: string): string | undefined {
-  for (const map of maps) if (map[key]) return map[key]
+export function vocabImageSrc(key: string): string | undefined {
+  for (const map of IMAGE_MAPS) if (map[key]) return map[key]
   return undefined
-}
-
-/** Para kind 'match': prioriza las fotos (ej: "unir con una línea"). */
-export function matchImageSrc(key: string): string | undefined {
-  return firstMatch([outdoorImages, ...OTHER_MAPS], key)
-}
-
-/** Para kind 'memory': prioriza los íconos vectoriales del memotest. */
-export function memoryImageSrc(key: string): string | undefined {
-  return firstMatch([outdoorIcons, ...OTHER_MAPS], key)
 }
