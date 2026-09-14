@@ -636,7 +636,7 @@ function Quiz({
               <img
                 className="outdoor-photo"
                 src={outdoorIcons[question.image]}
-                alt="Mirá la foto y elegí la palabra"
+                alt="Mirá el ícono y elegí la palabra"
               />
             )}
             {question.image && pastContinuousImages[question.image] && (

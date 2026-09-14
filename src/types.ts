@@ -40,7 +40,7 @@ export interface SentenceColumn {
 }
 
 export interface MatchPair {
-  /** Clave de la imagen (ver los mapas de imágenes en src/components, ej: outdoorImages). */
+  /** Clave de la imagen (ver los mapas de imágenes en src/components, ej: outdoorIcons). */
   image: string
   /** Palabra que corresponde a esa imagen (la ficha del otro lado). */
   word: string

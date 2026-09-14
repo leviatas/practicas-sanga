@@ -1,8 +1,8 @@
 // Íconos vectoriales del vocabulario de "The great outdoors" (4to grado, Unit
 // 6), recortados de la lámina de íconos que pasó la seño (sin el cartelito
-// bilingüe de abajo). Se usan en el memotest: a diferencia de las fotos de
-// `outdoorImages`, acá es un dibujo simple, ideal para reconocer de un
-// vistazo al dar vuelta una ficha.
+// bilingüe de abajo). Son más claros que las fotos que se usaban antes, así
+// que se usan en TODAS las actividades de este vocabulario (elegir por
+// definición, unir con una línea, memotest).
 import branch from '../assets/outdoor-icons/branch.jpg'
 import campfire from '../assets/outdoor-icons/campfire.jpg'
 import field from '../assets/outdoor-icons/field.jpg'
