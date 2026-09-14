@@ -364,7 +364,7 @@ export const grade4Unit6Practices: Practice[] = [
           { text: 'She was eating a sandwich.' },
           { text: "She wasn't cooking." },
         ] },
-      { id: 'u6c6', image: 'campfire', prompt: 'Look at the picture. Which sentence is true?',
+      { id: 'u6c6', image: 'campfire-scene', prompt: 'Look at the picture. Which sentence is true?',
         options: [
           { text: 'They were sitting near the campfire.', correct: true },
           { text: 'They were swimming in the stream.' },
