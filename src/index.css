@@ -1217,6 +1217,13 @@ button {
   flex-shrink: 0;
 }
 
+/* Botón "ABC"/"abc" (solo en Prácticas del Lenguaje de 1er grado): elige si
+   las sílabas y palabras se muestran en minúscula o en MAYÚSCULA. */
+.quiz-case-toggle {
+  flex-shrink: 0;
+  min-width: 44px;
+}
+
 /* ---- ❤️ / 👎 de cada ejercicio ----
    Van en la barra de arriba (fuera de la tarjeta) para que estén en todos los
    ejercicios sin quitarle lugar a la consigna. Sin nombre cargado se ven
@@ -1294,6 +1301,13 @@ button {
   .vote-btn {
     font-size: 0.95rem;
   }
+
+  .quiz-case-toggle {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 0.88rem;
+    min-width: 36px;
+  }
 }
 
 /* Celular MUY angosto (320px): además de la letra chica, "Reiniciar" va más
@@ -1309,6 +1323,13 @@ button {
     padding-left: 10px;
     padding-right: 10px;
     font-size: 0.88rem;
+  }
+
+  .quiz-case-toggle {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 0.8rem;
+    min-width: 30px;
   }
 }
 
