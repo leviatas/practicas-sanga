@@ -17,8 +17,9 @@ import Hero from '../components/Hero'
 // Los niveles del juego. Los dos comparten el mismo flujo: se muestra un
 // dibujo y, debajo, unos botones para elegir.
 //   Nivel 1: "¿con qué sonido empieza esta palabra?" → tres letras.
-//   Nivel 2: "completá la primera sílaba" → el hueco y el resto de la palabra
-//            (____NA) con dos sílabas que se diferencian solo en la inicial.
+//   Nivel 2: "completá con la sílaba que falta" → el hueco y el resto de la
+//            palabra (____NA) con dos sílabas que se diferencian solo en la
+//            inicial.
 // Cada uno tiene su propia lista de palabras (ver src/data/game.ts).
 // En los dos, al tocar una opción el personaje nombra lo que apretó con su
 // sonido: "Muy bien, apretaste sss" o "Apretaste mmm, probá otra vez". Si
@@ -220,17 +221,10 @@ function Play({ level }: { level: number }) {
   return (
     <section className="level">
       <FieldBackground />
-      <header className="level__top">
-        <Link to="/juego" className="btn btn--ghost btn--small">
-          ← MAPA
-        </Link>
-        <span className="level__counter">
-          NIVEL {level} · {current + 1} DE {total}
-        </span>
-      </header>
-
-      {/* La consigna la dice el personaje en su globo (y también lo que
-          comenta al acertar o errar). El altavoz de al lado la lee. */}
+      {/* La consigna va ARRIBA DE TODO: la dice el personaje en su globo
+          (y también lo que comenta al acertar o errar). El altavoz de al lado
+          la lee. Debajo viene el dibujo con su altavoz, después la palabra con
+          la sílaba que falta y al final las opciones. */}
       <div className="level__buddy">
         <Hero className="level__hero" cheering={solved} />
         <div
@@ -248,6 +242,15 @@ function Play({ level }: { level: number }) {
           </button>
         </div>
       </div>
+
+      <header className="level__top">
+        <Link to="/juego" className="btn btn--ghost btn--small">
+          ← MAPA
+        </Link>
+        <span className="level__counter">
+          NIVEL {level} · {current + 1} DE {total}
+        </span>
+      </header>
 
       <div className="level__card" key={current}>
         {/* El dibujo, con su propio altavoz para escuchar qué es. */}

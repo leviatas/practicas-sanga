@@ -83,7 +83,7 @@ export const level1Words: SoundWord[] = [
 ]
 
 /**
- * Nivel 2 — "completá la primera sílaba".
+ * Nivel 2 — "completá con la sílaba que falta".
  * Tiene su propia lista: todas empiezan con consonante + vocal, así la opción
  * incorrecta puede ser la misma sílaba cambiando SOLO la inicial (LU / MU).
  */
@@ -143,5 +143,5 @@ export function soundOf(option: string): string {
 /** Consigna de cada nivel (la dice el personaje en su globo). */
 export const LEVEL_PROMPTS: Record<number, string> = {
   1: '¿CON QUÉ SONIDO EMPIEZA ESTA PALABRA?',
-  2: 'COMPLETÁ LA PRIMERA SÍLABA',
+  2: 'COMPLETÁ CON LA SÍLABA QUE FALTA',
 }
