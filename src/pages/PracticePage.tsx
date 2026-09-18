@@ -76,15 +76,19 @@ function withShuffledQuiz(questions: Question[]): Question[] {
 }
 
 // Lee un texto en voz alta (Web Speech API). Quita emojis para que la voz no
-// diga "círculo rojo" y demás. `lang` elige el idioma: la consigna se lee en
-// español (por defecto) y la respuesta de ayuda en inglés ('en-US').
+// diga "círculo rojo" y demás, y también "+" y "⋯" (los usan las consignas de
+// completar sílaba, ej: "PA + ⋯"), que si no la voz lee como "más". `lang`
+// elige el idioma: la consigna se lee en español (por defecto) y la
+// respuesta de ayuda en inglés ('en-US').
 function speak(text: string, lang = 'es-AR') {
   try {
     const synth = window.speechSynthesis
     if (!synth) return
     const clean = text
       .replace(/[\p{Extended_Pictographic}️‍]/gu, '')
+      .replace(/[⋯+]/g, ' ')
       .replace(/\s+/g, ' ')
+      .replace(/\s+([?.,!;:])/g, '$1')
       .trim()
     if (!clean) return
     synth.cancel()
