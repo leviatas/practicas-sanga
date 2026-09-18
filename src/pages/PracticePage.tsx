@@ -125,6 +125,14 @@ function listenableAnswer(q: Question): string | null {
   return correct[0].text.trim() || null
 }
 
+// Frase que se anuncia por voz en las preguntas 'listen-tap': la sílaba (o
+// palabra) correcta, dicha dos veces, tal como la pediría una maestra.
+function listenTapPhrase(q: Question): string | null {
+  const target = q.options?.find((o) => o.correct)?.text?.trim()
+  if (!target) return null
+  return `Apretá ${target}. Apretá ${target}.`
+}
+
 // Pinta el poema respetando versos y estrofas. Lo que en los datos va entre
 // [corchetes] sale resaltado (para preguntar "lo resaltado, ¿qué es?").
 function renderPoem(text: string) {
@@ -256,15 +264,26 @@ function Quiz({
   // Cancela cualquier auto-avance pendiente al desmontar.
   useEffect(() => () => clearTimeout(autoNextRef.current), [])
 
-  // En jardín, leer la consigna en voz alta al cambiar de pregunta (best-effort:
-  // algunos navegadores móviles recién lo permiten tras el primer toque; para
-  // eso está también el botón 🔊).
+  // En jardín y en Prácticas del Lenguaje de 1er grado, leer la consigna en
+  // voz alta al cambiar de pregunta (best-effort: algunos navegadores móviles
+  // recién lo permiten tras el primer toque; para eso está también el botón
+  // 🔊). En las preguntas 'listen-tap' lo que se anuncia NO es la consigna
+  // (que es genérica y no revela nada) sino la sílaba a tocar.
+  const isGrade1Pdl = gradeId === '1' && subjectId === 'pdl'
   useEffect(() => {
-    if (gradeId !== 'jardin' || phase !== 'playing') return
+    if (phase !== 'playing') return
     const q = round[current]
-    if (q) speak(q.prompt)
+    if (!q) return
+    if (q.kind === 'listen-tap') {
+      const phrase = listenTapPhrase(q)
+      if (phrase) speak(phrase)
+    } else if (gradeId === 'jardin' || isGrade1Pdl) {
+      speak(q.prompt)
+    } else {
+      return
+    }
     return () => window.speechSynthesis?.cancel()
-  }, [current, phase, round, gradeId])
+  }, [current, phase, round, gradeId, isGrade1Pdl])
 
   const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
   const pendingCount = total - masteredCount
@@ -458,14 +477,17 @@ function Quiz({
     setDragCorrect(false)
   }
 
-  // Actividad de jardín ('tap'): solo llega cuando el chico acierta. Festeja,
-  // marca dominada y avanza solo tras un ratito.
+  // Actividad de jardín ('tap') o 'listen-tap' de 1er grado: solo llega
+  // cuando el chico acierta. Festeja, marca dominada y avanza solo tras un
+  // ratito (en 'listen-tap' el festejo también se anuncia por voz).
   function handleTapCorrect() {
     if (answered) return
     setAnswered(true)
     setDragCorrect(true)
     logAnswer(true)
-    markMastered(round[current].id)
+    const q = round[currentRef.current]
+    markMastered(q.id)
+    if (q.kind === 'listen-tap') speak(praise(childName, q.id))
     clearTimeout(autoNextRef.current)
     autoNextRef.current = setTimeout(handleNext, 1600)
   }
@@ -662,8 +684,12 @@ function Quiz({
               <button
                 type="button"
                 className="speak-btn speak-btn--answer"
-                onClick={() => speak(listenAnswer, 'en-US')}
-                aria-label={`Escuchar la respuesta en inglés: ${listenAnswer}`}
+                onClick={() => speak(listenAnswer, question.listenLang ?? 'en-US')}
+                aria-label={
+                  question.listenLang === 'es-AR'
+                    ? `Escuchar: ${listenAnswer}`
+                    : `Escuchar la respuesta en inglés: ${listenAnswer}`
+                }
               >
                 📢 ESCUCHA
               </button>
@@ -671,15 +697,29 @@ function Quiz({
 
             <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
 
-            {gradeId === 'jardin' && (
+            {question.kind === 'listen-tap' ? (
               <button
                 type="button"
                 className="speak-btn"
-                onClick={() => speak(question.prompt)}
-                aria-label="Escuchar la consigna"
+                onClick={() => {
+                  const phrase = listenTapPhrase(question)
+                  if (phrase) speak(phrase)
+                }}
+                aria-label="Escuchar de nuevo la sílaba"
               >
-                🔊 Escuchar
+                🔊 Escuchar sílaba
               </button>
+            ) : (
+              (gradeId === 'jardin' || isGrade1Pdl) && (
+                <button
+                  type="button"
+                  className="speak-btn"
+                  onClick={() => speak(question.prompt)}
+                  aria-label="Escuchar la consigna"
+                >
+                  🔊 Escuchar
+                </button>
+              )
             )}
 
             {question.kind === 'drag' ? (
@@ -707,7 +747,7 @@ function Quiz({
                 onValidate={handleDragValidate}
                 onRetry={handleDragRetry}
               />
-            ) : question.kind === 'tap' ? (
+            ) : question.kind === 'tap' || question.kind === 'listen-tap' ? (
               <TapGrid
                 key={question.id}
                 question={question}
@@ -895,7 +935,7 @@ function Quiz({
             </div>
           )}
 
-          {answered && question.kind === 'tap' && (
+          {answered && (question.kind === 'tap' || question.kind === 'listen-tap') && (
             <div className="quiz-feedback is-correct tap-cheer" role="status">
               <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
             </div>
@@ -918,7 +958,7 @@ function Quiz({
               <button className="btn btn--primary" onClick={handleNext}>
                 {current + 1 >= round.length
                   ? 'Terminar ronda 🏁'
-                  : question.kind === 'tap'
+                  : question.kind === 'tap' || question.kind === 'listen-tap'
                     ? 'Seguir →'
                     : 'Siguiente →'}
               </button>

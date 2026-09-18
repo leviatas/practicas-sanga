@@ -6,6 +6,7 @@ import {
 } from './grade1BodyParts'
 import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
 import { grade1NumbersPractices } from './grade1Numbers'
+import { grade1PdlPractices } from './grade1Pdl'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
 import { grade4OralPractices } from './grade4Oral'
@@ -56,6 +57,37 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
         },
       ],
     },
+  ]
+}
+
+// 1er grado: materia "Prácticas del Lenguaje" (sílabas, palabras y oraciones
+// con L, M, S, T y P) primero, y después "English" con sus dos parciales.
+function grade1Subjects(): Subject[] {
+  return [
+    {
+      id: 'pdl',
+      name: 'Prácticas del Lenguaje',
+      emoji: '📚',
+      newUntil: '2026-10-18',
+      description: 'Sílabas, palabras y oraciones con L, M, S, T y P.',
+      terms: [
+        {
+          id: 'silabas-l-m-s-t-p',
+          name: 'Sílabas con L, M, S, T y P',
+          emoji: '🔤',
+          newUntil: '2026-10-18',
+          description:
+            'Escuchá y tocá sílabas mezcladas, completá y elegí palabras, y armá oraciones.',
+          practices: grade1PdlPractices,
+        },
+      ],
+    },
+    ...grade1English(grade1Practices, [
+      ...grade1BodyPartsPractices,
+      ...grade1BodyLabelPractices,
+      ...grade1ThereIsThereArePractices,
+      ...grade1NumbersPractices,
+    ]),
   ]
 }
 
@@ -205,12 +237,7 @@ export const grades: Grade[] = [
     emoji: '🐣',
     color: '#f59e0b', // ámbar
     newUntil: '2026-09-15',
-    subjects: grade1English(grade1Practices, [
-      ...grade1BodyPartsPractices,
-      ...grade1BodyLabelPractices,
-      ...grade1ThereIsThereArePractices,
-      ...grade1NumbersPractices,
-    ]),
+    subjects: grade1Subjects(),
   },
   {
     id: '4',

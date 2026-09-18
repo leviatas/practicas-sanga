@@ -86,6 +86,13 @@ export interface Question {
    */
   listen?: string
   /**
+   * Idioma del botón "📢 ESCUCHA" (`listen` o la respuesta única de una foto).
+   * Por defecto inglés ('en-US'), que es el uso histórico (vocabulario en
+   * inglés). Usar 'es-AR' cuando lo que se escucha es en castellano (ej:
+   * repetir el nombre de un dibujo en las prácticas de lectoescritura).
+   */
+  listenLang?: string
+  /**
    * Poema (u otro texto) que se muestra ARRIBA de la consigna, con sus saltos
    * de línea y sus estrofas tal cual se escriben acá: un salto de línea separa
    * versos y una línea en blanco separa estrofas.
@@ -113,6 +120,13 @@ export interface Question {
    *  - 'classify': arrastrar palabras a su categoría y validar.
    *  - 'tap': tocar el dibujo/emoji correcto (jardín); reintenta sin penalizar,
    *    festeja al acertar y avanza solo.
+   *  - 'listen-tap': como 'tap', pero la sílaba a tocar NO aparece escrita en
+   *    ningún lado: se anuncia por voz ("Apretá LI. Apretá LI.") a partir de
+   *    la opción marcada como correcta, con un botón para repetirla las veces
+   *    que haga falta. El `prompt` es una consigna genérica que no revela la
+   *    respuesta (ej: "Escuchá y tocá la sílaba"). Pensado para 1er grado:
+   *    tandas de sílabas mezcladas (ej: LI, PA, SU, ME...) para practicar el
+   *    reconocimiento auditivo antes de leerlas.
    *  - 'speak': el alumno DICE la respuesta en voz alta y la app valida con
    *    reconocimiento de voz (Web Speech API). Reintenta sin penalizar.
    *  - 'reveal': opciones "para explorar". No se ve cuál es la correcta: al
@@ -172,6 +186,7 @@ export interface Question {
   | 'acrostic'
   | 'match'
   | 'memory'
+  | 'listen-tap'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
