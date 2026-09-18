@@ -126,11 +126,11 @@ function listenableAnswer(q: Question): string | null {
 }
 
 // Frase que se anuncia por voz en las preguntas 'listen-tap': la sílaba (o
-// palabra) correcta, dicha dos veces, tal como la pediría una maestra.
+// palabra) correcta, tal como la pediría una maestra.
 function listenTapPhrase(q: Question): string | null {
   const target = q.options?.find((o) => o.correct)?.text?.trim()
   if (!target) return null
-  return `Apretá ${target}. Apretá ${target}.`
+  return `Apretá ${target}.`
 }
 
 // Pinta el poema respetando versos y estrofas. Lo que en los datos va entre
@@ -244,6 +244,9 @@ function Quiz({
   const [childName] = useState(() => loadName(gradeId))
   // Votos (❤️ / 👎) de cada pregunta de esta práctica, por si vuelve a salir.
   const [votes, setVotes] = useState(() => loadVotes(gradeId, practiceId))
+  // En Prácticas del Lenguaje de 1er grado: botón para elegir si las sílabas y
+  // palabras se muestran en minúscula o en MAYÚSCULA (empieza en minúscula).
+  const [pdlUpper, setPdlUpper] = useState(false)
 
   // Refs para ajustar el tamaño del contenido (--fit) y que todo entre sin scroll.
   const cardRef = useRef<HTMLDivElement>(null)
@@ -620,9 +623,20 @@ function Quiz({
   const isChoice = question.kind == null || question.kind === 'choice'
   // Ayuda opcional: escuchar en inglés la respuesta correcta (ver arriba).
   const listenAnswer = listenableAnswer(question)
-  // En 1er grado los ejercicios van en MAYÚSCULAS.
+  // En 1er grado los ejercicios van en MAYÚSCULAS, salvo en Prácticas del
+  // Lenguaje, donde el botón 🔡/🔠 de arriba elige minúscula o MAYÚSCULA.
   const upper = gradeId === '1'
-  const T = (s: string) => (upper ? s.toUpperCase() : s)
+  const T = (s: string) => {
+    if (isGrade1Pdl) return pdlUpper ? s.toUpperCase() : s.toLowerCase()
+    return upper ? s.toUpperCase() : s
+  }
+
+  // Copia de la pregunta con las opciones ya pasadas por `T`, para los
+  // ejercicios (como 'listen-tap') que no arman su texto con `T` adentro.
+  const displayQuestion =
+    isGrade1Pdl && question.options
+      ? { ...question, options: question.options.map((o) => ({ ...o, text: T(o.text) })) }
+      : question
 
   return (
     <div className="quiz">
@@ -635,6 +649,18 @@ function Quiz({
           hasName={!!childName}
           onVote={(v) => handleVote(question.id, v)}
         />
+        {isGrade1Pdl && (
+          <button
+            type="button"
+            className="btn btn--ghost btn--small quiz-case-toggle"
+            onClick={() => setPdlUpper((v) => !v)}
+            aria-label={
+              pdlUpper ? 'Mostrar en minúscula' : 'Mostrar en MAYÚSCULA'
+            }
+          >
+            {pdlUpper ? 'abc' : 'ABC'}
+          </button>
+        )}
         <button
           className="btn btn--ghost btn--small quiz-reset"
           onClick={handleReset}
@@ -750,7 +776,7 @@ function Quiz({
             ) : question.kind === 'tap' || question.kind === 'listen-tap' ? (
               <TapGrid
                 key={question.id}
-                question={question}
+                question={displayQuestion}
                 locked={answered}
                 onCorrect={handleTapCorrect}
               />
