@@ -20,6 +20,7 @@ import WordLabel from '../components/WordLabel'
 import AcrosticFill from '../components/AcrosticFill'
 import MatchLines from '../components/MatchLines'
 import MemoryGame from '../components/MemoryGame'
+import SecretCode from '../components/SecretCode'
 import PrepositionScene from '../components/PrepositionScene'
 import VoteBar from '../components/VoteBar'
 import { schoolImages } from '../components/schoolImages'
@@ -92,16 +93,15 @@ function speak(text: string, lang = 'es-AR') {
       .trim()
     if (!clean) return
     synth.cancel()
-    const u = new SpeechSynthesisUtterance(clean)
-    u.lang = lang
-    u.rate = 0.9
-    // Algunos navegadores ignoran `lang` si no se les da una voz de ese idioma.
+    const utterance = new SpeechSynthesisUtterance(clean)
+    utterance.lang = lang
+    utterance.rate = 0.9
     const base = lang.slice(0, 2).toLowerCase()
     const voice = synth
       .getVoices()
-      .find((v) => v.lang?.toLowerCase().replace('_', '-').startsWith(base))
-    if (voice) u.voice = voice
-    synth.speak(u)
+      .find((item) => item.lang?.toLowerCase().replace('_', '-').startsWith(base))
+    if (voice) utterance.voice = voice
+    synth.speak(utterance)
   } catch {
     // Sin soporte de voz: no rompemos nada.
   }
@@ -114,17 +114,14 @@ function speak(text: string, lang = 'es-AR') {
 const LISTENABLE_IMAGES = [schoolImages, bodyPartsImages, familyImages]
 
 // Respuesta que se puede escuchar como AYUDA (botón "📢 ESCUCHA"): la de las
-// preguntas con una de esas fotos y una única opción correcta (ej: la foto de
-// un brazo → "ARM"), o la que se pida a mano con `listen` (ej: el número 7 →
-// "SEVEN"). Escucharla no responde la pregunta: el alumno igual tiene que
-// elegir la opción correcta, y puede tocar el botón las veces que quiera.
+// preguntas con una de esas fotos y una única opción correcta, o la pedida a mano.
 function listenableAnswer(q: Question): string | null {
   if (q.listen) return q.listen.trim() || null
   if (!q.image) return null
   const image = q.image
   if (!LISTENABLE_IMAGES.some((images) => images[image])) return null
   if (q.kind != null && q.kind !== 'choice') return null
-  const correct = (q.options ?? []).filter((o) => o.correct)
+  const correct = (q.options ?? []).filter((option) => option.correct)
   if (correct.length !== 1) return null
   return correct[0].text.trim() || null
 }
@@ -179,6 +176,9 @@ export default function PracticePage() {
 
   const { grade, subject, term, practice } = result
   const termPath = `/grado/${grade.id}/${subject.id}/${term.id}`
+  const hidePracticeBreadcrumb = practice.questions.some(
+    (question) => question.kind === 'secret-code',
+  )
 
   return (
     <section className="practice-view" style={{ ['--accent' as string]: grade.color }}>
@@ -197,8 +197,12 @@ export default function PracticePage() {
         <Link to={termPath} state={{ jumpToNext: true }}>
           {term.name}
         </Link>
-        <span aria-hidden="true">›</span>
-        <span aria-current="page">{practice.title}</span>
+        {!hidePracticeBreadcrumb && (
+          <>
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">{practice.title}</span>
+          </>
+        )}
       </nav>
 
       {/* key fuerza reiniciar el estado si cambia la práctica */}
@@ -227,6 +231,7 @@ function Quiz({
   const practiceId = practice.id
   const allQuestions = practice.questions
   const total = allQuestions.length
+  const hasSecretCode = allQuestions.some((question) => question.kind === 'secret-code')
 
   // Preguntas ya dominadas (persistidas en el navegador).
   const [mastered, setMastered] = useState(() =>
@@ -643,46 +648,68 @@ function Quiz({
       : question
 
   return (
-    <div className="quiz">
-      <div className="quiz-topbar">
-        <span className="quiz-mastery">
-          Dominadas: {masteredCount}/{total}
-        </span>
-        <VoteBar
-          vote={votes[question.id] ?? null}
-          hasName={!!childName}
-          onVote={(v) => handleVote(question.id, v)}
-        />
-        {isGrade1Pdl && (
+    <div className={`quiz${hasSecretCode ? ' quiz--secret-code' : ''}`}>
+      {question.kind !== 'secret-code' && (
+        <div className="quiz-topbar">
+          <span className="quiz-mastery">
+            Dominadas: {masteredCount}/{total}
+          </span>
+          <VoteBar
+            vote={votes[question.id] ?? null}
+            hasName={!!childName}
+            onVote={(v) => handleVote(question.id, v)}
+          />
+          {isGrade1Pdl && (
+            <button
+              type="button"
+              className="btn btn--ghost btn--small quiz-case-toggle"
+              onClick={() => setPdlUpper((v) => !v)}
+              aria-label={
+                pdlUpper ? 'Mostrar en minúscula' : 'Mostrar en MAYÚSCULA'
+              }
+            >
+              {pdlUpper ? 'abc' : 'ABC'}
+            </button>
+          )}
           <button
-            type="button"
-            className="btn btn--ghost btn--small quiz-case-toggle"
-            onClick={() => setPdlUpper((v) => !v)}
-            aria-label={
-              pdlUpper ? 'Mostrar en minúscula' : 'Mostrar en MAYÚSCULA'
-            }
+            className="btn btn--ghost btn--small quiz-reset"
+            onClick={handleReset}
           >
-            {pdlUpper ? 'abc' : 'ABC'}
+            ↺ Reiniciar
           </button>
-        )}
-        <button
-          className="btn btn--ghost btn--small quiz-reset"
-          onClick={handleReset}
-        >
-          ↺ Reiniciar
-        </button>
-      </div>
+        </div>
+      )}
 
-      <div className="quiz-progress" aria-hidden="true">
-        <div className="quiz-progress__bar" style={{ width: `${roundProgress}%` }} />
-      </div>
-      <p className="quiz-counter">
-        Pregunta {current + 1} de {round.length}
-      </p>
+      {question.kind !== 'secret-code' && (
+        <>
+          <div className="quiz-progress" aria-hidden="true">
+            <div className="quiz-progress__bar" style={{ width: `${roundProgress}%` }} />
+          </div>
+          <p className="quiz-counter">
+            Pregunta {current + 1} de {round.length}
+          </p>
+        </>
+      )}
 
       <div className="quiz-card" ref={cardRef}>
         <div className="quiz-card__fit" ref={fitRef}>
           <div className="quiz-card__scroll">
+            {question.kind === 'secret-code' && (
+              <div className="quiz-topbar">
+                <span className="quiz-mastery">
+                  Dominadas: {masteredCount}/{total}
+                </span>
+                <p className="secret-code__instruction">
+                  ¡¡RESOLVÉ EL CÁLCULO Y ELEGÍ LA LETRA QUE CORRESPONDA!!
+                </p>
+                <button
+                  className="btn btn--ghost btn--small quiz-reset"
+                  onClick={handleReset}
+                >
+                  ↺ Reiniciar
+                </button>
+              </div>
+            )}
             {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
             {question.scene && <PrepositionScene name={question.scene} />}
             <QuestionImage name={question.image} />
@@ -695,7 +722,7 @@ function Quiz({
                 {question.bigNumber}
               </div>
             )}
-            {question.emoji && (
+            {question.emoji && question.kind !== 'secret-code' && (
               <div className="quiz-card__emoji" aria-hidden="true">
                 {question.emoji}
               </div>
@@ -725,7 +752,9 @@ function Quiz({
               </button>
             )}
 
-            <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+            {question.kind !== 'secret-code' && (
+              <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+            )}
 
             {question.kind === 'listen-tap' ? (
               <button
@@ -752,7 +781,14 @@ function Quiz({
               )
             )}
 
-            {question.kind === 'drag' ? (
+            {question.kind === 'secret-code' ? (
+              <SecretCode
+                key={question.id}
+                question={question}
+                locked={answered}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'drag' ? (
               <DragCloze
                 key={question.id}
                 question={question}
@@ -936,7 +972,8 @@ function Quiz({
           {answered &&
             (question.kind === 'words' ||
               question.kind === 'analyze' ||
-              question.kind === 'acrostic') && (
+              question.kind === 'acrostic' ||
+              question.kind === 'secret-code') && (
             <div
               className={`quiz-feedback ${dragCorrect ? 'is-correct' : 'is-wrong'}`}
               role="status"

@@ -1100,7 +1100,7 @@ button {
 /* Tocar palabras y analizar la construcción sustantiva: escalan con --fit. */
 .app--exercise .wordpick__sentence,
 .app--exercise .word-analysis {
-  gap: calc(8px * var(--fit));
+  gap: max(10px, calc(12px * var(--fit)));
   margin-bottom: calc(16px * var(--fit));
 }
 .app--exercise .word-option {
@@ -2484,6 +2484,209 @@ button {
   gap: 4px;
   color: var(--text-muted);
   font-size: 0.95rem;
+}
+
+.secret-code {
+  margin: 0 auto 16px;
+  max-width: 900px;
+}
+
+.secret-code__instruction {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.quiz--secret-code .quiz-topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-areas: 'mastery instruction reset';
+  align-items: center;
+  gap: 12px;
+}
+
+.quiz--secret-code .quiz-mastery {
+  grid-area: mastery;
+}
+
+.quiz--secret-code .secret-code__instruction {
+  grid-area: instruction;
+  justify-self: center;
+  text-wrap: balance;
+}
+
+.quiz--secret-code .quiz-reset {
+  grid-area: reset;
+  justify-self: end;
+}
+
+.quiz--secret-code .quiz-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.secret-code__text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 18px;
+  row-gap: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.secret-code__word {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  margin: 0;
+  gap: 3px;
+  vertical-align: middle;
+}
+
+.secret-code__slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.secret-code__slot.is-active {
+  border-color: #d2a42e;
+  background: #fff0bd;
+  color: #634b12;
+  box-shadow: 0 0 0 2px rgb(210 164 46 / 22%);
+}
+
+.secret-code__slot.is-revealed {
+  border-color: #a9d8b8;
+  background: #dff3e5;
+  color: #286a47;
+}
+
+.secret-code__feedback {
+  min-height: 1.4em;
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.secret-code__feedback.is-wrong {
+  color: var(--wrong);
+}
+
+.secret-code__choices {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 7px;
+  max-width: 810px;
+  margin-inline: auto;
+}
+
+.secret-code__choice {
+  --choice-bg: #f1dffc;
+  --choice-border: #d8bce8;
+  --choice-ink: #9c61cf;
+  display: flex;
+  min-width: 0;
+  min-height: 60px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 3px;
+  border: 1px solid var(--choice-border);
+  border-radius: 9px;
+  background: var(--choice-bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease, transform 120ms ease;
+}
+
+.secret-code__choice:hover {
+  transform: translateY(-2px);
+  border-color: var(--choice-ink);
+  background: color-mix(in srgb, var(--choice-bg) 84%, var(--choice-ink));
+}
+
+.secret-code__choice:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.secret-code__choice-letter {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.secret-code__choice-value {
+  color: var(--choice-ink);
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 560px) {
+  .quiz--secret-code .quiz-topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'mastery reset'
+      'instruction instruction';
+    column-gap: 8px;
+    row-gap: 10px;
+  }
+  .quiz--secret-code .secret-code__instruction {
+    width: 100%;
+    font-size: 0.9rem;
+    line-height: 1.25;
+  }
+  .secret-code__text {
+    text-align: center;
+  }
+  .secret-code__word {
+    gap: 2px;
+  }
+  .secret-code__slot {
+    width: 43px;
+    height: 34px;
+    font-size: 1rem;
+  }
+  .secret-code__choices {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .secret-code__choice {
+    min-height: 52px;
+  }
+  .secret-code__choice-value {
+    font-size: 1.15rem;
+  }
+  .secret-code__choice-letter {
+    font-size: 0.9rem;
+  }
 }
 
 /* En celular la consigna pasa ARRIBA de su hilera y los casilleros ocupan todo

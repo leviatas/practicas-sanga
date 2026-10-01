@@ -14,6 +14,7 @@ import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
 import { grade4CienciasCalorPractices } from './grade4CienciasCalor'
 import { grade4MatematicaPractices } from './grade4Matematica'
+import { grade4TablasPractices } from './grade4Tablas'
 import { grade4PdlPractices } from './grade4Pdl'
 import { jardinPractices } from './jardin'
 
@@ -188,7 +189,7 @@ function grade4Subjects(): Subject[] {
       id: 'matematica',
       name: 'Matemática',
       emoji: '🧮',
-      description: 'Cálculo mental: multiplicar y dividir con trucos.',
+      description: 'Cálculo mental y tablas de multiplicar.',
       terms: [
         {
           id: '2da-trimestral',
@@ -196,6 +197,13 @@ function grade4Subjects(): Subject[] {
           emoji: '📐',
           description: 'Todas las prácticas para el segundo trimestral.',
           practices: grade4MatematicaPractices,
+        },
+        {
+          id: 'tablas',
+          name: 'Tablas',
+          emoji: '✖️',
+          description: 'Descifra mensajes secretos resolviendo multiplicaciones.',
+          practices: grade4TablasPractices,
         },
       ],
     },

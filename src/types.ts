@@ -187,6 +187,7 @@ export interface Question {
   | 'match'
   | 'memory'
   | 'listen-tap'
+  | 'secret-code'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -286,6 +287,8 @@ export interface Question {
    * imagen-palabra del ejercicio.
    */
   pairs?: MatchPair[]
+  /** Para kind 'secret-code': texto que el alumno descifra letra por letra. */
+  secretText?: string
 }
 
 export interface Practice {
