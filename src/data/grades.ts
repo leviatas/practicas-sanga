@@ -10,6 +10,11 @@ import { grade1PdlPractices } from './grade1Pdl'
 import { grade1FinalsPractices } from './grade1Finals'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
+import {
+  grade4FinalsReadingPractices,
+  grade4FinalsUseOfEnglishPractices,
+  grade4FinalsWritingPractices,
+} from './grade4Finals'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
@@ -109,8 +114,9 @@ function grade1Subjects(): Subject[] {
 // 4to: cuatro materias. Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
 //  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
 //    diccionario, clasificación semántica y tildación.
-//  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
-//    decís la palabra en inglés y la app valida).
+//  - English: "1st Midterms" (elegir/arrastrar), "2nd Midterms", "Midterms
+//    oral" (tocá hablar: decís la palabra en inglés y la app valida) y
+//    "Final Exams" (reading, use of English y writing).
 //  - Ciencias Naturales: "Los materiales" — tres períodos: características de
 //    los sólidos, clasificación (estado y origen) y el calor y los materiales.
 //  - Matemática: "2da Trimestral" — con "Estrategias de cálculo de
@@ -139,7 +145,7 @@ function grade4Subjects(): Subject[] {
       id: 'english',
       name: 'English',
       emoji: '🌍',
-      newUntil: '2026-09-30',
+      newUntil: '2026-11-12',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -164,6 +170,21 @@ function grade4Subjects(): Subject[] {
           emoji: '🎤',
           description: 'Tocá hablar: decí la palabra en inglés y la app te valida.',
           practices: grade4OralPractices,
+        },
+        {
+          id: 'final-exams',
+          name: 'Final Exams',
+          emoji: '🏆',
+          newUntil: '2026-11-12',
+          description:
+            'Reading Comprehension (26/10), Use of English (2/11) y Writing (12/11): Academy Stars 4, unidades 5 a 8.',
+          // En el orden de los exámenes: primero reading, después use of
+          // English y al final writing.
+          practices: [
+            ...grade4FinalsReadingPractices,
+            ...grade4FinalsUseOfEnglishPractices,
+            ...grade4FinalsWritingPractices,
+          ],
         },
       ],
     },
@@ -266,7 +287,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    newUntil: '2026-09-15',
+    newUntil: '2026-11-12',
     subjects: grade4Subjects(),
   },
 ]
