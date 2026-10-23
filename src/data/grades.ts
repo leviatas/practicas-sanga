@@ -7,8 +7,14 @@ import {
 import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
 import { grade1NumbersPractices } from './grade1Numbers'
 import { grade1PdlPractices } from './grade1Pdl'
+import { grade1FinalsPractices } from './grade1Finals'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
+import {
+  grade4FinalsReadingPractices,
+  grade4FinalsUseOfEnglishPractices,
+  grade4FinalsWritingPractices,
+} from './grade4Finals'
 import { grade4OralPractices } from './grade4Oral'
 import { grade4CienciasPractices } from './grade4Ciencias'
 import { grade4CienciasClasificacionPractices } from './grade4CienciasClasificacion'
@@ -30,15 +36,19 @@ import { jardinPractices } from './jardin'
 // ============================================================================
 
 // Helper: arma la materia "English" para 1er grado con los períodos
-// "1st Midterms" y "2nd Midterms". La materia y el "2nd Midterms" llevan
-// etiqueta NEW (vence sola en la fecha de `newUntil`).
-function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices: Practice[]): Subject[] {
+// "1st Midterms", "2nd Midterms" y "Final Exams". La materia y "Final Exams"
+// llevan etiqueta NEW hasta el último examen (vence sola en `newUntil`).
+function grade1English(
+  firstMidtermPractices: Practice[],
+  secondMidtermPractices: Practice[],
+  finalPractices: Practice[],
+): Subject[] {
   return [
     {
       id: 'english',
       name: 'English',
       emoji: '📖',
-      newUntil: '2026-09-15',
+      newUntil: '2026-11-12',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -52,9 +62,17 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
           id: '2nd-midterms',
           name: '2nd Midterms',
           emoji: '📝',
-          newUntil: '2026-09-15',
           description: 'Todas las prácticas para el segundo parcial.',
           practices: secondMidtermPractices,
+        },
+        {
+          id: 'final-exams',
+          name: 'Final Exams',
+          emoji: '🏆',
+          newUntil: '2026-11-12',
+          description:
+            'Writing (27/10), Comprehension (03/11) y Use of English (12/11): Curious Kids 1, unidades 3 a 6.',
+          practices: finalPractices,
         },
       ],
     },
@@ -62,7 +80,8 @@ function grade1English(firstMidtermPractices: Practice[], secondMidtermPractices
 }
 
 // 1er grado: materia "Prácticas del Lenguaje" (sílabas, palabras y oraciones
-// con L, M, S, T y P) primero, y después "English" con sus dos parciales.
+// con L, M, S, T y P) primero, y después "English" con sus dos parciales y
+// los finales.
 function grade1Subjects(): Subject[] {
   return [
     {
@@ -88,15 +107,16 @@ function grade1Subjects(): Subject[] {
       ...grade1BodyLabelPractices,
       ...grade1ThereIsThereArePractices,
       ...grade1NumbersPractices,
-    ]),
+    ], grade1FinalsPractices),
   ]
 }
 
 // 4to: cuatro materias. Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
 //  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
 //    diccionario, clasificación semántica y tildación.
-//  - English: "1st Midterms" (elegir/arrastrar) y "Midterms oral" (tocá hablar:
-//    decís la palabra en inglés y la app valida).
+//  - English: "1st Midterms" (elegir/arrastrar), "2nd Midterms", "Midterms
+//    oral" (tocá hablar: decís la palabra en inglés y la app valida) y
+//    "Final Exams" (reading, use of English y writing).
 //  - Ciencias Naturales: "Los materiales" — tres períodos: características de
 //    los sólidos, clasificación (estado y origen) y el calor y los materiales.
 //  - Matemática: "2da Trimestral" — con "Estrategias de cálculo de
@@ -125,7 +145,7 @@ function grade4Subjects(): Subject[] {
       id: 'english',
       name: 'English',
       emoji: '🌍',
-      newUntil: '2026-09-30',
+      newUntil: '2026-11-12',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
         {
@@ -150,6 +170,21 @@ function grade4Subjects(): Subject[] {
           emoji: '🎤',
           description: 'Tocá hablar: decí la palabra en inglés y la app te valida.',
           practices: grade4OralPractices,
+        },
+        {
+          id: 'final-exams',
+          name: 'Final Exams',
+          emoji: '🏆',
+          newUntil: '2026-11-12',
+          description:
+            'Reading Comprehension (26/10), Use of English (2/11) y Writing (12/11): Academy Stars 4, unidades 5 a 8.',
+          // En el orden de los exámenes: primero reading, después use of
+          // English y al final writing.
+          practices: [
+            ...grade4FinalsReadingPractices,
+            ...grade4FinalsUseOfEnglishPractices,
+            ...grade4FinalsWritingPractices,
+          ],
         },
       ],
     },
@@ -244,7 +279,7 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
-    newUntil: '2026-09-15',
+    newUntil: '2026-11-12',
     subjects: grade1Subjects(),
   },
   {
@@ -252,7 +287,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    newUntil: '2026-09-15',
+    newUntil: '2026-11-12',
     subjects: grade4Subjects(),
   },
 ]
