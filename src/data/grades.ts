@@ -8,6 +8,8 @@ import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
 import { grade1NumbersPractices } from './grade1Numbers'
 import { grade1PdlPractices } from './grade1Pdl'
 import { grade1FinalsPractices } from './grade1Finals'
+import { grade1PdlAlto3Practices } from './grade1PdlAlto3'
+import { grade1MatematicaAlto3Practices } from './grade1MatematicaAlto3'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
 import {
@@ -82,18 +84,28 @@ function grade1English(
   ]
 }
 
-// 1er grado: materia "Prácticas del Lenguaje" (sílabas, palabras y oraciones
-// con L, M, S, T y P) primero, y después "English" con sus dos parciales y
-// los finales.
+// 1er grado: materia "Prácticas del Lenguaje" (con su "Alto en el camino
+// III" primero y después las sílabas con L, M, S, T y P), "Matemática" (con
+// su "Alto en el camino III") y después "English" con sus dos parciales y los
+// finales.
 function grade1Subjects(): Subject[] {
   return [
     {
       id: 'pdl',
       name: 'Prácticas del Lenguaje',
       emoji: '📚',
-      newUntil: '2026-10-18',
-      description: 'Sílabas, palabras y oraciones con L, M, S, T y P.',
+      newUntil: '2026-11-20',
+      description: 'Sílabas, grupos consonánticos, poesía y oraciones.',
       terms: [
+        {
+          id: 'alto-en-el-camino-3',
+          name: 'Alto en el camino III',
+          emoji: '🛑',
+          newUntil: '2026-11-20',
+          description:
+            'Semana del 16/11: grupos consonánticos (FL, FR, GL, GR, DR, BL, PL, CR, CL), R y RR, W y X, poesía y oraciones a partir de una imagen.',
+          practices: grade1PdlAlto3Practices,
+        },
         {
           id: 'silabas-l-m-s-t-p',
           name: 'Sílabas con L, M, S, T y P',
@@ -102,6 +114,24 @@ function grade1Subjects(): Subject[] {
           description:
             'Escuchá y tocá sílabas mezcladas, completá y elegí palabras, y armá oraciones.',
           practices: grade1PdlPractices,
+        },
+      ],
+    },
+    {
+      id: 'matematica',
+      name: 'Matemática',
+      emoji: '🧮',
+      newUntil: '2026-11-28',
+      description: 'Problemas con plata, cálculo mental y medida.',
+      terms: [
+        {
+          id: 'alto-en-el-camino-3',
+          name: 'Alto en el camino III',
+          emoji: '🛑',
+          newUntil: '2026-11-28',
+          description:
+            'Semana del 24/11: problemas de suma y resta con dinero, sumas que dan 10, suma de iguales y medida.',
+          practices: grade1MatematicaAlto3Practices,
         },
       ],
     },
@@ -322,7 +352,7 @@ export const grades: Grade[] = [
     name: '1er Grado',
     emoji: '🐣',
     color: '#f59e0b', // ámbar
-    newUntil: '2026-11-12',
+    newUntil: '2026-11-28',
     subjects: grade1Subjects(),
   },
   {

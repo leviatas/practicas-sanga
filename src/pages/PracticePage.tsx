@@ -282,6 +282,11 @@ function Quiz({
   // 🔊). En las preguntas 'listen-tap' lo que se anuncia NO es la consigna
   // (que es genérica y no revela nada) sino la sílaba a tocar.
   const isGrade1Pdl = gradeId === '1' && subjectId === 'pdl'
+  // Consignas que se leen solas (y tienen botón 🔊): jardín y, en 1er grado,
+  // Prácticas del Lenguaje y Matemática.
+  const readsPrompt =
+    gradeId === 'jardin' ||
+    (gradeId === '1' && (subjectId === 'pdl' || subjectId === 'matematica'))
   useEffect(() => {
     if (phase !== 'playing') return
     const q = round[current]
@@ -289,13 +294,13 @@ function Quiz({
     if (q.kind === 'listen-tap') {
       const phrase = listenTapPhrase(q)
       if (phrase) speak(phrase)
-    } else if (gradeId === 'jardin' || isGrade1Pdl) {
+    } else if (readsPrompt) {
       speak(q.prompt)
     } else {
       return
     }
     return () => window.speechSynthesis?.cancel()
-  }, [current, phase, round, gradeId, isGrade1Pdl])
+  }, [current, phase, round, readsPrompt])
 
   const masteredCount = allQuestions.filter((q) => mastered.has(q.id)).length
   const pendingCount = total - masteredCount
@@ -769,7 +774,7 @@ function Quiz({
                 🔊 Escuchar sílaba
               </button>
             ) : (
-              (gradeId === 'jardin' || isGrade1Pdl) && (
+              readsPrompt && (
                 <button
                   type="button"
                   className="speak-btn"
