@@ -22,6 +22,9 @@ import { grade4CienciasCalorPractices } from './grade4CienciasCalor'
 import { grade4MatematicaPractices } from './grade4Matematica'
 import { grade4TablasPractices } from './grade4Tablas'
 import { grade4PdlPractices } from './grade4Pdl'
+import { grade4PdlAlto3Practices } from './grade4PdlAlto3'
+import { grade4MatematicaAlto3Practices } from './grade4MatematicaAlto3'
+import { grade4SocialesAlto3Practices } from './grade4SocialesAlto3'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -111,7 +114,9 @@ function grade1Subjects(): Subject[] {
   ]
 }
 
-// 4to: cuatro materias. Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
+// 4to: cinco materias (con Ciencias Sociales). Cada una con su "Alto en el
+// camino III" (3er trimestre) primero.
+// Antes: Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
 //  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
 //    diccionario, clasificación semántica y tildación.
 //  - English: "1st Midterms" (elegir/arrastrar), "2nd Midterms", "Midterms
@@ -129,8 +134,18 @@ function grade4Subjects(): Subject[] {
       id: 'pdl',
       name: 'Prácticas del Lenguaje',
       emoji: '📚',
-      description: 'Poesía, gramática, diccionario y tildación.',
+      newUntil: '2026-11-25',
+      description: 'Cuento maravilloso, verbos, la noticia, la oración y más.',
       terms: [
+        {
+          id: 'alto-en-el-camino-3',
+          name: 'Alto en el camino III',
+          emoji: '🛑',
+          newUntil: '2026-11-25',
+          description:
+            'Examen del 25/11: cuento maravilloso, tiempos verbales del pasado, la noticia, el portal de noticias, la publicidad y la oración (sujeto, predicado y concordancia).',
+          practices: grade4PdlAlto3Practices,
+        },
         {
           id: '2do-trimestre',
           name: '2do Trimestre',
@@ -224,8 +239,18 @@ function grade4Subjects(): Subject[] {
       id: 'matematica',
       name: 'Matemática',
       emoji: '🧮',
-      description: 'Cálculo mental y tablas de multiplicar.',
+      newUntil: '2026-11-18',
+      description: 'Cálculo mental, tablas, geometría y problemas.',
       terms: [
+        {
+          id: 'alto-en-el-camino-3',
+          name: 'Alto en el camino III',
+          emoji: '🛑',
+          newUntil: '2026-11-18',
+          description:
+            'Examen del 18/11: problemas con varias operaciones, circunferencia y círculo, ángulos y transportador, y triángulos.',
+          practices: grade4MatematicaAlto3Practices,
+        },
         {
           id: '2da-trimestral',
           name: '2da Trimestral',
@@ -239,6 +264,24 @@ function grade4Subjects(): Subject[] {
           emoji: '✖️',
           description: 'Descifra mensajes secretos resolviendo multiplicaciones.',
           practices: grade4TablasPractices,
+        },
+      ],
+    },
+    {
+      id: 'sociales',
+      name: 'Ciencias Sociales',
+      emoji: '🌎',
+      newUntil: '2026-11-16',
+      description: 'Normas, gobiernos, pueblos originarios y civilizaciones de América.',
+      terms: [
+        {
+          id: 'alto-en-el-camino-3',
+          name: 'Alto en el camino III',
+          emoji: '🛑',
+          newUntil: '2026-11-16',
+          description:
+            'Examen del 16/11: normas y leyes, niveles de gobierno, nómades y sedentarios, mayas, aztecas e incas y pueblos indígenas.',
+          practices: grade4SocialesAlto3Practices,
         },
       ],
     },
@@ -287,7 +330,7 @@ export const grades: Grade[] = [
     name: '4to Grado',
     emoji: '🚀',
     color: '#4f46e5', // índigo
-    newUntil: '2026-11-12',
+    newUntil: '2026-11-25',
     subjects: grade4Subjects(),
   },
 ]
