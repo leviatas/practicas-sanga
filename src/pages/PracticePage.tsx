@@ -21,6 +21,7 @@ import AcrosticFill from '../components/AcrosticFill'
 import MatchLines from '../components/MatchLines'
 import MemoryGame from '../components/MemoryGame'
 import SecretCode from '../components/SecretCode'
+import BlankChoice from '../components/BlankChoice'
 import PrepositionScene from '../components/PrepositionScene'
 import VoteBar from '../components/VoteBar'
 import { schoolImages } from '../components/schoolImages'
@@ -29,6 +30,7 @@ import { bodyPartsImages } from '../components/bodyPartsImages'
 import { sentenceImages } from '../components/sentenceImages'
 import { outdoorIcons } from '../components/outdoorIcons'
 import { pastContinuousImages } from '../components/pastContinuousImages'
+import { repasoImages } from '../components/repasoImages'
 import NotFoundPage from './NotFoundPage'
 
 // Mapas de imágenes que pueden acompañar a una pregunta, en orden de
@@ -42,6 +44,7 @@ const QUESTION_IMAGES: { map: Record<string, string>; className: string; alt: st
   { map: outdoorIcons, className: 'outdoor-photo', alt: 'Mirá el ícono y elegí la palabra' },
   { map: pastContinuousImages, className: 'scene-photo', alt: 'Mirá el dibujo y elegí la oración que lo describe' },
   { map: bodyPartsImages, className: 'body-photo', alt: '¿Qué parte del cuerpo es?' },
+  { map: repasoImages, className: 'repaso-photo', alt: 'Mirá el dibujo y completá la oración' },
 ]
 
 /** La imagen de la pregunta (una sola), o nada si el nombre no está en ningún mapa. */
@@ -892,6 +895,14 @@ function Quiz({
                 onValidate={handleDragValidate}
                 onSkip={handleNext}
                 lastOfRound={current + 1 >= round.length}
+              />
+            ) : question.blank ? (
+              <BlankChoice
+                question={question}
+                selected={selected}
+                answered={answered}
+                onSelect={handleSelect}
+                T={T}
               />
             ) : (
               <ul className="quiz-options" role="list">

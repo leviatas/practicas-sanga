@@ -139,7 +139,9 @@ export default function MatchLines({
   }
 
   return (
-    <div className="match" ref={boxRef}>
+    // Con muchos pares (las fichas de repaso traen 7 u 8) las cajas cuadradas
+    // no entran: van en renglones bajos y anchos, como en la fotocopia.
+    <div className={`match${pairs.length > 4 ? ' match--compact' : ''}`} ref={boxRef}>
       <svg className="match-svg" aria-hidden="true">
         {lines.map((l) => (
           <line key={l.key} x1={l.from.x} y1={l.from.y} x2={l.to.x} y2={l.to.y} className={l.state} />
