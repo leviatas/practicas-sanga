@@ -13,6 +13,7 @@ import { pastContinuousImages } from './pastContinuousImages'
 import { schoolImages } from './schoolImages'
 import { bodyPartsImages } from './bodyPartsImages'
 import { familyImages } from './familyImages'
+import { repasoImages } from './repasoImages'
 
 const IMAGE_MAPS: Record<string, string>[] = [
   outdoorIcons,
@@ -20,6 +21,7 @@ const IMAGE_MAPS: Record<string, string>[] = [
   schoolImages,
   bodyPartsImages,
   familyImages,
+  repasoImages,
 ]
 
 export function vocabImageSrc(key: string): string | undefined {

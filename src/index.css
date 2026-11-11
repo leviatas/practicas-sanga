@@ -4276,3 +4276,118 @@ button {
     width: 84px;
   }
 }
+
+/* ---- Repaso de English (1er grado): dibujos recortados de las fichas ----
+   Son tiras anchas (dos animales juntos, o la escena con la ✗), así que van
+   anchas pero nunca más altas que un tercio de la pantalla. */
+.repaso-photo {
+  display: block;
+  width: auto;
+  max-width: min(100%, 420px);
+  max-height: 30dvh;
+  height: auto;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: #fff; /* el papel de la ficha es blanco */
+  box-shadow: var(--shadow);
+}
+.app--exercise .repaso-photo {
+  max-width: min(100%, calc(420px * var(--fit, 1)));
+  max-height: calc(30dvh * var(--fit, 1));
+  margin-bottom: calc(10px * var(--fit, 1));
+}
+
+/* ---- Oración con hueco (pregunta 'choice' con `blank`) ----
+   "NO, [THEY ARE / THEY AREN'T]." Las opciones van apiladas ADENTRO del
+   hueco, que se dibuja con borde punteado como el renglón de la fotocopia. */
+.blank-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10px * var(--fit, 1));
+  margin: 0 0 calc(8px * var(--fit, 1));
+  font-weight: 800;
+  font-size: calc(1.35rem * var(--fit, 1));
+  color: var(--text);
+}
+
+.blank-slot {
+  display: inline-flex;
+  flex-direction: column;
+  gap: calc(8px * var(--fit, 1));
+  padding: calc(8px * var(--fit, 1));
+  border: 3px dashed var(--border);
+  border-radius: 16px;
+}
+
+.blank-option {
+  min-width: calc(150px * var(--fit, 1));
+  padding: calc(10px * var(--fit, 1)) calc(16px * var(--fit, 1));
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: calc(1.15rem * var(--fit, 1));
+  cursor: pointer;
+  transition: transform 0.08s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.blank-option:not(:disabled):hover {
+  border-color: var(--accent);
+}
+
+.blank-option:active {
+  transform: scale(0.98);
+}
+
+.blank-option:disabled {
+  cursor: default;
+}
+
+.blank-option.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+  color: var(--correct);
+}
+
+.blank-option.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+.blank-option.is-dim {
+  opacity: 0.45;
+}
+
+/* ---- Unir con una línea, versión con muchos pares (7 u 8) ----
+   Renglones bajos y anchos en vez de cajas cuadradas, como en la fotocopia
+   "Match with arrows". El alto escala con --fit para que entren todos. */
+.match--compact {
+  gap: clamp(28px, 14vw, 110px);
+}
+
+.match--compact .match-col {
+  gap: calc(8px * var(--fit, 1));
+}
+
+.match--compact .match-item--image,
+.match--compact .match-item--word {
+  aspect-ratio: auto;
+  height: calc(68px * var(--fit, 1));
+}
+
+.match--compact .match-item--image {
+  padding: calc(3px * var(--fit, 1));
+  background: #fff; /* los recortes vienen con el papel blanco de la ficha */
+}
+
+.match--compact .match-item--image img {
+  object-fit: contain;
+}
+
+.match--compact .match-item--word {
+  font-size: calc(1.05rem * var(--fit, 1));
+}

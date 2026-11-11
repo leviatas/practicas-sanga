@@ -191,6 +191,14 @@ export interface Question {
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
+   * Para kind 'choice': oración con un hueco marcado con `___` (ej:
+   * "NO, ___." o "THE DOG ___ SWIM."). Si está, las opciones NO van en la
+   * lista de abajo sino ADENTRO del hueco, apiladas, y el chico toca la que
+   * completa la oración (como en la fotocopia). Conviene usarla con
+   * `keepOrder` para que las opciones salgan siempre en el mismo orden.
+   */
+  blank?: string
+  /**
    * Si es `true`, las opciones NO se barajan (se muestran en el orden dado).
    * Útil para contar: los números 1..10 siempre en orden.
    */

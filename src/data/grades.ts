@@ -8,6 +8,7 @@ import { grade1ThereIsThereArePractices } from './grade1ThereIsThereAre'
 import { grade1NumbersPractices } from './grade1Numbers'
 import { grade1PdlPractices } from './grade1Pdl'
 import { grade1FinalsPractices } from './grade1Finals'
+import { grade1RepasoPractices } from './grade1Repaso'
 import { grade1PdlAlto3Practices } from './grade1PdlAlto3'
 import { grade1MatematicaAlto3Practices } from './grade1MatematicaAlto3'
 import { grade4Practices } from './grade4'
@@ -41,9 +42,11 @@ import { jardinPractices } from './jardin'
 // ============================================================================
 
 // Helper: arma la materia "English" para 1er grado con los períodos
-// "1st Midterms", "2nd Midterms" y "Final Exams". La materia y "Final Exams"
-// llevan etiqueta NEW hasta el último examen (vence sola en `newUntil`).
+// "Repaso" (las fichas de repaso, primero porque es lo último que pasó la
+// seño), "1st Midterms", "2nd Midterms" y "Final Exams". La materia y el
+// "Repaso" llevan etiqueta NEW (vence sola en `newUntil`).
 function grade1English(
+  repasoPractices: Practice[],
   firstMidtermPractices: Practice[],
   secondMidtermPractices: Practice[],
   finalPractices: Practice[],
@@ -53,9 +56,18 @@ function grade1English(
       id: 'english',
       name: 'English',
       emoji: '📖',
-      newUntil: '2026-11-12',
+      newUntil: '2026-11-25',
       description: 'Vocabulario y gramática de inglés.',
       terms: [
+        {
+          id: 'repaso',
+          name: 'Repaso',
+          emoji: '🔁',
+          newUntil: '2026-11-25',
+          description:
+            "Las fichas de repaso: They are / They aren't, It is / It isn't, Can / Can't, Body parts y Animals.",
+          practices: repasoPractices,
+        },
         {
           id: '1st-midterms',
           name: '1st Midterms',
@@ -135,7 +147,7 @@ function grade1Subjects(): Subject[] {
         },
       ],
     },
-    ...grade1English(grade1Practices, [
+    ...grade1English(grade1RepasoPractices, grade1Practices, [
       ...grade1BodyPartsPractices,
       ...grade1BodyLabelPractices,
       ...grade1ThereIsThereArePractices,
