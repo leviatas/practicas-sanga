@@ -162,6 +162,18 @@ function pendingQuestions(questions: Question[], mastered: Set<string>): Questio
   return questions.filter((q) => !mastered.has(q.id))
 }
 
+// Preguntas de una ronda. Una práctica `inOrder` (los simulacros) se hace
+// SIEMPRE completa, de la primera a la última, como la fotocopia: no saltea
+// las ya dominadas (que igual se cuentan en «Dominadas»). Las demás prácticas
+// solo repiten las que faltan.
+function roundQuestions(
+  questions: Question[],
+  mastered: Set<string>,
+  inOrder?: boolean,
+): Question[] {
+  return inOrder ? questions : pendingQuestions(questions, mastered)
+}
+
 // Mensaje de incentivo al acertar. Usa el nombre del niño si lo hay, y es
 // estable por pregunta (no cambia entre renders) usando el id como semilla.
 const PRAISES = ['¡Muy bien', '¡Genial', '¡Excelente', '¡Bravo', '¡Buenísimo', '¡Perfecto']
@@ -249,7 +261,7 @@ function Quiz({
   // Ronda actual: solo las pendientes, con orden y opciones barajados.
   const [round, setRound] = useState(() =>
     withShuffledQuiz(
-      pendingQuestions(allQuestions, loadMastered(gradeId, practiceId)),
+      roundQuestions(allQuestions, loadMastered(gradeId, practiceId), practice.inOrder),
       practice.inOrder,
     ),
   )
@@ -539,11 +551,14 @@ function Quiz({
     setDragCorrect(false)
   }
 
-  // Empieza otra ronda con lo que todavía falta dominar.
+  // Empieza otra ronda con lo que todavía falta dominar (o, en un simulacro,
+  // otra vez completo desde la primera).
   function startNextRound() {
     clearTimeout(autoNextRef.current)
     autoNextRef.current = undefined
-    setRound(withShuffledQuiz(pendingQuestions(allQuestions, mastered), practice.inOrder))
+    setRound(
+      withShuffledQuiz(roundQuestions(allQuestions, mastered, practice.inOrder), practice.inOrder),
+    )
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
@@ -631,7 +646,9 @@ function Quiz({
         </p>
         <div className="quiz-result__actions">
           <button className="btn btn--primary" onClick={startNextRound}>
-            Seguir con las que faltan →
+            {practice.inOrder
+              ? 'Hacerlo de nuevo desde la primera →'
+              : 'Seguir con las que faltan →'}
           </button>
           <button className="btn btn--ghost" onClick={handleReset}>
             ↺ Reiniciar progreso
