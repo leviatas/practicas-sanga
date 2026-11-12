@@ -230,40 +230,24 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
 
       // ---- 6: cuadro de autoridades ----
       {
-        id: 'ss6a',
+        id: 'ss6',
         kind: 'classify',
-        prompt: '6) Completá el cuadro: ¿de qué nivel de gobierno es cada autoridad?',
+        prompt: '6) Completá el cuadro colocando cada autoridad en el casillero correspondiente.',
         categories: ['Nacional', 'Provincial', 'Municipal'],
+        tableRows: ['Poder Ejecutivo', 'Poder Legislativo', 'Poder Judicial'],
         items: [
-          { text: 'Presidente', category: 'Nacional' },
-          { text: 'Congreso Nacional', category: 'Nacional' },
-          { text: 'Corte Suprema de Justicia de la Nación', category: 'Nacional' },
-          { text: 'Gobernador', category: 'Provincial' },
-          { text: 'Legislatura provincial', category: 'Provincial' },
-          { text: 'Suprema Corte de Justicia provincial', category: 'Provincial' },
-          { text: 'Intendente', category: 'Municipal' },
-          { text: 'Concejo Deliberante', category: 'Municipal' },
-          { text: 'Tribunal de Faltas', category: 'Municipal' },
-        ],
-      },
-      {
-        id: 'ss6b',
-        kind: 'classify',
-        prompt: 'Ahora el mismo cuadro por filas: ¿a qué poder pertenece cada autoridad?',
-        categories: ['Poder Ejecutivo', 'Poder Legislativo', 'Poder Judicial'],
-        items: [
-          { text: 'Presidente', category: 'Poder Ejecutivo' },
-          { text: 'Gobernador', category: 'Poder Ejecutivo' },
-          { text: 'Intendente', category: 'Poder Ejecutivo' },
-          { text: 'Congreso Nacional', category: 'Poder Legislativo' },
-          { text: 'Legislatura provincial', category: 'Poder Legislativo' },
-          { text: 'Concejo Deliberante', category: 'Poder Legislativo' },
-          { text: 'Corte Suprema de Justicia de la Nación', category: 'Poder Judicial' },
-          { text: 'Suprema Corte de Justicia provincial', category: 'Poder Judicial' },
-          { text: 'Tribunal de Faltas', category: 'Poder Judicial' },
+          { text: 'Presidente', row: 'Poder Ejecutivo', category: 'Nacional' },
+          { text: 'Gobernador', row: 'Poder Ejecutivo', category: 'Provincial' },
+          { text: 'Intendente', row: 'Poder Ejecutivo', category: 'Municipal' },
+          { text: 'Congreso Nacional', row: 'Poder Legislativo', category: 'Nacional' },
+          { text: 'Legislatura provincial', row: 'Poder Legislativo', category: 'Provincial' },
+          { text: 'Concejo Deliberante', row: 'Poder Legislativo', category: 'Municipal' },
+          { text: 'Corte Suprema de Justicia de la Nación', row: 'Poder Judicial', category: 'Nacional' },
+          { text: 'Suprema Corte de Justicia provincial', row: 'Poder Judicial', category: 'Provincial' },
+          { text: 'Tribunal de Faltas', row: 'Poder Judicial', category: 'Municipal' },
         ],
         explanation:
-          'El cuadro completo: Ejecutivo → Presidente / Gobernador / Intendente. Legislativo → Congreso Nacional / Legislatura provincial / Concejo Deliberante. Judicial → Corte Suprema de la Nación / Suprema Corte provincial / Tribunal de Faltas.',
+          'Ejecutivo → Presidente / Gobernador / Intendente. Legislativo → Congreso Nacional / Legislatura provincial / Concejo Deliberante. Judicial → Corte Suprema de la Nación / Suprema Corte provincial / Tribunal de Faltas.',
       },
 
       // ---- 7: república y Poder Legislativo ----

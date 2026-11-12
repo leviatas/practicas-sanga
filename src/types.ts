@@ -222,7 +222,15 @@ export interface Question {
   /** Para kind 'classify': las categorías (columnas) donde clasificar. */
   categories?: string[]
   /** Para kind 'classify': cada palabra y a qué categoría pertenece. */
-  items?: { text: string; category: string }[]
+  items?: { text: string; category: string; row?: string }[]
+  /**
+   * Para kind 'classify': si está, el ejercicio es un CUADRO de doble
+   * entrada. `categories` son las columnas (ej: Nacional / Provincial /
+   * Municipal) y `tableRows` las filas (ej: Poder Ejecutivo / Legislativo /
+   * Judicial). Cada ficha va en la celda de su fila (`row`) y su columna
+   * (`category`), como el cuadro de la fotocopia.
+   */
+  tableRows?: string[]
   /** Para kind 'label': clave de la imagen a etiquetar (ej: 'fullbody'). */
   labelImage?: string
   /** Para kind 'label': los puntos señalados por las flechas. */

@@ -95,6 +95,10 @@ export default function ClassifyDrag({
   const categories = question.categories ?? []
   const items = question.items ?? []
   const checkOnDrop = !!question.checkOnDrop
+  // Cuadro de doble entrada: cada celda es «fila|columna».
+  const tableRows = question.tableRows
+  const targetOf = (it: { category: string; row?: string }) =>
+    tableRows ? `${it.row}|${it.category}` : it.category
 
   // A qué categoría fue asignada cada palabra (o null = todavía en el banco).
   const [assign, setAssign] = useState<Record<string, string | null>>(() =>
@@ -132,7 +136,7 @@ export default function ClassifyDrag({
       if (!cat) return
       const item = items.find((i) => i.text === text)
       if (!item) return
-      if (item.category !== cat) {
+      if (targetOf(item) !== cat) {
         // Caja equivocada: la ficha vuelve al banco y se marca un instante.
         setBounced(text)
         window.setTimeout(() => setBounced((b) => (b === text ? null : b)), 900)
@@ -142,7 +146,7 @@ export default function ClassifyDrag({
       setAssign(next)
       setBounced(null)
       // ¿Ya están todas en su lugar? Entonces el ejercicio está resuelto.
-      if (items.every((it) => next[it.text] === it.category)) onValidate(true)
+      if (items.every((it) => next[it.text] === targetOf(it))) onValidate(true)
       return
     }
 
@@ -159,7 +163,7 @@ export default function ClassifyDrag({
     if (checkOnDrop) return assign[text] != null ? 'is-correct' : ''
     if (!locked) return ''
     const it = items.find((i) => i.text === text)!
-    return assign[text] === it.category ? 'is-correct' : 'is-wrong'
+    return assign[text] === targetOf(it) ? 'is-correct' : 'is-wrong'
   }
 
   return (
@@ -169,29 +173,76 @@ export default function ClassifyDrag({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="classify-bins" data-count={categories.length}>
-        {categories.map((cat) => (
-          <Zone key={cat} id={`cat:${cat}`} title={cat} disabled={locked}>
-            {items
-              .filter((it) => assign[it.text] === cat)
-              .map((it) => (
-                <Chip
-                  key={it.text}
-                  text={it.text}
-                  state={stateFor(it.text)}
-                  disabled={locked || checkOnDrop}
-                />
-              ))}
-          </Zone>
-        ))}
-      </div>
+      {tableRows ? (
+        <div
+          className="classify-table"
+          style={{ ['--cols' as string]: categories.length }}
+        >
+          <span className="classify-table__corner" />
+          {categories.map((cat) => (
+            <span key={cat} className="classify-table__head">
+              {cat}
+            </span>
+          ))}
+          {tableRows.map((row) => (
+            <div key={row} className="classify-table__row">
+              <span className="classify-table__rowhead">
+                {/* «Poder Ejecutivo» → «Poder» chiquito arriba y el nombre
+                    abajo, para que la columna de títulos sea angosta. */}
+                {row.startsWith('Poder ') ? (
+                  <>
+                    <small>Poder</small>
+                    {row.slice(6)}
+                  </>
+                ) : (
+                  row
+                )}
+              </span>
+              {categories.map((cat) => {
+                const cell = `${row}|${cat}`
+                return (
+                  <Zone key={cell} id={`cat:${cell}`} disabled={locked}>
+                    {items
+                      .filter((it) => assign[it.text] === cell)
+                      .map((it) => (
+                        <Chip
+                          key={it.text}
+                          text={it.text}
+                          state={stateFor(it.text)}
+                          disabled={locked || checkOnDrop}
+                        />
+                      ))}
+                  </Zone>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="classify-bins" data-count={categories.length}>
+          {categories.map((cat) => (
+            <Zone key={cat} id={`cat:${cat}`} title={cat} disabled={locked}>
+              {items
+                .filter((it) => assign[it.text] === cat)
+                .map((it) => (
+                  <Chip
+                    key={it.text}
+                    text={it.text}
+                    state={stateFor(it.text)}
+                    disabled={locked || checkOnDrop}
+                  />
+                ))}
+            </Zone>
+          ))}
+        </div>
+      )}
 
       {!locked && (
         <>
           <Zone id="pool" disabled={locked}>
             {pool.length === 0 ? (
               <span className="drag-bank__empty">
-                Arrastrá cada palabra a su columna ⬚
+                {tableRows ? 'Arrastrá cada ficha a su casillero del cuadro ⬚' : 'Arrastrá cada palabra a su columna ⬚'}
               </span>
             ) : (
               pool.map((it) => (
@@ -210,7 +261,7 @@ export default function ClassifyDrag({
                 className="btn btn--primary"
                 disabled={!allAssigned}
                 onClick={() =>
-                  onValidate(items.every((it) => assign[it.text] === it.category))
+                  onValidate(items.every((it) => assign[it.text] === targetOf(it)))
                 }
               >
                 Validar ✅
