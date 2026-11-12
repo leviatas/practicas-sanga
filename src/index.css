@@ -1733,6 +1733,77 @@ button {
   color: var(--accent);
 }
 
+/* Cuadro de doble entrada (classify con `tableRows`): una columna de
+   títulos de fila y una columna por categoría. Las filas usan
+   `display: contents` para que sus celdas caigan en la grilla. */
+.classify-table {
+  display: grid;
+  grid-template-columns: minmax(58px, 0.7fr) repeat(var(--cols), minmax(0, 1fr));
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.classify-table__row {
+  display: contents;
+}
+.classify-table__head,
+.classify-table__rowhead {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2px;
+  hyphens: auto;
+}
+.classify-table__rowhead {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+.classify-table__rowhead small {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+.classify-table .classify-bin,
+.app--exercise .classify-table .classify-bin {
+  min-height: 72px;
+  padding: 3px;
+  border-radius: 10px;
+  min-width: 0;
+}
+.classify-table .classify-bin__items {
+  gap: 4px;
+  flex-direction: column;
+  align-items: stretch;
+}
+.classify-table .drag-chip,
+.app--exercise .classify-table .drag-chip {
+  font-size: 0.72rem;
+  padding: 4px 4px;
+  border-radius: 10px;
+  white-space: normal;
+  line-height: 1.15;
+  max-width: 100%;
+  hyphens: auto;
+  text-align: center;
+}
+/* En la compu hay lugar: letras un poco más grandes. */
+@media (min-width: 640px) {
+  .classify-table__head,
+  .classify-table__rowhead {
+    font-size: 1rem;
+  }
+  .classify-table .drag-chip,
+  .app--exercise .classify-table .drag-chip {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+}
+
 /* Categoría que es un DIBUJO (el título es solo emojis): se muestra grande,
    como la imagen que hay que relacionar con su oración. */
 .classify-bin__title--emoji {
