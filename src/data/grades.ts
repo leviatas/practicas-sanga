@@ -189,7 +189,7 @@ function grade4Subjects(): Subject[] {
           emoji: '📝',
           newUntil: '2026-11-25',
           description:
-            'El simulacro de la seño: El gato con botas, análisis de oraciones, verdadero o falso, partes de la noticia y cuadro de verbos. Y otra vuelta con otro cuento.',
+            'El simulacro de la fotocopia, consigna por consigna y en el mismo orden: El gato con botas, análisis de oraciones, verdadero o falso, partes de la noticia y cuadro de verbos.',
           practices: grade4PdlSimulacro3Practices,
         },
         {
@@ -303,7 +303,7 @@ function grade4Subjects(): Subject[] {
           emoji: '📝',
           newUntil: '2026-11-18',
           description:
-            'El simulacro de la seño: los problemas con sus mismos datos, circunferencias, ángulos con transportador y triángulos. Y otra vuelta con otros números.',
+            'El simulacro de la fotocopia, consigna por consigna y en el mismo orden: los problemas, circunferencia y círculo, ángulos con transportador y triángulos.',
           practices: grade4MatematicaSimulacro3Practices,
         },
         {
@@ -344,7 +344,7 @@ function grade4Subjects(): Subject[] {
           emoji: '📝',
           newUntil: '2026-11-16',
           description:
-            'El simulacro de la seño: nómades y sedentarios, técnicas de cultivo, mayas, aztecas e incas, los tres poderes, normas y pueblos indígenas.',
+            'El simulacro de la fotocopia, consigna por consigna, en el mismo orden y con sus dibujos: nómades y sedentarios, técnicas de cultivo, mayas, aztecas e incas, los poderes, normas y pueblos indígenas.',
           practices: grade4SocialesSimulacro3Practices,
         },
         {

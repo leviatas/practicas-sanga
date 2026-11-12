@@ -32,6 +32,7 @@ import { outdoorIcons } from '../components/outdoorIcons'
 import { pastContinuousImages } from '../components/pastContinuousImages'
 import { repasoImages } from '../components/repasoImages'
 import { socialesImages } from '../components/socialesImages'
+import { simulacroImages } from '../components/simulacroImages'
 import NotFoundPage from './NotFoundPage'
 
 // Mapas de imágenes que pueden acompañar a una pregunta, en orden de
@@ -47,6 +48,7 @@ const QUESTION_IMAGES: { map: Record<string, string>; className: string; alt: st
   { map: bodyPartsImages, className: 'body-photo', alt: '¿Qué parte del cuerpo es?' },
   { map: repasoImages, className: 'repaso-photo', alt: 'Mirá el dibujo y completá la oración' },
   { map: socialesImages, className: 'scene-photo', alt: 'Mirá el dibujo de la fotocopia y respondé' },
+  { map: simulacroImages, className: 'scene-photo', alt: 'Mirá el dibujo de la fotocopia y respondé' },
 ]
 
 /** La imagen de la pregunta (una sola), o nada si el nombre no está en ningún mapa. */
@@ -69,9 +71,11 @@ function shuffle<T>(items: readonly T[]): T[] {
 }
 
 // Baraja el orden de las preguntas y, dentro de cada una, el de las opciones
-// (o el banco de fichas, en los ejercicios de arrastrar).
-function withShuffledQuiz(questions: Question[]): Question[] {
-  return shuffle(questions).map((q) => ({
+// (o el banco de fichas, en los ejercicios de arrastrar). Con `inOrder` (ej:
+// los simulacros, que siguen la fotocopia consigna por consigna) las preguntas
+// salen en el orden en que están escritas; las opciones se barajan igual.
+function withShuffledQuiz(questions: Question[], inOrder = false): Question[] {
+  return (inOrder ? questions : shuffle(questions)).map((q) => ({
     ...q,
     // keepOrder: mantener el orden dado (ej: números 1..10 al contar).
     options: q.options && !q.keepOrder ? shuffle(q.options) : q.options,
@@ -244,7 +248,10 @@ function Quiz({
   )
   // Ronda actual: solo las pendientes, con orden y opciones barajados.
   const [round, setRound] = useState(() =>
-    withShuffledQuiz(pendingQuestions(allQuestions, loadMastered(gradeId, practiceId))),
+    withShuffledQuiz(
+      pendingQuestions(allQuestions, loadMastered(gradeId, practiceId)),
+      practice.inOrder,
+    ),
   )
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
@@ -536,7 +543,7 @@ function Quiz({
   function startNextRound() {
     clearTimeout(autoNextRef.current)
     autoNextRef.current = undefined
-    setRound(withShuffledQuiz(pendingQuestions(allQuestions, mastered)))
+    setRound(withShuffledQuiz(pendingQuestions(allQuestions, mastered), practice.inOrder))
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
@@ -554,7 +561,7 @@ function Quiz({
     resetMastered(gradeId, practiceId)
     const cleared = new Set<string>()
     setMastered(cleared)
-    setRound(withShuffledQuiz(allQuestions))
+    setRound(withShuffledQuiz(allQuestions, practice.inOrder))
     setCurrent(0)
     setSelected(null)
     setAnswered(false)

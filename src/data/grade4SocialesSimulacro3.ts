@@ -2,35 +2,32 @@ import type { Practice } from '../types'
 
 // ============================================================================
 // 4to GRADO — Ciencias Sociales — Simulacro "Alto en el camino III"
-// Basado en el simulacro que dio la seño:
-//  1-2) Nómades o sedentarios (mirando dibujos) y justificar.
-//  3)   Técnicas de cultivo: roza, chinampas y terrazas.
-//  4)   Pistas para mayas, aztecas e incas.
-//  5)   Los tres poderes (opción múltiple).
-//  6)   Cuadro de autoridades: nacional, provincial y municipal.
-//  7)   República y función del Poder Legislativo.
-//  8)   Leyes, Constitución, tradiciones y normas.
-//  9)   Pueblos indígenas: cazadores-recolectores o agricultores.
-//  10)  Verdadero o falso: el poblamiento de América.
-// La práctica 1 sigue el simulacro tal cual; la 2 es otra vuelta con
-// preguntas parecidas.
+// Es EXACTAMENTE el simulacro de la fotocopia, en el mismo orden (la práctica
+// tiene `inOrder`, así que las preguntas no se barajan), con sus dibujos:
+//  1)  Nómades o sedentarios (imágenes A y B).   2)  Justificar.
+//  3)  Nombrar las técnicas de cultivo (terrazas, chinampas, roza) y explicar
+//      una.
+//  4)  Pistas: M (mayas), A (aztecas) o I (incas), con el mapa.
+//  5)  Los tres poderes.   6)  Cuadro de autoridades (doble entrada).
+//  7)  República y Poder Legislativo.   8)  Leyes, Constitución, tradiciones
+//      y normas.   9)  C o A.   10) Verdadero o falso.
 // ============================================================================
 
 export const grade4SocialesSimulacro3Practices: Practice[] = [
-  // =================== 1. EL SIMULACRO, CONSIGNA POR CONSIGNA ===============
   {
     id: 'simulacro-sociales',
-    title: 'Simulacro 1: consigna por consigna',
+    title: 'Simulacro: consigna por consigna',
     description:
-      'El simulacro de la seño: nómades y sedentarios, técnicas de cultivo, mayas, aztecas e incas, los tres poderes, normas y pueblos indígenas.',
+      'El simulacro de la fotocopia, en el mismo orden y con sus dibujos: nómades y sedentarios, técnicas de cultivo, mayas, aztecas e incas, los poderes, normas y pueblos indígenas.',
     emoji: '📝',
+    inOrder: true,
     questions: [
       // ---- 1 y 2: nómades o sedentarios ----
       {
         id: 'ss1a',
         kind: 'reveal',
         image: 'sociales-sedentarios',
-        prompt: 'Observá atentamente la imagen A. ¿Este grupo es nómade o sedentario?',
+        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. A)',
         hint: 'Mirá dónde viven, qué están haciendo las mujeres y qué animales hay.',
         options: [
           {
@@ -48,7 +45,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss1b',
         kind: 'reveal',
         image: 'sociales-nomades',
-        prompt: 'Observá atentamente la imagen B. ¿Este grupo es nómade o sedentario?',
+        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. B)',
         hint: 'Mirá con qué están hechos sus refugios: ¿son casas para quedarse siempre o se pueden desarmar y llevar?',
         options: [
           {
@@ -65,7 +62,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss2',
         kind: 'classify',
-        prompt: '2) Para justificar: ¿qué característica es de los nómades y cuál de los sedentarios?',
+        prompt: '2) Justificá la respuesta de las imágenes de arriba: ¿qué característica es de los nómades y cuál de los sedentarios?',
         categories: ['Nómades', 'Sedentarios'],
         items: [
           { text: 'se trasladan de un lugar a otro', category: 'Nómades' },
@@ -87,7 +84,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss3a',
         kind: 'reveal',
         image: 'sociales-terrazas',
-        prompt: '¿Qué técnica de cultivo es esta: roza, chinampas o terrazas?',
+        prompt: '3) Nombrá cada una de las siguientes técnicas de cultivo: roza, chinampas y terrazas. Primer dibujo:',
         options: [
           {
             text: 'Terrazas',
@@ -102,7 +99,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss3b',
         kind: 'reveal',
         image: 'sociales-chinampas',
-        prompt: '¿Qué técnica de cultivo es esta: roza, chinampas o terrazas?',
+        prompt: '3) Nombrá cada una de las siguientes técnicas de cultivo: roza, chinampas y terrazas. Segundo dibujo:',
         options: [
           {
             text: 'Chinampas',
@@ -117,7 +114,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss3c',
         kind: 'reveal',
         image: 'sociales-roza',
-        prompt: 'Mirá los pasos 1, 2 y 3. ¿Qué técnica de cultivo es: roza, chinampas o terrazas?',
+        prompt: '3) Nombrá cada una de las siguientes técnicas de cultivo: roza, chinampas y terrazas. Tercer dibujo (pasos 1, 2 y 3):',
         options: [
           {
             text: 'Roza',
@@ -129,23 +126,9 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         ],
       },
       {
-        id: 'ss3d',
-        kind: 'classify',
-        prompt: '¿Qué pueblo usaba cada técnica y en qué ambiente?',
-        categories: ['Roza', 'Chinampas', 'Terrazas'],
-        items: [
-          { text: 'mayas', category: 'Roza' },
-          { text: 'en la selva', category: 'Roza' },
-          { text: 'aztecas', category: 'Chinampas' },
-          { text: 'sobre un lago', category: 'Chinampas' },
-          { text: 'incas', category: 'Terrazas' },
-          { text: 'en las montañas', category: 'Terrazas' },
-        ],
-      },
-      {
         id: 'ss3e',
         kind: 'drag',
-        prompt: 'Elegí una técnica y explicá en qué consistía: completá.',
+        prompt: '3) ● Elegí una de las técnicas y explicá en qué consistía. Por ejemplo, las chinampas: completá.',
         segments: [
           'Las chinampas eran ',
           ' artificiales que los ',
@@ -161,68 +144,26 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss4',
         kind: 'classify',
         image: 'sociales-mapa',
-        prompt: 'Mirá el mapa, leé las pistas y colocá cada una en Mayas, Aztecas o Incas.',
-        categories: ['Mayas', 'Aztecas', 'Incas'],
+        prompt: '4) Leé las pistas y colocá M (Mayas), A (Aztecas) o I (Incas) según corresponda.',
+        keepOrder: true,
+        categories: ['M (Mayas)', 'A (Aztecas)', 'I (Incas)'],
         items: [
-          { text: 'Para cultivar en la selva usaban la roza.', category: 'Mayas' },
-          { text: 'Eran ciudades independientes, no formaron un imperio.', category: 'Mayas' },
-          { text: 'Habitaban Centroamérica y el sur de México.', category: 'Mayas' },
-          { text: 'Construyeron una gran ciudad sobre un lago rodeada de chinampas.', category: 'Aztecas' },
-          { text: 'Su emperador gobernaba desde Tenochtitlan y comandaba un gran ejército.', category: 'Aztecas' },
-          { text: 'Vivieron en América del Sur.', category: 'Incas' },
-          { text: 'Hicieron terrazas de cultivo en los valles y zonas montañosas.', category: 'Incas' },
-          { text: 'Mandaban mensajes por medio de los chasquis.', category: 'Incas' },
-          { text: 'Sus caminos conducían todos a la capital, Cuzco.', category: 'Incas' },
+          { text: 'a. Vivieron en América del Sur.', category: 'I (Incas)' },
+          { text: 'b. Para cultivar en la selva usaban una técnica llamada roza.', category: 'M (Mayas)' },
+          { text: 'c. Eran ciudades independientes, no formaron un imperio.', category: 'M (Mayas)' },
+          { text: 'd. Construyeron una gran ciudad sobre un lago rodeada de chinampas.', category: 'A (Aztecas)' },
+          { text: 'e. La máxima autoridad era un emperador que comandaba un gran ejército.', category: 'A (Aztecas)' },
+          { text: 'f. Construyeron terrazas de cultivo en los valles y zonas montañosas.', category: 'I (Incas)' },
+          { text: 'g. Mandaban mensajes por medio de los chasquis.', category: 'I (Incas)' },
+          { text: 'h. Habitaban la zona de Centroamérica y sur de México.', category: 'M (Mayas)' },
+          { text: 'i. Crearon una red de caminos que conducían todas a la ciudad capital, Cuzco.', category: 'I (Incas)' },
         ],
         explanation:
-          'Ojo: los incas también tenían un emperador (el Inca) con un gran ejército. En el simulacro, fijate en las otras pistas de la misma fila; si dice Tenochtitlan o el lago, es azteca; si dice Cuzco, es inca.',
+          'Mayas: b, c, h. Aztecas: d, e. Incas: a, f, g, i. Ojo con la «e»: los incas también tenían un emperador (el Inca) con un gran ejército. Acá va con los aztecas, pero preguntale a la seño si acepta las dos.',
       },
-      {
-        id: 'ss4-mapa',
-        kind: 'reveal',
-        image: 'sociales-mapa',
-        prompt: 'Mirá el mapa. ¿Qué pueblo vivió en América del Sur, a lo largo de la Cordillera de los Andes?',
-        options: [
-          {
-            text: 'Los incas',
-            correct: true,
-            why: '¡Correcto! En el mapa de la izquierda se ven los incas en América del Sur, con su capital, Cuzco.',
-          },
-          {
-            text: 'Los aztecas',
-            why: 'Incorrecto. Los aztecas vivían en el centro de México; su capital era Tenochtitlan, sobre un lago.',
-          },
-          {
-            text: 'Los mayas',
-            why: 'Incorrecto. Los mayas vivían en Centroamérica y el sur de México (la península de Yucatán).',
-          },
-        ],
-      },
-      {
-        id: 'ss4-mapa2',
-        image: 'sociales-mapa',
-        prompt: 'Según el mapa, ¿qué dos pueblos vivieron en Mesoamérica (México y Centroamérica)?',
-        options: [
-          { text: 'Aztecas y mayas', correct: true },
-          { text: 'Incas y mayas' },
-          { text: 'Incas y aztecas' },
-        ],
-        explanation: 'Los aztecas en el centro de México (Tenochtitlan) y los mayas en el sur de México y Centroamérica.',
-      },
-      {
-        id: 'ss4b',
-        prompt: '¿Quiénes eran los chasquis?',
-        options: [
-          { text: 'Mensajeros incas que corrían por los caminos llevando noticias.', correct: true },
-          { text: 'Sacerdotes mayas que estudiaban las estrellas.' },
-          { text: 'Agricultores aztecas que trabajaban en las chinampas.' },
-        ],
-      },
-
-      // ---- 5: los tres poderes ----
       {
         id: 'ss5a',
-        prompt: '¿Qué poder propone y aprueba las leyes?',
+        prompt: '5) ¿Qué poder propone y aprueba las leyes?',
         keepOrder: true,
         options: [
           { text: 'a) El Poder Judicial' },
@@ -233,7 +174,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       },
       {
         id: 'ss5b',
-        prompt: '¿Quién controla que se cumplan las leyes?',
+        prompt: '5) ¿Quién controla que se cumplan las leyes?',
         keepOrder: true,
         options: [
           { text: 'a) El Poder Judicial', correct: true },
@@ -244,14 +185,14 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       },
       {
         id: 'ss5c',
-        prompt: '¿Cuántas cámaras tiene el Poder Legislativo de la provincia de Buenos Aires?',
+        prompt: '5) ¿Cuántas cámaras tiene el Poder Legislativo de la provincia?',
         keepOrder: true,
         options: [{ text: 'a) Una' }, { text: 'b) Dos', correct: true }, { text: 'c) Tres' }],
         explanation: 'Dos: la Cámara de Senadores y la Cámara de Diputados. Juntas forman la Legislatura.',
       },
       {
         id: 'ss5d',
-        prompt: '¿Qué poder está a cargo del gobernador?',
+        prompt: '5) ¿Qué poder está a cargo del gobernador?',
         keepOrder: true,
         options: [
           { text: 'a) Poder Legislativo' },
@@ -288,25 +229,27 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss7a',
         kind: 'reveal',
         emoji: '🇦🇷',
-        prompt: '¿Por qué la Argentina es una república?',
+        prompt: '7) Señalá la respuesta correcta. a. ¿Por qué la Argentina es una república?',
+        keepOrder: true,
         options: [
           {
-            text: 'Porque el poder de gobernar se divide en tres poderes, cada uno con una función, y los poderes se controlan entre sí.',
-            correct: true,
-            why: '¡Correcto! Eso es la división de poderes, la base de la forma republicana.',
+            text: 'i. Porque el territorio nacional está dividido en provincias, que eligen a sus propias autoridades.',
+            why: 'Incorrecto. Eso explica por qué la Argentina es FEDERAL, no por qué es una república.',
           },
           {
-            text: 'Porque el territorio está dividido en provincias, que eligen a sus propias autoridades.',
-            why: 'Incorrecto. Eso explica por qué la Argentina es FEDERAL, no por qué es una república.',
+            text: 'ii. El poder de gobernar se divide en tres poderes y cada poder tiene una función, además los poderes se controlan entre sí.',
+            correct: true,
+            why: '¡Correcto! Eso es la división de poderes, la base de la forma republicana.',
           },
         ],
       },
       {
         id: 'ss7b',
-        prompt: '¿Cuál es la función del Poder Legislativo?',
+        prompt: '7) b. ¿Cuál es la función del Poder Legislativo?',
+        keepOrder: true,
         options: [
-          { text: 'Hacer las leyes que gobiernan el país.', correct: true },
-          { text: 'Administrar el país.' },
+          { text: 'i. Administrar el país.' },
+          { text: 'ii. Hacer las leyes que gobiernan el país.', correct: true },
         ],
         explanation: 'Administrar el país es la función del Poder Ejecutivo.',
       },
@@ -315,12 +258,12 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss8',
         kind: 'drag',
-        prompt: '8) ¿A qué concepto corresponde cada definición? Arrastrá: Leyes, Constitución, Tradiciones, Normas.',
+        prompt: '8) ¿A cuál de los conceptos corresponde cada una de las siguientes definiciones? Leyes - Constitución - Tradiciones - Normas',
         segments: [
-          'a) Texto que contiene las ideas fundamentales acerca de cómo debe ser un país: ',
-          '. b) Reglas que fijan qué se puede hacer y qué no: ',
-          '. c) Costumbres que se mantienen durante mucho tiempo y son compartidas por una comunidad: ',
-          '. d) Normas escritas, obligatorias para todos los que habitan un territorio: ',
+          'a. Texto que contiene las ideas fundamentales acerca de cómo debe ser un país: ',
+          '. b. Reglas que fijan qué se puede hacer y qué no: ',
+          '. c. Costumbres que se mantienen durante mucho tiempo y son compartidas por una comunidad, un pueblo o un país: ',
+          '. d. Normas escritas que sirven para organizar una sociedad y son obligatorias, es decir que tienen que cumplirlas todas las personas que habitan un territorio: ',
           '.',
         ],
         blanks: ['Constitución', 'Normas', 'Tradiciones', 'Leyes'],
@@ -331,176 +274,50 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss9',
         kind: 'classify',
-        prompt: '9) Indicá si cada pueblo era cazador-recolector (C) o agricultor (A).',
-        categories: ['C: cazadores-recolectores', 'A: agricultores'],
+        prompt: '9) Indicá con una C (cazadores - recolectores) o con una A (agricultores) según corresponda.',
+        keepOrder: true,
+        categories: ['C (cazadores - recolectores)', 'A (agricultores)'],
         items: [
-          { text: 'Querandíes', category: 'C: cazadores-recolectores' },
-          { text: 'Qom', category: 'C: cazadores-recolectores' },
-          { text: 'Selk’nam', category: 'C: cazadores-recolectores' },
-          { text: 'Wichís', category: 'C: cazadores-recolectores' },
-          { text: 'Diaguitas', category: 'A: agricultores' },
-          { text: 'Guaraníes', category: 'A: agricultores' },
-          { text: 'Atacamas', category: 'A: agricultores' },
+          { text: 'a. Diaguitas', category: 'A (agricultores)' },
+          { text: 'b. Querandíes', category: 'C (cazadores - recolectores)' },
+          { text: 'c. Guaraníes', category: 'A (agricultores)' },
+          { text: 'd. Qom', category: 'C (cazadores - recolectores)' },
+          { text: 'e. Selk’nam', category: 'C (cazadores - recolectores)' },
+          { text: 'f. Wichis', category: 'C (cazadores - recolectores)' },
+          { text: 'g. Atacamas', category: 'A (agricultores)' },
         ],
         explanation:
-          'Agricultores: diaguitas y atacamas (noroeste, con terrazas) y guaraníes (noreste, con roza). Cazadores-recolectores: querandíes (llanura pampeana), qom y wichís (Chaco) y selk’nam (Tierra del Fuego).',
+          'A: diaguitas y atacamas (noroeste, con terrazas) y guaraníes (noreste, con roza). C: querandíes (llanura pampeana), qom y wichis (Chaco) y selk’nam (Tierra del Fuego).',
       },
 
       // ---- 10: verdadero o falso ----
       {
         id: 'ss10',
         kind: 'classify',
-        prompt: '10) ¿Verdadero o falso? El poblamiento de América.',
-        categories: ['Verdadero', 'Falso'],
+        prompt: '10) Indicá si las siguientes afirmaciones son verdaderas o falsas.',
+        keepOrder: true,
+        categories: ['Verdadera', 'Falsa'],
         items: [
           {
-            text: 'Los primeros seres humanos que llegaron a América venían desde Oceanía o Asia.',
-            category: 'Verdadero',
+            text: 'a. Los primeros seres humanos que llegaron a América venían desde Oceanía o Asia.',
+            category: 'Verdadera',
+          },
+          { text: 'b. Los cazadores-recolectores podían producir su propio alimento.', category: 'Falsa' },
+          {
+            text: 'c. Al finalizar la Era de Hielo, todos los pueblos americanos eran agricultores.',
+            category: 'Falsa',
           },
           {
-            text: 'Durante la glaciación se congeló parte de los mares, bajó su nivel y quedó al descubierto el Estrecho de Bering.',
-            category: 'Verdadero',
+            text: 'd. Durante la glaciación, una parte de los mares y los océanos se congeló y bajó el nivel del mar dejando al descubierto el Estrecho de Bering.',
+            category: 'Verdadera',
           },
           {
-            text: 'Por el Estrecho de Bering pasaron grandes animales en busca de alimento y un mejor clima.',
-            category: 'Verdadero',
-          },
-          { text: 'Los cazadores-recolectores podían producir su propio alimento.', category: 'Falso' },
-          {
-            text: 'Al finalizar la Era de Hielo, todos los pueblos americanos eran agricultores.',
-            category: 'Falso',
+            text: 'e. Al congelarse los mares, por el Estrecho de Bering, pasaron grandes animales en busca de alimento y un mejor clima.',
+            category: 'Verdadera',
           },
         ],
         explanation:
-          'Corregidas: los cazadores-recolectores NO producían su alimento, lo obtenían de la naturaleza (cazando y recolectando). Al terminar la Era de Hielo ALGUNOS pueblos se hicieron agricultores y otros siguieron siendo cazadores-recolectores.',
-      },
-      {
-        id: 'ss10b',
-        kind: 'reveal',
-        emoji: '🧊',
-        prompt: '¿Por qué los primeros pobladores pudieron pasar caminando de Asia a América?',
-        options: [
-          {
-            text: 'Porque en la glaciación bajó el nivel del mar y el Estrecho de Bering quedó como un puente de tierra.',
-            correct: true,
-            why: '¡Correcto! Siguiendo a los grandes animales que cazaban, cruzaron por ese «puente» y fueron poblando el continente.',
-          },
-          {
-            text: 'Porque construyeron un puente de piedra.',
-            why: 'Incorrecto. Fue un paso natural que quedó al descubierto cuando bajó el mar.',
-          },
-          {
-            text: 'Porque viajaron en grandes barcos de vela.',
-            why: 'Incorrecto. Por Bering pasaron caminando. (Otra teoría dice que algunos llegaron desde Oceanía en canoas o balsas, pero no en barcos de vela.)',
-          },
-        ],
-      },
-    ],
-  },
-
-  // ===================== 2. OTRA VUELTA, CON PREGUNTAS PARECIDAS ============
-  {
-    id: 'simulacro-otra-vuelta',
-    title: 'Simulacro 2: otra vuelta',
-    description: 'Preguntas parecidas a las del simulacro, para practicar de nuevo con otras palabras.',
-    emoji: '🔁',
-    questions: [
-      {
-        id: 'so1',
-        prompt: 'Un grupo vive en tiendas de cuero que desarman y cargan cuando los guanacos se van a otra zona. ¿Cómo son?',
-        options: [{ text: 'Nómades', correct: true }, { text: 'Sedentarios' }],
-        explanation: 'Se trasladan siguiendo a los animales: son nómades.',
-      },
-      {
-        id: 'so2',
-        prompt: 'Una aldea tiene casas de piedra, campos de maíz y corrales con llamas. ¿Cómo son sus habitantes?',
-        options: [{ text: 'Sedentarios', correct: true }, { text: 'Nómades' }],
-        explanation: 'Cultivan, crían animales y tienen casas fijas: son sedentarios.',
-      },
-      {
-        id: 'so3',
-        kind: 'reveal',
-        emoji: '🌽',
-        prompt: '¿Qué cambio permitió que algunos pueblos se volvieran sedentarios?',
-        options: [
-          {
-            text: 'La agricultura: al cultivar, tenían que quedarse cerca de sus campos.',
-            correct: true,
-            why: '¡Correcto! Al producir su propio alimento ya no necesitaban trasladarse para buscarlo.',
-          },
-          {
-            text: 'La caza de grandes animales.',
-            why: 'Incorrecto. La caza obligaba a moverse siguiendo a los animales.',
-          },
-          {
-            text: 'El uso del fuego.',
-            why: 'Incorrecto. Los nómades también usaban el fuego.',
-          },
-        ],
-      },
-      {
-        id: 'so4',
-        kind: 'classify',
-        prompt: 'Otra tanda: ¿mayas, aztecas o incas?',
-        categories: ['Mayas', 'Aztecas', 'Incas'],
-        items: [
-          { text: 'Península de Yucatán', category: 'Mayas' },
-          { text: 'pirámides y estudio de los astros', category: 'Mayas' },
-          { text: 'Tenochtitlan', category: 'Aztecas' },
-          { text: 'lago Texcoco', category: 'Aztecas' },
-          { text: 'Cordillera de los Andes', category: 'Incas' },
-          { text: 'quipus para contar', category: 'Incas' },
-        ],
-      },
-      {
-        id: 'so5',
-        prompt: '¿Quién está a cargo del Poder Ejecutivo de un municipio?',
-        options: [{ text: 'El intendente', correct: true }, { text: 'El gobernador' }, { text: 'El Concejo Deliberante' }],
-      },
-      {
-        id: 'so6',
-        prompt: '¿Qué hace el Concejo Deliberante?',
-        options: [
-          { text: 'Hace las ordenanzas (las normas del municipio).', correct: true },
-          { text: 'Juzga las faltas de tránsito.' },
-          { text: 'Gobierna la provincia.' },
-        ],
-        explanation: 'Es el Poder Legislativo del municipio. Las faltas las juzga el Tribunal de Faltas.',
-      },
-      {
-        id: 'so7',
-        prompt: '¿Cuáles son las dos cámaras del Congreso Nacional?',
-        options: [
-          { text: 'Diputados y Senadores', correct: true },
-          { text: 'Jueces y Fiscales' },
-          { text: 'Ministros y Gobernadores' },
-        ],
-      },
-      {
-        id: 'so8',
-        kind: 'classify',
-        prompt: '¿Es una ley o una tradición?',
-        categories: ['Ley', 'Tradición'],
-        items: [
-          { text: 'Es obligatorio usar cinturón de seguridad.', category: 'Ley' },
-          { text: 'La educación primaria es obligatoria.', category: 'Ley' },
-          { text: 'Comer rosca de Pascua.', category: 'Tradición' },
-          { text: 'Festejar la Fiesta de la Tradición con danzas folclóricas.', category: 'Tradición' },
-        ],
-      },
-      {
-        id: 'so9',
-        kind: 'classify',
-        prompt: 'Verdadero o falso.',
-        categories: ['Verdadero', 'Falso'],
-        items: [
-          { text: 'El presidente hace las leyes.', category: 'Falso' },
-          { text: 'La Argentina es una república federal.', category: 'Verdadero' },
-          { text: 'Los guaraníes cultivaban mandioca y maíz.', category: 'Verdadero' },
-          { text: 'Los selk’nam vivían en Tierra del Fuego.', category: 'Verdadero' },
-          { text: 'Los incas vivían en la selva de México.', category: 'Falso' },
-        ],
-        explanation: 'Corregidas: las leyes las hace el Congreso (Poder Legislativo); los incas vivían en la Cordillera de los Andes, en América del Sur.',
+          'b es falsa: los cazadores-recolectores NO producían su alimento, lo obtenían de la naturaleza. c es falsa: al terminar la Era de Hielo ALGUNOS pueblos se hicieron agricultores y otros siguieron siendo cazadores-recolectores.',
       },
     ],
   },
