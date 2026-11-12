@@ -28,6 +28,9 @@ import { grade4PdlPractices } from './grade4Pdl'
 import { grade4PdlAlto3Practices } from './grade4PdlAlto3'
 import { grade4MatematicaAlto3Practices } from './grade4MatematicaAlto3'
 import { grade4SocialesAlto3Practices } from './grade4SocialesAlto3'
+import { grade4PdlSimulacro3Practices } from './grade4PdlSimulacro3'
+import { grade4MatematicaSimulacro3Practices } from './grade4MatematicaSimulacro3'
+import { grade4SocialesSimulacro3Practices } from './grade4SocialesSimulacro3'
 import { jardinPractices } from './jardin'
 
 // ============================================================================
@@ -156,8 +159,9 @@ function grade1Subjects(): Subject[] {
   ]
 }
 
-// 4to: cinco materias (con Ciencias Sociales). Cada una con su "Alto en el
-// camino III" (3er trimestre) primero.
+// 4to: cinco materias (con Ciencias Sociales). PDL, Matemática y Sociales
+// arrancan con el "Simulacro Alto en el camino III" y después su "Alto en el
+// camino III" (3er trimestre).
 // Antes: Prácticas del Lenguaje va primera (ya sin etiqueta NEW).
 //  - Prácticas del Lenguaje: "2do Trimestre" — poesía, artículos y adjetivos,
 //    diccionario, clasificación semántica y tildación.
@@ -179,6 +183,15 @@ function grade4Subjects(): Subject[] {
       newUntil: '2026-11-25',
       description: 'Cuento maravilloso, verbos, la noticia, la oración y más.',
       terms: [
+        {
+          id: 'simulacro-3',
+          name: 'Simulacro Alto en el camino III',
+          emoji: '📝',
+          newUntil: '2026-11-25',
+          description:
+            'El simulacro de la seño: El gato con botas, análisis de oraciones, verdadero o falso, partes de la noticia y cuadro de verbos. Y otra vuelta con otro cuento.',
+          practices: grade4PdlSimulacro3Practices,
+        },
         {
           id: 'alto-en-el-camino-3',
           name: 'Alto en el camino III',
@@ -285,6 +298,15 @@ function grade4Subjects(): Subject[] {
       description: 'Cálculo mental, tablas, geometría y problemas.',
       terms: [
         {
+          id: 'simulacro-3',
+          name: 'Simulacro Alto en el camino III',
+          emoji: '📝',
+          newUntil: '2026-11-18',
+          description:
+            'El simulacro de la seño: los problemas con sus mismos datos, circunferencias, ángulos con transportador y triángulos. Y otra vuelta con otros números.',
+          practices: grade4MatematicaSimulacro3Practices,
+        },
+        {
           id: 'alto-en-el-camino-3',
           name: 'Alto en el camino III',
           emoji: '🛑',
@@ -316,6 +338,15 @@ function grade4Subjects(): Subject[] {
       newUntil: '2026-11-16',
       description: 'Normas, gobiernos, pueblos originarios y civilizaciones de América.',
       terms: [
+        {
+          id: 'simulacro-3',
+          name: 'Simulacro Alto en el camino III',
+          emoji: '📝',
+          newUntil: '2026-11-16',
+          description:
+            'El simulacro de la seño: nómades y sedentarios, técnicas de cultivo, mayas, aztecas e incas, los tres poderes, normas y pueblos indígenas.',
+          practices: grade4SocialesSimulacro3Practices,
+        },
         {
           id: 'alto-en-el-camino-3',
           name: 'Alto en el camino III',
