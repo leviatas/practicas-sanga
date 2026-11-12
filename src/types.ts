@@ -316,6 +316,11 @@ export interface Practice {
   description: string
   /** Emoji representativo. */
   emoji: string
+  /**
+   * Si es `true`, las preguntas NO se barajan: salen en el orden en que están
+   * escritas (ej: un simulacro que sigue la fotocopia consigna por consigna).
+   */
+  inOrder?: boolean
   /** Preguntas de la práctica. */
   questions: Question[]
 }
