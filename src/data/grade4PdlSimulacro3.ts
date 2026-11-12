@@ -45,7 +45,7 @@ export const grade4PdlSimulacro3Practices: Practice[] = [
         id: 's1-lugar',
         kind: 'reveal',
         ...CUENTO,
-        prompt: '2) A) ¿Dónde y cuándo sucede la historia?',
+        prompt: '2) ¿Dónde y cuándo sucede la historia?',
         hint: 'Buscá las pistas en el primer párrafo: ¿cuándo? y ¿dónde llegó el gato?',
         options: [
           {
@@ -67,7 +67,7 @@ export const grade4PdlSimulacro3Practices: Practice[] = [
         id: 's1-ogro',
         kind: 'classify',
         ...CUENTO,
-        prompt: '2) B) ¿Cuáles son las características del ogro? ¿Y las del gato?',
+        prompt: '2) ¿Cuáles son las características del ogro? ¿Y las del gato?',
         categories: ['El ogro', 'El gato'],
         items: [
           { text: 'temible', category: 'El ogro' },
@@ -86,7 +86,7 @@ export const grade4PdlSimulacro3Practices: Practice[] = [
         id: 's1-objetivo',
         kind: 'reveal',
         ...CUENTO,
-        prompt: '2) C) ¿Qué objetivo tenía el gato?',
+        prompt: '2) ¿Qué objetivo tenía el gato?',
         hint: 'Pensá por qué lo desafió a convertirse en un animal pequeño y qué hizo después.',
         options: [
           {

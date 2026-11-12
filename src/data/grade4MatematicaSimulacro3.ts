@@ -34,7 +34,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         kind: 'reveal',
         emoji: '🏖️',
         prompt:
-          '1) Durante las vacaciones Leandro gastó, cada día, $10.168 en comida, $1.609 en transportes y $20.024 en hospedaje. a. ¿Cuánto dinero gastó por día?',
+          '1) Durante las vacaciones Leandro gastó, cada día, $10.168 en comida, $1.609 en transportes y $20.024 en hospedaje. ¿Cuánto dinero gastó por día?',
         hint: 'Sumá los tres gastos de un día. Encolumná bien: unidades debajo de unidades.',
         options: [
           {
@@ -60,7 +60,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         id: 'sm1b',
         kind: 'reveal',
         emoji: '📅',
-        prompt: '1) b. Si sus vacaciones duraron 15 días, ¿cuánto dinero gastó en total?',
+        prompt: '1) Si sus vacaciones duraron 15 días, ¿cuánto dinero gastó en total?',
         hint: 'Ya sabés lo que gastó en UN día. Si son 15 días iguales, ¿qué operación hacés?',
         options: [
           {
@@ -86,7 +86,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         id: 'sm1c',
         kind: 'reveal',
         emoji: '💵',
-        prompt: '1) c. Si llevó $50.000, ¿cuánto dinero le sobró?',
+        prompt: '1) Si llevó $50.000, ¿cuánto dinero le sobró?',
         hint: 'Con $50.000 no le alcanza para los 15 días, así que pensalo para UN día: lo que llevó menos lo que gastó por día.',
         options: [
           {
@@ -131,7 +131,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         id: 'sm2b',
         kind: 'reveal',
         emoji: '📚',
-        prompt: '2) b. ¿Cuántos libros tiene en total?',
+        prompt: '2) ¿Cuántos libros tiene en total?',
         hint: 'Sumá los libros de los tres géneros: 432 + 420 + 105.',
         options: [
           { text: '957 libros', correct: true, why: '¡Correcto! 432 + 420 + 105 = 957.' },
@@ -327,7 +327,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         kind: 'reveal',
         image: 'mate-transportador-125',
         prompt:
-          '4) a. Trazá sobre el transportador el lado que falta del ángulo para que tenga la amplitud que se indica (mide 125°). ¿Hasta qué número trazás el lado?',
+          '4) Trazá sobre el transportador el lado que falta del ángulo para que tenga la amplitud que se indica (mide 125°). ¿Hasta qué número trazás el lado?',
         hint: 'El lado rojo está sobre el 0 de la derecha. Usá la escala que empieza en 0 de ese lado.',
         options: [
           {
@@ -364,7 +364,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         id: 'sg4c1',
         kind: 'reveal',
         emoji: '🔺',
-        prompt: '4) c. Construí un triángulo con tres lados distintos. Ahora clasificalo según sus lados: ¿cómo se llama?',
+        prompt: '4) Construí un triángulo con tres lados distintos. Ahora clasificalo según sus lados: ¿cómo se llama?',
         options: [
           { text: 'Escaleno', correct: true, why: '¡Correcto! Escaleno: sus tres lados miden distinto.' },
           { text: 'Isósceles', why: 'Incorrecto. El isósceles tiene DOS lados iguales.' },
@@ -375,7 +375,7 @@ export const grade4MatematicaSimulacro3Practices: Practice[] = [
         id: 'sg4c2',
         kind: 'reveal',
         emoji: '🔺',
-        prompt: '4) c. Construí un triángulo con dos lados iguales. Ahora clasificalo según sus lados: ¿cómo se llama?',
+        prompt: '4) Construí un triángulo con dos lados iguales. Ahora clasificalo según sus lados: ¿cómo se llama?',
         options: [
           { text: 'Isósceles', correct: true, why: '¡Correcto! Isósceles: dos lados iguales y uno distinto.' },
           { text: 'Escaleno', why: 'Incorrecto. El escaleno tiene los tres lados distintos.' },

@@ -27,7 +27,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss1a',
         kind: 'reveal',
         image: 'sociales-sedentarios',
-        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. A)',
+        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. Primera imagen: ¿este grupo es nómade o sedentario?',
         hint: 'Mirá dónde viven, qué están haciendo las mujeres y qué animales hay.',
         options: [
           {
@@ -45,7 +45,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss1b',
         kind: 'reveal',
         image: 'sociales-nomades',
-        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. B)',
+        prompt: '1) Observá atentamente las imágenes y clasificá cada grupo en NÓMADES O SEDENTARIOS. Segunda imagen: ¿este grupo es nómade o sedentario?',
         hint: 'Mirá con qué están hechos sus refugios: ¿son casas para quedarse siempre o se pueden desarmar y llevar?',
         options: [
           {
@@ -229,7 +229,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         id: 'ss7a',
         kind: 'reveal',
         emoji: '🇦🇷',
-        prompt: '7) Señalá la respuesta correcta. a. ¿Por qué la Argentina es una república?',
+        prompt: '7) Señalá la respuesta correcta. ¿Por qué la Argentina es una república?',
         keepOrder: true,
         options: [
           {
@@ -245,7 +245,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       },
       {
         id: 'ss7b',
-        prompt: '7) b. ¿Cuál es la función del Poder Legislativo?',
+        prompt: '7) ¿Cuál es la función del Poder Legislativo?',
         keepOrder: true,
         options: [
           { text: 'i. Administrar el país.' },
