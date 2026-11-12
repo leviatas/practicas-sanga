@@ -31,6 +31,7 @@ import { sentenceImages } from '../components/sentenceImages'
 import { outdoorIcons } from '../components/outdoorIcons'
 import { pastContinuousImages } from '../components/pastContinuousImages'
 import { repasoImages } from '../components/repasoImages'
+import { socialesImages } from '../components/socialesImages'
 import NotFoundPage from './NotFoundPage'
 
 // Mapas de imágenes que pueden acompañar a una pregunta, en orden de
@@ -45,6 +46,7 @@ const QUESTION_IMAGES: { map: Record<string, string>; className: string; alt: st
   { map: pastContinuousImages, className: 'scene-photo', alt: 'Mirá el dibujo y elegí la oración que lo describe' },
   { map: bodyPartsImages, className: 'body-photo', alt: '¿Qué parte del cuerpo es?' },
   { map: repasoImages, className: 'repaso-photo', alt: 'Mirá el dibujo y completá la oración' },
+  { map: socialesImages, className: 'scene-photo', alt: 'Mirá el dibujo de la fotocopia y respondé' },
 ]
 
 /** La imagen de la pregunta (una sola), o nada si el nombre no está en ningún mapa. */

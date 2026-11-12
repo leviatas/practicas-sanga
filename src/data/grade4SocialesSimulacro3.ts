@@ -29,14 +29,14 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss1a',
         kind: 'reveal',
-        emoji: '🏘️🏺🌽',
-        prompt:
-          'Imagen A: un grupo vive en casas de piedra y adobe, una mujer hace vasijas de cerámica, otras muelen granos y hay animales domesticados en un corral. ¿Son nómades o sedentarios?',
+        image: 'sociales-sedentarios',
+        prompt: 'Observá atentamente la imagen A. ¿Este grupo es nómade o sedentario?',
+        hint: 'Mirá dónde viven, qué están haciendo las mujeres y qué animales hay.',
         options: [
           {
             text: 'Sedentarios',
             correct: true,
-            why: '¡Correcto! Justificación: viven en un lugar fijo (casas permanentes), cultivan y muelen granos, crían animales y fabrican cerámica, que es pesada y no se puede trasladar todo el tiempo.',
+            why: '¡Correcto! Justificación: viven en casas de piedra, que son permanentes; cultivan la tierra, crían llamas, tejen en telar y hacen vasijas de cerámica, que son pesadas y no se pueden andar trasladando.',
           },
           {
             text: 'Nómades',
@@ -47,18 +47,18 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss1b',
         kind: 'reveal',
-        emoji: '⛰️🔥🏹',
-        prompt:
-          'Imagen B: un grupo vive en la entrada de una cueva, se abriga con pieles y lleva lanzas para cazar; hay un fuego y un perro. ¿Son nómades o sedentarios?',
+        image: 'sociales-nomades',
+        prompt: 'Observá atentamente la imagen B. ¿Este grupo es nómade o sedentario?',
+        hint: 'Mirá con qué están hechos sus refugios: ¿son casas para quedarse siempre o se pueden desarmar y llevar?',
         options: [
           {
             text: 'Nómades',
             correct: true,
-            why: '¡Correcto! Justificación: viven en refugios naturales (cuevas) o temporarios, cazan y recolectan, y se trasladan siguiendo a los animales y los frutos de cada estación.',
+            why: '¡Correcto! Justificación: viven en toldos hechos con palos y cueros de animales, que se arman y desarman fácilmente para trasladarse; obtienen su alimento cazando y recolectando, y se mudan siguiendo a los animales.',
           },
           {
             text: 'Sedentarios',
-            why: 'Incorrecto. No construyen viviendas permanentes ni cultivan: viven de la caza y la recolección.',
+            why: 'Incorrecto. Sus toldos de cuero no son casas permanentes: se desarman y se llevan. Viven de la caza y la recolección.',
           },
         ],
       },
@@ -70,7 +70,7 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         items: [
           { text: 'se trasladan de un lugar a otro', category: 'Nómades' },
           { text: 'cazan, pescan y recolectan', category: 'Nómades' },
-          { text: 'viven en cuevas o refugios temporarios', category: 'Nómades' },
+          { text: 'viven en toldos de cuero o refugios temporarios', category: 'Nómades' },
           { text: 'pocas pertenencias, fáciles de llevar', category: 'Nómades' },
           { text: 'viven siempre en el mismo lugar', category: 'Sedentarios' },
           { text: 'cultivan la tierra (agricultura)', category: 'Sedentarios' },
@@ -86,8 +86,8 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss3a',
         kind: 'reveal',
-        emoji: '⛰️🌱',
-        prompt: 'Dibujo 1: escalones de tierra en la ladera de una montaña, sostenidos con muros de piedra. ¿Qué técnica es?',
+        image: 'sociales-terrazas',
+        prompt: '¿Qué técnica de cultivo es esta: roza, chinampas o terrazas?',
         options: [
           {
             text: 'Terrazas',
@@ -101,8 +101,8 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss3b',
         kind: 'reveal',
-        emoji: '🛶🌿',
-        prompt: 'Dibujo 2: personas en canoas, entre parcelas cultivadas que flotan sobre el agua. ¿Qué técnica es?',
+        image: 'sociales-chinampas',
+        prompt: '¿Qué técnica de cultivo es esta: roza, chinampas o terrazas?',
         options: [
           {
             text: 'Chinampas',
@@ -116,8 +116,8 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss3c',
         kind: 'reveal',
-        emoji: '🌳🔥🌽',
-        prompt: 'Dibujo 3 (en tres pasos): 1) cortan árboles de la selva, 2) los queman, 3) siembran en ese terreno. ¿Qué técnica es?',
+        image: 'sociales-roza',
+        prompt: 'Mirá los pasos 1, 2 y 3. ¿Qué técnica de cultivo es: roza, chinampas o terrazas?',
         options: [
           {
             text: 'Roza',
@@ -160,7 +160,8 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
       {
         id: 'ss4',
         kind: 'classify',
-        prompt: 'Leé las pistas y colocá cada una en Mayas, Aztecas o Incas.',
+        image: 'sociales-mapa',
+        prompt: 'Mirá el mapa, leé las pistas y colocá cada una en Mayas, Aztecas o Incas.',
         categories: ['Mayas', 'Aztecas', 'Incas'],
         items: [
           { text: 'Para cultivar en la selva usaban la roza.', category: 'Mayas' },
@@ -175,6 +176,38 @@ export const grade4SocialesSimulacro3Practices: Practice[] = [
         ],
         explanation:
           'Ojo: los incas también tenían un emperador (el Inca) con un gran ejército. En el simulacro, fijate en las otras pistas de la misma fila; si dice Tenochtitlan o el lago, es azteca; si dice Cuzco, es inca.',
+      },
+      {
+        id: 'ss4-mapa',
+        kind: 'reveal',
+        image: 'sociales-mapa',
+        prompt: 'Mirá el mapa. ¿Qué pueblo vivió en América del Sur, a lo largo de la Cordillera de los Andes?',
+        options: [
+          {
+            text: 'Los incas',
+            correct: true,
+            why: '¡Correcto! En el mapa de la izquierda se ven los incas en América del Sur, con su capital, Cuzco.',
+          },
+          {
+            text: 'Los aztecas',
+            why: 'Incorrecto. Los aztecas vivían en el centro de México; su capital era Tenochtitlan, sobre un lago.',
+          },
+          {
+            text: 'Los mayas',
+            why: 'Incorrecto. Los mayas vivían en Centroamérica y el sur de México (la península de Yucatán).',
+          },
+        ],
+      },
+      {
+        id: 'ss4-mapa2',
+        image: 'sociales-mapa',
+        prompt: 'Según el mapa, ¿qué dos pueblos vivieron en Mesoamérica (México y Centroamérica)?',
+        options: [
+          { text: 'Aztecas y mayas', correct: true },
+          { text: 'Incas y mayas' },
+          { text: 'Incas y aztecas' },
+        ],
+        explanation: 'Los aztecas en el centro de México (Tenochtitlan) y los mayas en el sur de México y Centroamérica.',
       },
       {
         id: 'ss4b',
