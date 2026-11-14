@@ -319,6 +319,10 @@ function Quiz({
     if (q.kind === 'listen-tap') {
       const phrase = listenTapPhrase(q)
       if (phrase) speak(phrase)
+    } else if (readsPrompt && q.title && q.listen) {
+      // Consigna general (el título) UNA sola vez, al empezar; después, en
+      // cada pregunta, solo la palabra.
+      speak(current === 0 ? `${q.title}. ${q.listen}.` : q.listen)
     } else if (readsPrompt) {
       speak(q.title ?? q.prompt)
     } else {

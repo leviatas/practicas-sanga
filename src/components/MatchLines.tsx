@@ -41,7 +41,18 @@ export default function MatchLines({
 
   // Orden de las palabras: barajado UNA vez por pregunta (si no, alinearían
   // en el mismo renglón que su foto y no habría nada que unir).
-  const [words] = useState(() => shuffle(pairs.map((p) => p.word)))
+  // Y NUNCA queda una palabra justo enfrente de su foto: se vuelve a barajar
+  // hasta que ninguna coincida (si no, a veces salían todas ya "unidas").
+  const [words] = useState(() => {
+    const original = pairs.map((p) => p.word)
+    if (original.length < 2) return original
+    for (let tries = 0; tries < 50; tries++) {
+      const mixed = shuffle(original)
+      if (mixed.every((w, i) => w !== original[i])) return mixed
+    }
+    // Por las dudas: correr todo un lugar siempre desalinea.
+    return [...original.slice(1), original[0]]
+  })
 
   // Qué imagen (por índice) ya quedó unida a su palabra correcta.
   const [matched, setMatched] = useState<Set<number>>(new Set())

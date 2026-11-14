@@ -4498,78 +4498,166 @@ button {
   font-size: calc(2.4rem * var(--fit, 1));
 }
 
-/* ---- Armar varias oraciones con fichas mezcladas (kind 'sentence-mix') ---- */
+/* ---- Armar varias oraciones con fichas mezcladas (kind 'sentence-mix') ----
+   Un renglón numerado por oración y, abajo, el montón de fichas. */
 .sentence-mix {
   display: grid;
   gap: calc(10px * var(--fit, 1));
 }
 
-.sentence-mix__done {
+.sentence-mix__rows {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: calc(6px * var(--fit, 1));
-}
-
-.sentence-mix__done li {
-  border: 2px solid var(--correct);
-  background: var(--correct-bg);
-  color: var(--correct);
-  border-radius: 10px;
-  padding: calc(8px * var(--fit, 1)) calc(10px * var(--fit, 1));
-  font-weight: 700;
-  font-size: calc(1rem * var(--fit, 1));
-  text-align: center;
-}
-
-.sentence-mix__line,
-.sentence-mix__bank {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   gap: calc(8px * var(--fit, 1));
 }
 
-.sentence-mix__line {
-  min-height: calc(52px * var(--fit, 1));
+.sentence-mix__row-item {
+  display: flex;
+  align-items: stretch;
+  gap: calc(8px * var(--fit, 1));
+}
+
+.sentence-mix__num {
+  flex: 0 0 auto;
+  width: calc(30px * var(--fit, 1));
+  display: flex;
   align-items: center;
-  border: 2px dashed var(--border);
+  justify-content: center;
+  border-radius: 50%;
+  align-self: center;
+  height: calc(30px * var(--fit, 1));
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: calc(0.95rem * var(--fit, 1));
+}
+
+.sentence-mix__row,
+.sentence-mix__bank {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(6px * var(--fit, 1));
   border-radius: 12px;
   padding: calc(6px * var(--fit, 1));
 }
 
-.sentence-mix__line.is-wrong {
+.sentence-mix__row {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(54px * var(--fit, 1));
+  border: 2px dashed var(--border);
+}
+
+.sentence-mix__bank {
+  justify-content: center;
+  min-height: calc(54px * var(--fit, 1));
+  background: var(--bg);
+}
+
+.sentence-mix__row.is-over,
+.sentence-mix__bank.is-over {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+}
+
+.sentence-mix__row.is-correct {
+  border: 2px solid var(--correct);
+  background: var(--correct-bg);
+}
+
+.sentence-mix__row.is-wrong {
   border-color: var(--wrong);
   background: var(--wrong-bg);
+  animation: sentence-mix-shake 0.4s ease;
+}
+
+@keyframes sentence-mix-shake {
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.sentence-mix__dot {
+  font-weight: 800;
+  font-size: calc(1.2rem * var(--fit, 1));
 }
 
 .sentence-mix__hint {
   color: var(--text-muted);
-  opacity: 0.7;
-  font-size: calc(0.9rem * var(--fit, 1));
+  font-size: calc(0.85rem * var(--fit, 1));
+  text-align: center;
 }
 
 .sentence-mix__chip {
   border: 2px solid var(--border);
-  background: var(--bg);
+  background: var(--surface);
   color: var(--text);
   border-radius: 10px;
-  padding: calc(9px * var(--fit, 1)) calc(12px * var(--fit, 1));
+  padding: calc(9px * var(--fit, 1)) calc(11px * var(--fit, 1));
   font-weight: 700;
-  font-size: calc(1rem * var(--fit, 1));
-  text-transform: inherit;
-  cursor: pointer;
+  font-size: calc(0.95rem * var(--fit, 1));
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.sentence-mix__line .sentence-mix__chip {
+.sentence-mix__chip.is-selected {
   border-color: var(--accent);
   background: var(--accent);
   color: #fff;
+}
+
+.sentence-mix__chip.is-over {
+  border-color: var(--accent);
+}
+
+.sentence-mix__chip.is-dragging {
+  opacity: 0.3;
+}
+
+.sentence-mix__chip--overlay {
+  display: inline-block;
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 25%);
+  cursor: grabbing;
+}
+
+.sentence-mix__row.is-correct .sentence-mix__chip {
+  border-color: transparent;
+  background: transparent;
+  color: var(--correct);
+  cursor: default;
+  padding-left: calc(4px * var(--fit, 1));
+  padding-right: calc(4px * var(--fit, 1));
 }
 
 /* El dibujo ya unido no se apaga (el botón queda deshabilitado). */
 .match-item:disabled .match-emoji {
   opacity: 1;
   filter: none;
+}
+
+/* ---- Tocar la opción, en hilera (kind 'tap' con título fijo) ----
+   Tres o cuatro recuadros uno al lado del otro, con las letras para elegir. */
+.tap-grid.tap-grid--row {
+  display: grid;
+  gap: calc(10px * var(--fit, 1));
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tap-grid--row .tap-card {
+  grid-column: auto !important;
+  min-height: 0;
+  aspect-ratio: auto;
+  padding: calc(16px * var(--fit, 1)) calc(4px * var(--fit, 1));
+}
+
+.tap-grid--row .tap-card__face {
+  font-size: calc(1.7rem * var(--fit, 1));
+  font-weight: 800;
 }

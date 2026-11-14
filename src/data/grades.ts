@@ -119,7 +119,7 @@ function grade1Subjects(): Subject[] {
           emoji: '🔎',
           newUntil: '2026-11-20',
           description:
-            'Las 9 misiones de la fotocopia de práctica, en orden: grupos consonánticos, R y RR, W y X, poemas (versos, estrofas y rimas) y oraciones a partir de una imagen.',
+            'Las misiones de la fotocopia de práctica, en orden: grupos consonánticos, R y RR, W y X, poemas (versos, estrofas y rimas) y oraciones a partir de una imagen.',
           practices: grade1PdlMisionesPractices,
         },
         {
