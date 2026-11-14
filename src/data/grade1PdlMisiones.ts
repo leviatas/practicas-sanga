@@ -17,8 +17,9 @@ import type { Practice, Question } from '../types'
 // Lo que en la hoja es "unir con flechas", "rodear", "recortar y pegar" o
 // "escribir", acá se resuelve tocando o arrastrando.
 //
-// Ojo: en PDL de 1er grado el botón abc/ABC pasa TODO a minúscula o a
-// MAYÚSCULA, así que ningún ejercicio depende de mayúsculas.
+// Todas las misiones arrancan en MAYÚSCULA (`upper`), como la fotocopia. El
+// botón abc/ABC las puede pasar a minúscula, así que ningún ejercicio depende
+// de mayúsculas.
 // ============================================================================
 
 type Opt = { text: string; correct?: boolean }
@@ -27,37 +28,48 @@ function opts(correcta: string, otras: string[]): Opt[] {
   return [{ text: correcta, correct: true }, ...otras.map((text) => ({ text }))]
 }
 
-// "Uní el dibujo con su palabra": el dibujo arriba y las palabras para elegir.
-function dibujo(id: string, emoji: string, correcta: string, otras: string[]): Question {
+// "Uní con flechas": los dibujos a la izquierda y las palabras, mezcladas, a
+// la derecha.
+function unir(id: string, prompt: string, pares: [string, string][]): Question {
   return {
     id,
-    emoji,
-    prompt: 'Nombrá el dibujo y tocá su palabra.',
-    options: opts(correcta, otras),
-    explanation: `Es ${correcta.toUpperCase()}.`,
+    kind: 'match',
+    prompt,
+    pairs: pares.map(([emoji, word]) => ({ image: `${id}-${word}`, emoji, word })),
   }
 }
 
-// "Completá": el dibujo, la palabra con un hueco (⋯) y las letras para elegir.
+// "Completá": el título fijo arriba, el dibujo, la palabra con un hueco (⋯),
+// un solo botón de sonido (la palabra) y las letras para elegir, siempre en
+// el mismo orden.
 function falta(
   id: string,
+  title: string,
   emoji: string,
   palabra: string,
   hueco: string,
   correcta: string,
-  otras: string[],
+  opciones: string[],
   explanation?: string,
 ): Question {
   return {
     id,
+    title,
     emoji,
-    prompt: `¿Qué falta? ${hueco}`,
+    prompt: hueco,
     listen: palabra,
     listenLang: 'es-AR',
-    options: opts(correcta, otras),
+    keepOrder: true,
+    options: opciones.map((text) => ({ text, correct: text === correcta || undefined })),
     explanation: explanation ?? `Se escribe ${palabra.toUpperCase()}.`,
   }
 }
+
+const BUZONES = ['bl', 'pl', 'cr', 'cl']
+const R_RR = ['r', 'rr']
+const T_BUZON = '¿En qué buzón va? Elegí las letras que faltan.'
+const T_R = 'Completá con R o RR'
+const T_FINAL = 'Completá con las letras que faltan'
 
 // "Rodeá las dos primeras letras de la palabra".
 function empieza(id: string, palabra: string, correcta: string, otras: string[]): Question {
@@ -92,6 +104,7 @@ function completa(
 // ------------------------------- Poemas ------------------------------------
 
 const BARCO = {
+  listenPoem: true,
   poemTitle: 'Un barco diferente',
   poem: `En un charco de la plaza
 flota un barco de papel.
@@ -113,9 +126,10 @@ const FIESTA_2 = `A la fiesta viene una rana
 que se asoma a la ventana.
 También se acerca una ardilla
 y se sienta en una silla.`
-const FIESTA = { poemTitle: FIESTA_TITULO, poem: `${FIESTA_1}\n\n${FIESTA_2}` }
+const FIESTA = { listenPoem: true, poemTitle: FIESTA_TITULO, poem: `${FIESTA_1}\n\n${FIESTA_2}` }
 
 const MARIPOSA = {
+  listenPoem: true,
   poem: `Una mariposa
 voló hasta el jardín.
 Se posó sobre una flor
@@ -143,12 +157,15 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'FL, FR, GL, GR y DR: uní cada dibujo con su palabra y mirá con qué letras empieza.',
     emoji: '🔎',
     inOrder: true,
+    upper: true,
     questions: [
-      dibujo('m1a1', '🌸', 'flor', ['globo', 'frutilla']),
-      dibujo('m1a2', '🍓', 'frutilla', ['flor', 'grillo']),
-      dibujo('m1a3', '🎈', 'globo', ['grillo', 'dragón']),
-      dibujo('m1a4', '🦗', 'grillo', ['globo', 'frutilla']),
-      dibujo('m1a5', '🐉', 'dragón', ['grillo', 'flor']),
+      unir('m1a1', 'Nombrá cada dibujo y unilo con su palabra.', [
+        ['🌸', 'flor'],
+        ['🍓', 'frutilla'],
+        ['🎈', 'globo'],
+        ['🦗', 'grillo'],
+        ['🐉', 'dragón'],
+      ]),
       empieza('m1b1', 'globo', 'gl', ['gr', 'go']),
       empieza('m1b2', 'dragón', 'dr', ['gr', 'da']),
       empieza('m1b3', 'flor', 'fl', ['fr', 'fo']),
@@ -175,63 +192,19 @@ export const grade1PdlMisionesPractices: Practice[] = [
   {
     id: 'mision-2-el-correo-de-las-palabras',
     title: 'Misión 2: El correo de las palabras',
-    description: 'BL, PL, CR y CL: leé cada tarjeta y llevala a su buzón.',
+    description: 'BL, PL, CR y CL: mirá el dibujo, escuchá la palabra y elegí su buzón.',
     emoji: '📮',
     inOrder: true,
+    upper: true,
     questions: [
-      {
-        id: 'm2a1',
-        kind: 'classify',
-        checkOnDrop: true,
-        prompt: 'Leé las tarjetas y llevá cada una a su buzón.',
-        categories: ['BL', 'PL', 'CR', 'CL'],
-        items: [
-          { text: 'pluma', category: 'PL' },
-          { text: 'clase', category: 'CL' },
-          { text: 'blusa', category: 'BL' },
-          { text: 'cruz', category: 'CR' },
-          { text: 'crema', category: 'CR' },
-          { text: 'bloque', category: 'BL' },
-          { text: 'clavo', category: 'CL' },
-          { text: 'plato', category: 'PL' },
-        ],
-      },
-      {
-        id: 'm2b1',
-        emoji: '🪶',
-        prompt: '¿Qué tarjeta nombra este dibujo?',
-        options: opts('pluma', ['blusa', 'plato']),
-      },
-      {
-        id: 'm2b2',
-        emoji: '👚',
-        prompt: '¿Qué tarjeta nombra este dibujo?',
-        options: opts('blusa', ['bloque', 'pluma']),
-      },
-      {
-        id: 'm2b3',
-        emoji: '🍽️',
-        prompt: '¿Qué tarjeta nombra este dibujo?',
-        options: opts('plato', ['clavo', 'pluma']),
-      },
-      {
-        id: 'm2b4',
-        emoji: '🧱',
-        prompt: '¿Qué tarjeta nombra este dibujo?',
-        options: opts('bloque', ['blusa', 'clase']),
-      },
-      {
-        id: 'm2c1',
-        prompt: '¿Cuál de estas palabras va en el buzón CR?',
-        options: opts('crema', ['clavo', 'clase']),
-        explanation: 'CREMA empieza con CR. CLAVO y CLASE empiezan con CL.',
-      },
-      {
-        id: 'm2c2',
-        prompt: '¿Cuál de estas palabras va en el buzón CL?',
-        options: opts('clavo', ['cruz', 'crema']),
-        explanation: 'CLAVO empieza con CL. CRUZ y CREMA empiezan con CR.',
-      },
+      falta('m2a1', T_BUZON, '🪶', 'pluma', '⋯ uma', 'pl', BUZONES),
+      falta('m2a2', T_BUZON, '🏫', 'clase', '⋯ ase', 'cl', BUZONES),
+      falta('m2a3', T_BUZON, '👚', 'blusa', '⋯ usa', 'bl', BUZONES),
+      falta('m2a4', T_BUZON, '✝️', 'cruz', '⋯ uz', 'cr', BUZONES),
+      falta('m2a5', T_BUZON, '🧴', 'crema', '⋯ ema', 'cr', BUZONES),
+      falta('m2a6', T_BUZON, '🧱', 'bloque', '⋯ oque', 'bl', BUZONES),
+      falta('m2a7', T_BUZON, '🔨', 'clavo', '⋯ avo', 'cl', BUZONES),
+      falta('m2a8', T_BUZON, '🍽️', 'plato', '⋯ ato', 'pl', BUZONES),
     ],
   },
 
@@ -243,18 +216,19 @@ export const grade1PdlMisionesPractices: Practice[] = [
       'Al empezar, la R suena fuerte en RANA. Entre vocales, compará PERA con PERRA.',
     emoji: '🐶',
     inOrder: true,
+    upper: true,
     questions: [
-      falta('m3a1', '🐸', 'rana', '⋯ ana', 'r', ['rr'],
+      falta('m3a1', T_R, '🐸', 'rana', '⋯ ana', 'r', R_RR,
         'Al empezar la palabra va UNA sola R, aunque suene fuerte: RANA.'),
-      falta('m3a2', '🐶', 'perro', 'pe ⋯ o', 'rr', ['r'],
+      falta('m3a2', T_R, '🐶', 'perro', 'pe ⋯ o', 'rr', R_RR,
         'PERRO suena fuerte entre vocales: va con RR.'),
-      falta('m3a3', '🍐', 'pera', 'pe ⋯ a', 'r', ['rr'],
+      falta('m3a3', T_R, '🍐', 'pera', 'pe ⋯ a', 'r', R_RR,
         'PERA suena suave: va con una sola R.'),
-      falta('m3a4', '🚗', 'carro', 'ca ⋯ o', 'rr', ['r'],
+      falta('m3a4', T_R, '🚗', 'carro', 'ca ⋯ o', 'rr', R_RR,
         'CARRO suena fuerte entre vocales: va con RR.'),
-      falta('m3a5', '🦜', 'loro', 'lo ⋯ o', 'r', ['rr'],
+      falta('m3a5', T_R, '🦜', 'loro', 'lo ⋯ o', 'r', R_RR,
         'LORO suena suave: va con una sola R.'),
-      falta('m3a6', '🐭', 'ratón', '⋯ atón', 'r', ['rr'],
+      falta('m3a6', T_R, '🐭', 'ratón', '⋯ atón', 'r', R_RR,
         'Al empezar la palabra va UNA sola R, aunque suene fuerte: RATÓN.'),
       completa('m3b1', 'El ___ ladra.', ['pero', 'perro'], 'perro',
         'El PERRO ladra: el animal va con RR.'),
@@ -272,11 +246,14 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'Leé, encontrá la W y la X, y elegí palabras con cada una.',
     emoji: '🚕',
     inOrder: true,
+    upper: true,
     questions: [
-      dibujo('m4a1', '🥝', 'kiwi', ['taxi', 'waffle']),
-      dibujo('m4a2', '🚕', 'taxi', ['kiwi', 'saxofón']),
-      dibujo('m4a3', '🧇', 'waffle', ['kiwi', 'saxofón']),
-      dibujo('m4a4', '🎷', 'saxofón', ['taxi', 'waffle']),
+      unir('m4a1', 'Uní cada dibujo con su palabra.', [
+        ['🥝', 'kiwi'],
+        ['🚕', 'taxi'],
+        ['🧇', 'waffle'],
+        ['🎷', 'saxofón'],
+      ]),
       {
         id: 'm4b1',
         kind: 'classify',
@@ -323,6 +300,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
       'Leé «Un barco diferente» y buscá las pistas. Podés volver al poema cuantas veces quieras.',
     emoji: '⛵',
     inOrder: true,
+    upper: true,
     questions: [
       {
         ...BARCO,
@@ -389,6 +367,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'Leé «La fiesta en el jardín» y encontrá el título, los versos y las estrofas.',
     emoji: '🗺️',
     inOrder: true,
+    upper: true,
     questions: [
       {
         ...FIESTA,
@@ -401,6 +380,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
         explanation: 'El título es el nombre del poema y va arriba de todo.',
       },
       {
+        listenPoem: true,
         poemTitle: FIESTA_TITULO,
         poem: `[${FIESTA_1}]\n\n${FIESTA_2}`,
         id: 'm6b1',
@@ -409,6 +389,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
         explanation: PISTA_VERSOS,
       },
       {
+        listenPoem: true,
         poemTitle: FIESTA_TITULO,
         poem: `${FIESTA_1}\n\n[A la fiesta viene una rana]\nque se asoma a la ventana.\nTambién se acerca una ardilla\ny se sienta en una silla.`,
         id: 'm6b2',
@@ -450,6 +431,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'Escuchá cómo terminan las palabras y encontrá las que riman.',
     emoji: '🎵',
     inOrder: true,
+    upper: true,
     questions: [
       rimaFiesta('m7a1', 'gato', 'zapato', ['sombrero', 'jardín']),
       rimaFiesta('m7a2', 'ratón', 'botón', ['regalo', 'zapato']),
@@ -486,27 +468,17 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'Mirá el dibujo, contá en voz alta qué pasa y armá las oraciones.',
     emoji: '✏️',
     inOrder: true,
+    upper: true,
     questions: [
       {
         id: 'm8a1',
-        kind: 'sentence',
+        kind: 'sentence-mix',
         image: 'pdl-nena-riega-flores',
-        prompt: 'Armá una oración sobre lo que hace la nena.',
-        columns: [
-          { options: ['La nena', 'El perro', 'La pelota'], answer: 'La nena' },
-          { options: ['riega', 'come', 'patea'], answer: 'riega' },
-          { options: ['las flores.', 'el banco.', 'el sol.'], answer: 'las flores.' },
-        ],
-      },
-      {
-        id: 'm8b1',
-        kind: 'sentence',
-        image: 'pdl-nena-riega-flores',
-        prompt: 'Armá otra oración sobre algo que veas.',
-        columns: [
-          { options: ['El perro', 'El gato', 'El loro'], answer: 'El perro' },
-          { options: ['está cerca', 'está lejos', 'está arriba'], answer: 'está cerca' },
-          { options: ['de la pelota.', 'del taxi.', 'del barco.'], answer: 'de la pelota.' },
+        prompt: 'Mirá el dibujo y armá tres oraciones con las fichas.',
+        sentences: [
+          ['La nena', 'riega', 'las flores'],
+          ['El perro', 'ladra'],
+          ['La pelota', 'rueda'],
         ],
       },
       {
@@ -546,13 +518,14 @@ export const grade1PdlMisionesPractices: Practice[] = [
     description: 'Repaso cortito de todo. ¡Probá hacerlo sin ayuda!',
     emoji: '🚀',
     inOrder: true,
+    upper: true,
     questions: [
-      falta('m9a1', '🦗', 'grillo', '⋯ illo', 'gr', ['cl', 'rr']),
-      falta('m9a2', '🔨', 'clavo', '⋯ avo', 'cl', ['gr', 'x']),
-      falta('m9a3', '🐸', 'rana', '⋯ ana', 'r', ['rr', 'w']),
-      falta('m9a4', '🐶', 'perro', 'pe ⋯ o', 'rr', ['r', 'x']),
-      falta('m9a5', '🥝', 'kiwi', 'ki ⋯ i', 'w', ['x', 'r']),
-      falta('m9a6', '🚕', 'taxi', 'ta ⋯ i', 'x', ['w', 'rr']),
+      falta('m9a1', T_FINAL, '🦗', 'grillo', '⋯ illo', 'gr', ['cl', 'gr', 'rr']),
+      falta('m9a2', T_FINAL, '🔨', 'clavo', '⋯ avo', 'cl', ['cl', 'gr', 'x']),
+      falta('m9a3', T_FINAL, '🐸', 'rana', '⋯ ana', 'r', ['r', 'rr', 'w']),
+      falta('m9a4', T_FINAL, '🐶', 'perro', 'pe ⋯ o', 'rr', ['r', 'rr', 'x']),
+      falta('m9a5', T_FINAL, '🥝', 'kiwi', 'ki ⋯ i', 'w', ['r', 'w', 'x']),
+      falta('m9a6', T_FINAL, '🚕', 'taxi', 'ta ⋯ i', 'x', ['rr', 'w', 'x']),
       {
         ...MARIPOSA,
         id: 'm9b1',

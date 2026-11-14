@@ -4462,3 +4462,114 @@ button {
 .match--compact .match-item--word {
   font-size: calc(1.05rem * var(--fit, 1));
 }
+
+/* ---- 1er grado, Prácticas del Lenguaje en MAYÚSCULA ----
+   Con el botón abc/ABC en MAYÚSCULA va TODO el ejercicio en mayúscula: también
+   lo que arman los componentes por su cuenta (fichas, poemas, palabras para
+   unir), no solo la consigna y las opciones. */
+/* Los botones no heredan `text-transform`: hay que pedírselo aparte. */
+.quiz--upper .quiz-card,
+.quiz--upper .quiz-card button {
+  text-transform: uppercase;
+}
+
+/* Título fijo arriba de la tarjeta (ej: «COMPLETÁ CON R O RR»). */
+.quiz-card__title {
+  margin: 0 0 calc(10px * var(--fit, 1));
+  text-align: center;
+  font-weight: 800;
+  font-size: calc(1.15rem * var(--fit, 1));
+  color: var(--accent);
+}
+
+/* Con título, la consigna es la palabra a completar: va bien grande. */
+.quiz-card__prompt.quiz-card__prompt--word {
+  font-size: calc(2rem * var(--fit, 1));
+  letter-spacing: 0.04em;
+}
+
+/* Unir con una línea con dibujos en emoji en vez de fotos. */
+.match-emoji {
+  font-size: calc(3rem * var(--fit, 1));
+  line-height: 1;
+}
+
+.match--compact .match-emoji {
+  font-size: calc(2.4rem * var(--fit, 1));
+}
+
+/* ---- Armar varias oraciones con fichas mezcladas (kind 'sentence-mix') ---- */
+.sentence-mix {
+  display: grid;
+  gap: calc(10px * var(--fit, 1));
+}
+
+.sentence-mix__done {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: calc(6px * var(--fit, 1));
+}
+
+.sentence-mix__done li {
+  border: 2px solid var(--correct);
+  background: var(--correct-bg);
+  color: var(--correct);
+  border-radius: 10px;
+  padding: calc(8px * var(--fit, 1)) calc(10px * var(--fit, 1));
+  font-weight: 700;
+  font-size: calc(1rem * var(--fit, 1));
+  text-align: center;
+}
+
+.sentence-mix__line,
+.sentence-mix__bank {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(8px * var(--fit, 1));
+}
+
+.sentence-mix__line {
+  min-height: calc(52px * var(--fit, 1));
+  align-items: center;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: calc(6px * var(--fit, 1));
+}
+
+.sentence-mix__line.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+.sentence-mix__hint {
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: calc(0.9rem * var(--fit, 1));
+}
+
+.sentence-mix__chip {
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 10px;
+  padding: calc(9px * var(--fit, 1)) calc(12px * var(--fit, 1));
+  font-weight: 700;
+  font-size: calc(1rem * var(--fit, 1));
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.sentence-mix__line .sentence-mix__chip {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* El dibujo ya unido no se apaga (el botón queda deshabilitado). */
+.match-item:disabled .match-emoji {
+  opacity: 1;
+  filter: none;
+}
