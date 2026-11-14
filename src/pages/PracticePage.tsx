@@ -13,6 +13,7 @@ import LabelDrag from '../components/LabelDrag'
 import TapGrid from '../components/TapGrid'
 import SpeakCheck from '../components/SpeakCheck'
 import RevealChoices from '../components/RevealChoices'
+import SentenceMix from '../components/SentenceMix'
 import SentenceBuilder from '../components/SentenceBuilder'
 import VersePick from '../components/VersePick'
 import WordPick from '../components/WordPick'
@@ -279,7 +280,7 @@ function Quiz({
   const [votes, setVotes] = useState(() => loadVotes(gradeId, practiceId))
   // En Prácticas del Lenguaje de 1er grado: botón para elegir si las sílabas y
   // palabras se muestran en minúscula o en MAYÚSCULA (empieza en minúscula).
-  const [pdlUpper, setPdlUpper] = useState(false)
+  const [pdlUpper, setPdlUpper] = useState(!!practice.upper)
 
   // Refs para ajustar el tamaño del contenido (--fit) y que todo entre sin scroll.
   const cardRef = useRef<HTMLDivElement>(null)
@@ -319,7 +320,7 @@ function Quiz({
       const phrase = listenTapPhrase(q)
       if (phrase) speak(phrase)
     } else if (readsPrompt) {
-      speak(q.prompt)
+      speak(q.title ?? q.prompt)
     } else {
       return
     }
@@ -682,7 +683,11 @@ function Quiz({
       : question
 
   return (
-    <div className={`quiz${hasSecretCode ? ' quiz--secret-code' : ''}`}>
+    <div
+      className={`quiz${hasSecretCode ? ' quiz--secret-code' : ''}${
+        isGrade1Pdl && pdlUpper ? ' quiz--upper' : ''
+      }`}
+    >
       {question.kind !== 'secret-code' && (
         <div className="quiz-topbar">
           <span className="quiz-mastery">
@@ -744,6 +749,9 @@ function Quiz({
                 </button>
               </div>
             )}
+            {question.title && (
+              <p className="quiz-card__title">{T(question.title)}</p>
+            )}
             {question.map === 'city' && question.kind !== 'drag' && <CityMap />}
             {question.scene && <PrepositionScene name={question.scene} />}
             <QuestionImage name={question.image} />
@@ -787,7 +795,11 @@ function Quiz({
             )}
 
             {question.kind !== 'secret-code' && (
-              <h1 className="quiz-card__prompt">{T(question.prompt)}</h1>
+              <h1
+                className={`quiz-card__prompt${question.title ? ' quiz-card__prompt--word' : ''}`}
+              >
+                {T(question.prompt)}
+              </h1>
             )}
 
             {question.kind === 'listen-tap' ? (
@@ -803,7 +815,27 @@ function Quiz({
                 🔊 Escuchar sílaba
               </button>
             ) : (
-              readsPrompt && (
+              readsPrompt &&
+              // Con título fijo y palabra para escuchar queda UN solo botón de
+              // sonido: el de la palabra (📢 ESCUCHA, arriba).
+              !(question.title && listenAnswer) &&
+              (question.listenPoem && question.poem ? (
+                <button
+                  type="button"
+                  className="speak-btn"
+                  onClick={() =>
+                    speak(
+                      `${question.poemTitle ? `${question.poemTitle}. ` : ''}${question.poem ?? ''}`
+                        .replace(/[[\]]/g, '')
+                        .replace(/\n+/g, '. ')
+                        .replace(/([.,!?])\./g, '$1'),
+                    )
+                  }
+                  aria-label="Escuchar el poema"
+                >
+                  🔊 Escuchar el poema
+                </button>
+              ) : (
                 <button
                   type="button"
                   className="speak-btn"
@@ -812,7 +844,7 @@ function Quiz({
                 >
                   🔊 Escuchar
                 </button>
-              )
+              ))
             )}
 
             {question.kind === 'secret-code' ? (
@@ -868,6 +900,13 @@ function Quiz({
                 question={question}
                 locked={answered}
                 correct={dragCorrect}
+                onValidate={handleDragValidate}
+              />
+            ) : question.kind === 'sentence-mix' ? (
+              <SentenceMix
+                key={question.id}
+                question={question}
+                locked={answered}
                 onValidate={handleDragValidate}
               />
             ) : question.kind === 'verses' ? (
@@ -1050,7 +1089,7 @@ function Quiz({
             </div>
           )}
 
-          {answered && question.kind === 'match' && (
+          {answered && (question.kind === 'match' || question.kind === 'sentence-mix') && (
             <div className="quiz-feedback is-correct tap-cheer" role="status">
               <p className="quiz-feedback__title">{praise(childName, question.id)}</p>
             </div>

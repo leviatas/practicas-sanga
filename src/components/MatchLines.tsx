@@ -141,7 +141,7 @@ export default function MatchLines({
   return (
     // Con muchos pares (las fichas de repaso traen 7 u 8) las cajas cuadradas
     // no entran: van en renglones bajos y anchos, como en la fotocopia.
-    <div className={`match${pairs.length > 4 ? ' match--compact' : ''}`} ref={boxRef}>
+    <div className={`match${pairs.length > 4 || pairs.some((p) => p.emoji) ? ' match--compact' : ''}`} ref={boxRef}>
       <svg className="match-svg" aria-hidden="true">
         {lines.map((l) => (
           <line key={l.key} x1={l.from.x} y1={l.from.y} x2={l.to.x} y2={l.to.y} className={l.state} />
@@ -166,7 +166,11 @@ export default function MatchLines({
               aria-pressed={selectedImage === i}
               aria-label={`Foto ${i + 1} para unir con su palabra`}
             >
-              {src && <img src={src} alt="" />}
+              {pair.emoji ? (
+                <span className="match-emoji" aria-hidden="true">{pair.emoji}</span>
+              ) : (
+                src && <img src={src} alt="" />
+              )}
             </button>
           )
         })}

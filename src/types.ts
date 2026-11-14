@@ -44,6 +44,11 @@ export interface MatchPair {
   image: string
   /** Palabra que corresponde a esa imagen (la ficha del otro lado). */
   word: string
+  /**
+   * Dibujo en emoji, para cuando no hay foto (ej: '🌸'). Si está, se muestra
+   * en lugar de la imagen; `image` queda solo como clave única del par.
+   */
+  emoji?: string
 }
 
 export interface AcrosticRow {
@@ -64,6 +69,18 @@ export interface Question {
   id: string
   /** Consigna / pregunta. */
   prompt: string
+  /**
+   * Título fijo ARRIBA de todo en la tarjeta (ej: 'Completá con R o RR'). Con
+   * título, `prompt` pasa a ser lo que se completa (ej: 'PE ⋯ O') y se muestra
+   * grande debajo del dibujo; al cambiar de pregunta se lee el título, y si
+   * además hay `listen` queda UN solo botón de sonido: el de la palabra.
+   */
+  title?: string
+  /**
+   * Si es `true` y la pregunta tiene `poem`, el botón de escuchar lee el
+   * POEMA (título y versos) en vez de la consigna.
+   */
+  listenPoem?: boolean
   /** Emoji o texto grande de apoyo visual (opcional, ideal para los más chicos). */
   emoji?: string
   /** Apoyo visual con un mapa dibujado (SVG). Ej: 'city' o 'city2'. */
@@ -170,6 +187,10 @@ export interface Question {
    *    boca arriba para siempre, si no, se dan vuelta solas después de un
    *    instante (sin penalizar). No hay tope de pares: al no mostrarse todo
    *    junto (como en 'match'), no hay líneas que se crucen ni se amontonen.
+   *  - 'sentence-mix': armar VARIAS oraciones con fichas mezcladas. Todas
+   *    las fichas sirven: el alumno toca las que forman una oración, la envía
+   *    y, si está bien, queda escrita arriba y esas fichas se van. Si no, las
+   *    fichas vuelven al montón (sin penalizar). Termina al armar todas.
    */
   kind?:
   | 'choice'
@@ -188,6 +209,7 @@ export interface Question {
   | 'memory'
   | 'listen-tap'
   | 'secret-code'
+  | 'sentence-mix'
   /** Opciones de respuesta (para kind 'choice' y 'reveal'). */
   options?: Option[]
   /**
@@ -303,6 +325,11 @@ export interface Question {
    * imagen-palabra del ejercicio.
    */
   pairs?: MatchPair[]
+  /**
+   * Para kind 'sentence-mix': las oraciones a armar, cada una partida en sus
+   * fichas en orden. Ej: [['La nena', 'riega', 'las flores'], ['El perro', 'ladra']].
+   */
+  sentences?: string[][]
   /** Para kind 'secret-code': texto que el alumno descifra letra por letra. */
   secretText?: string
 }
@@ -321,6 +348,11 @@ export interface Practice {
    * escritas (ej: un simulacro que sigue la fotocopia consigna por consigna).
    */
   inOrder?: boolean
+  /**
+   * Solo en Prácticas del Lenguaje de 1er grado: si es `true`, la práctica
+   * arranca en MAYÚSCULA (el botón abc/ABC la puede pasar a minúscula).
+   */
+  upper?: boolean
   /** Preguntas de la práctica. */
   questions: Question[]
 }
