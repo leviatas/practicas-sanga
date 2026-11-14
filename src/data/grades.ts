@@ -10,6 +10,7 @@ import { grade1PdlPractices } from './grade1Pdl'
 import { grade1FinalsPractices } from './grade1Finals'
 import { grade1RepasoPractices } from './grade1Repaso'
 import { grade1PdlAlto3Practices } from './grade1PdlAlto3'
+import { grade1PdlMisionesPractices } from './grade1PdlMisiones'
 import { grade1MatematicaAlto3Practices } from './grade1MatematicaAlto3'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
@@ -112,6 +113,15 @@ function grade1Subjects(): Subject[] {
       newUntil: '2026-11-20',
       description: 'Sílabas, grupos consonánticos, poesía y oraciones.',
       terms: [
+        {
+          id: 'misiones-de-palabras',
+          name: 'Práctica Alto en el camino III: Misiones de palabras',
+          emoji: '🔎',
+          newUntil: '2026-11-20',
+          description:
+            'Las 9 misiones de la fotocopia de práctica, en orden: grupos consonánticos, R y RR, W y X, poemas (versos, estrofas y rimas) y oraciones a partir de una imagen.',
+          practices: grade1PdlMisionesPractices,
+        },
         {
           id: 'alto-en-el-camino-3',
           name: 'Alto en el camino III',
