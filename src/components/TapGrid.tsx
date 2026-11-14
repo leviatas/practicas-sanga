@@ -8,6 +8,37 @@ import type { Question } from '../types'
 // - Si acierta: la ficha festeja, aparecen estrellitas y se avisa al padre
 //   (que marca la pregunta como dominada y avanza solo).
 
+// Aviso de "esa no era": un sonidito grave y cortito, y vibración si el
+// dispositivo la tiene. Todo best-effort: si no hay audio, no pasa nada.
+let audioCtx: AudioContext | null = null
+function buzz() {
+  try {
+    navigator.vibrate?.(180)
+  } catch {
+    // sin vibración
+  }
+  try {
+    const Ctx =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+    if (!Ctx) return
+    audioCtx ??= new Ctx()
+    const ctx = audioCtx
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'square'
+    osc.frequency.setValueAtTime(190, ctx.currentTime)
+    osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25)
+    gain.gain.setValueAtTime(0.12, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28)
+    osc.connect(gain).connect(ctx.destination)
+    osc.start()
+    osc.stop(ctx.currentTime + 0.3)
+  } catch {
+    // sin audio
+  }
+}
+
 export default function TapGrid({
   question,
   locked,
@@ -25,6 +56,10 @@ export default function TapGrid({
   const numbersOnly =
     options.length > 0 && options.every((o) => !o.emoji && /^\d+$/.test(o.text))
 
+  // Con título fijo (ej: «Completá con las letras que faltan») las opciones
+  // van en UNA hilera de recuadros, y la que no es suena y vibra.
+  const inRow = !!question.title
+
   function handleTap(index: number) {
     if (locked || rightIdx !== null) return
     const opt = options[index]
@@ -34,6 +69,7 @@ export default function TapGrid({
       onCorrect()
     } else {
       // Sacudida breve; se puede reintentar.
+      if (inRow) buzz()
       setWrongIdx(index)
       window.setTimeout(() => {
         setWrongIdx((cur) => (cur === index ? null : cur))
@@ -42,7 +78,11 @@ export default function TapGrid({
   }
 
   return (
-    <div className={`tap-grid${numbersOnly ? ' tap-grid--numbers' : ''}`} role="list">
+    <div
+      className={`tap-grid${numbersOnly ? ' tap-grid--numbers' : ''}${inRow ? ' tap-grid--row' : ''}`}
+      style={inRow ? { gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` } : undefined}
+      role="list"
+    >
       {options.map((option, index) => {
         const isRight = rightIdx === index
         const isWrong = wrongIdx === index

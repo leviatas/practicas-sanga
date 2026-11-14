@@ -4,15 +4,16 @@ import type { Practice, Question } from '../types'
 // 1er GRADO — Prácticas del Lenguaje — Práctica para el "Alto en el camino
 // III": la fotocopia «Misiones de palabras» (9 fichas), misión por misión y
 // en el mismo orden (cada práctica tiene `inOrder`).
-//  1) Detectives de sonidos: FL, FR, GL, GR, DR.
-//  2) El correo de las palabras: BL, PL, CR, CL.
-//  3) ¿Una R o dos?
-//  4) La W y la X escondidas.
-//  5) Un poema con pistas («Un barco diferente»).
-//  6) El mapa del poema («La fiesta en el jardín»): título, versos, estrofas.
-//  7) Cazadoras de rimas.
-//  8) Una imagen, dos oraciones.
-//  9) Misión final (repaso cortito).
+//  1) Detectives de sonidos: unir dibujo y palabra (FL, FR, GL, GR, DR).
+//  2) Letras que faltan: las dos primeras letras de esas mismas palabras.
+//  3) El correo de las palabras: BL, PL, CR, CL.
+//  4) ¿Una R o dos?
+//  5) La W y la X escondidas.
+//  6) Un poema con pistas («Un barco diferente»).
+//  7) El mapa del poema («La fiesta en el jardín»): título, versos, estrofas.
+//  8) Cazadoras de rimas.
+//  9) Una imagen, tres oraciones.
+//  Misión final (repaso cortito).
 //
 // Lo que en la hoja es "unir con flechas", "rodear", "recortar y pegar" o
 // "escribir", acá se resuelve tocando o arrastrando.
@@ -67,19 +68,34 @@ function falta(
 
 const BUZONES = ['bl', 'pl', 'cr', 'cl']
 const R_RR = ['r', 'rr']
-const T_BUZON = '¿En qué buzón va? Elegí las letras que faltan.'
+const T_FALTAN = 'Completá con las letras que faltan'
 const T_R = 'Completá con R o RR'
-const T_FINAL = 'Completá con las letras que faltan'
+const T_FINAL = T_FALTAN
 
-// "Rodeá las dos primeras letras de la palabra".
-function empieza(id: string, palabra: string, correcta: string, otras: string[]): Question {
+// "Completá con las letras que faltan", tocando: el dibujo, la palabra sin sus
+// dos primeras letras, un botón para volver a escucharla y las opciones en una
+// hilera de recuadros. La que no es suena y vibra, y se puede seguir probando;
+// al acertar pasa sola a la siguiente. La consigna (el título) se dice una
+// sola vez, al empezar la misión.
+function tocar(
+  id: string,
+  emoji: string,
+  palabra: string,
+  hueco: string,
+  correcta: string,
+  opciones: string[],
+  keepOrder = false,
+): Question {
   return {
     id,
-    prompt: `¿Con qué dos letras empieza ${palabra.toUpperCase()}?`,
+    kind: 'tap',
+    title: T_FALTAN,
+    emoji,
+    prompt: hueco,
     listen: palabra,
     listenLang: 'es-AR',
-    options: opts(correcta, otras),
-    explanation: `${palabra.toUpperCase()} empieza con ${correcta.toUpperCase()}.`,
+    keepOrder,
+    options: opciones.map((text) => ({ text, correct: text === correcta || undefined })),
   }
 }
 
@@ -154,7 +170,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
   {
     id: 'mision-1-detectives-de-sonidos',
     title: 'Misión 1: Detectives de sonidos',
-    description: 'FL, FR, GL, GR y DR: uní cada dibujo con su palabra y mirá con qué letras empieza.',
+    description: 'FL, FR, GL, GR y DR: uní cada dibujo con su palabra.',
     emoji: '🔎',
     inOrder: true,
     upper: true,
@@ -166,52 +182,50 @@ export const grade1PdlMisionesPractices: Practice[] = [
         ['🦗', 'grillo'],
         ['🐉', 'dragón'],
       ]),
-      empieza('m1b1', 'globo', 'gl', ['gr', 'go']),
-      empieza('m1b2', 'dragón', 'dr', ['gr', 'da']),
-      empieza('m1b3', 'flor', 'fl', ['fr', 'fo']),
-      empieza('m1b4', 'grillo', 'gr', ['gl', 'gi']),
-      empieza('m1b5', 'frutilla', 'fr', ['fl', 'fu']),
-      {
-        id: 'm1c1',
-        emoji: '🎈',
-        prompt: '¿Cómo se escribe el nombre de este dibujo?',
-        options: opts('globo', ['golobo', 'gobo']),
-        explanation: 'GLOBO: la G y la L van juntas.',
-      },
-      {
-        id: 'm1c2',
-        emoji: '🐉',
-        prompt: '¿Cómo se escribe el nombre de este dibujo?',
-        options: opts('dragón', ['daragón', 'dagón']),
-        explanation: 'DRAGÓN: la D y la R van juntas.',
-      },
     ],
   },
 
-  // ==================== MISIÓN 2: EL CORREO DE LAS PALABRAS =================
+  // ==================== MISIÓN 2: LETRAS QUE FALTAN =======================
   {
-    id: 'mision-2-el-correo-de-las-palabras',
-    title: 'Misión 2: El correo de las palabras',
+    id: 'mision-2-letras-que-faltan',
+    title: 'Misión 2: Letras que faltan',
+    description: 'Mirá el dibujo, escuchá la palabra y tocá las dos letras con las que empieza.',
+    emoji: '🧩',
+    inOrder: true,
+    upper: true,
+    questions: [
+      tocar('m1b1', '🎈', 'globo', '⋯ obo', 'gl', ['gl', 'gr', 'bl']),
+      tocar('m1b2', '🐉', 'dragón', '⋯ agón', 'dr', ['dr', 'gr', 'br']),
+      tocar('m1b3', '🌸', 'flor', '⋯ or', 'fl', ['fl', 'fr', 'pl']),
+      tocar('m1b4', '🦗', 'grillo', '⋯ illo', 'gr', ['gr', 'gl', 'cr']),
+      tocar('m1b5', '🍓', 'frutilla', '⋯ utilla', 'fr', ['fr', 'fl', 'tr']),
+    ],
+  },
+
+  // ==================== MISIÓN 3: EL CORREO DE LAS PALABRAS =================
+  {
+    id: 'mision-3-el-correo-de-las-palabras',
+    title: 'Misión 3: El correo de las palabras',
     description: 'BL, PL, CR y CL: mirá el dibujo, escuchá la palabra y elegí su buzón.',
     emoji: '📮',
     inOrder: true,
     upper: true,
     questions: [
-      falta('m2a1', T_BUZON, '🪶', 'pluma', '⋯ uma', 'pl', BUZONES),
-      falta('m2a2', T_BUZON, '🏫', 'clase', '⋯ ase', 'cl', BUZONES),
-      falta('m2a3', T_BUZON, '👚', 'blusa', '⋯ usa', 'bl', BUZONES),
-      falta('m2a4', T_BUZON, '✝️', 'cruz', '⋯ uz', 'cr', BUZONES),
-      falta('m2a5', T_BUZON, '🧴', 'crema', '⋯ ema', 'cr', BUZONES),
-      falta('m2a6', T_BUZON, '🧱', 'bloque', '⋯ oque', 'bl', BUZONES),
-      falta('m2a7', T_BUZON, '🔨', 'clavo', '⋯ avo', 'cl', BUZONES),
-      falta('m2a8', T_BUZON, '🍽️', 'plato', '⋯ ato', 'pl', BUZONES),
+      tocar('m2a1', '🪶', 'pluma', '⋯ uma', 'pl', BUZONES, true),
+      tocar('m2a2', '🏫', 'clase', '⋯ ase', 'cl', BUZONES, true),
+      tocar('m2a3', '👚', 'blusa', '⋯ usa', 'bl', BUZONES, true),
+      tocar('m2a4', '✝️', 'cruz', '⋯ uz', 'cr', BUZONES, true),
+      tocar('m2a5', '🧴', 'crema', '⋯ ema', 'cr', BUZONES, true),
+      tocar('m2a6', '🧱', 'bloque', '⋯ oque', 'bl', BUZONES, true),
+      tocar('m2a7', '🔨', 'clavo', '⋯ avo', 'cl', BUZONES, true),
+      tocar('m2a8', '🍽️', 'plato', '⋯ ato', 'pl', BUZONES, true),
     ],
   },
 
-  // ==================== MISIÓN 3: ¿UNA R O DOS? =============================
+  // ==================== MISIÓN 4: ¿UNA R O DOS? =============================
   {
-    id: 'mision-3-una-r-o-dos',
-    title: 'Misión 3: ¿Una R o dos?',
+    id: 'mision-4-una-r-o-dos',
+    title: 'Misión 4: ¿Una R o dos?',
     description:
       'Al empezar, la R suena fuerte en RANA. Entre vocales, compará PERA con PERRA.',
     emoji: '🐶',
@@ -239,10 +253,10 @@ export const grade1PdlMisionesPractices: Practice[] = [
     ],
   },
 
-  // ==================== MISIÓN 4: LA W Y LA X ESCONDIDAS ====================
+  // ==================== MISIÓN 5: LA W Y LA X ESCONDIDAS ====================
   {
-    id: 'mision-4-la-w-y-la-x',
-    title: 'Misión 4: La W y la X escondidas',
+    id: 'mision-5-la-w-y-la-x',
+    title: 'Misión 5: La W y la X escondidas',
     description: 'Leé, encontrá la W y la X, y elegí palabras con cada una.',
     emoji: '🚕',
     inOrder: true,
@@ -279,23 +293,13 @@ export const grade1PdlMisionesPractices: Practice[] = [
         options: opts('saxofón', ['waffle', 'wifi']),
         explanation: 'SAXOFÓN tiene X. WAFFLE y WIFI tienen W.',
       },
-      {
-        id: 'm4d1',
-        emoji: '🗣️',
-        prompt:
-          'Desafío oral: escuchá y decí dos veces seguidas «Wanda viaja en taxi». Después tocá la palabra que tiene W.',
-        listen: 'Wanda viaja en taxi',
-        listenLang: 'es-AR',
-        options: opts('Wanda', ['viaja', 'taxi']),
-        explanation: 'WANDA tiene W. TAXI tiene X y VIAJA va con V.',
-      },
     ],
   },
 
-  // ==================== MISIÓN 5: UN POEMA CON PISTAS =======================
+  // ==================== MISIÓN 6: UN POEMA CON PISTAS =======================
   {
-    id: 'mision-5-un-poema-con-pistas',
-    title: 'Misión 5: Un poema con pistas',
+    id: 'mision-6-un-poema-con-pistas',
+    title: 'Misión 6: Un poema con pistas',
     description:
       'Leé «Un barco diferente» y buscá las pistas. Podés volver al poema cuantas veces quieras.',
     emoji: '⛵',
@@ -360,10 +364,10 @@ export const grade1PdlMisionesPractices: Practice[] = [
     ],
   },
 
-  // ==================== MISIÓN 6: EL MAPA DEL POEMA =========================
+  // ==================== MISIÓN 7: EL MAPA DEL POEMA =========================
   {
-    id: 'mision-6-el-mapa-del-poema',
-    title: 'Misión 6: El mapa del poema',
+    id: 'mision-7-el-mapa-del-poema',
+    title: 'Misión 7: El mapa del poema',
     description: 'Leé «La fiesta en el jardín» y encontrá el título, los versos y las estrofas.',
     emoji: '🗺️',
     inOrder: true,
@@ -424,10 +428,10 @@ export const grade1PdlMisionesPractices: Practice[] = [
     ],
   },
 
-  // ==================== MISIÓN 7: CAZADORAS DE RIMAS ========================
+  // ==================== MISIÓN 8: CAZADORAS DE RIMAS ========================
   {
-    id: 'mision-7-cazadoras-de-rimas',
-    title: 'Misión 7: Cazadoras de rimas',
+    id: 'mision-8-cazadoras-de-rimas',
+    title: 'Misión 8: Cazadoras de rimas',
     description: 'Escuchá cómo terminan las palabras y encontrá las que riman.',
     emoji: '🎵',
     inOrder: true,
@@ -439,33 +443,30 @@ export const grade1PdlMisionesPractices: Practice[] = [
       rimaFiesta('m7a4', 'ardilla', 'silla', ['ventana', 'rana']),
       {
         id: 'm7b1',
-        kind: 'drag',
-        prompt: 'Llevá a cada hueco la palabra que hace rimar el par. Sobran dos tarjetas.',
-        segments: [
-          'En el charco salta un sapo.\nPara secarse pide un ',
-          '.\n\nSopla fuerte el viento.\nYo me siento y leo un ',
-          '.',
-        ],
-        blanks: ['trapo', 'cuento'],
-        bank: ['libro', 'trapo', 'cuento', 'globo'],
-        explanation: 'SAPO rima con TRAPO, y VIENTO rima con CUENTO.',
+        prompt: '¿Con qué rima SAPO?',
+        options: opts('trapo', ['libro', 'perro']),
+        explanation: 'SAPO y TRAPO riman: terminan igual, en «APO».',
+      },
+      {
+        id: 'm7b2',
+        prompt: '¿Con qué rima VIENTO?',
+        options: opts('cuento', ['aire', 'cielo']),
+        explanation: 'VIENTO y CUENTO riman: terminan igual, en «ENTO».',
       },
       {
         id: 'm7c1',
-        emoji: '📖',
-        prompt:
-          'Abrí «Don Sueño» en la página 119 del libro. En la última estrofa, ¿qué palabra rima con RATITO?',
+        prompt: '¿Qué rima con RATITO?',
         options: opts('solito', ['sueño', 'ratón']),
-        explanation: 'RATITO y SOLITO riman: las dos terminan en «ITO». Decilas juntas.',
+        explanation: 'RATITO y SOLITO riman: las dos terminan en «ITO».',
       },
     ],
   },
 
-  // ==================== MISIÓN 8: UNA IMAGEN, DOS ORACIONES =================
+  // ==================== MISIÓN 9: UNA IMAGEN, TRES ORACIONES================
   {
-    id: 'mision-8-una-imagen-dos-oraciones',
-    title: 'Misión 8: Una imagen, dos oraciones',
-    description: 'Mirá el dibujo, contá en voz alta qué pasa y armá las oraciones.',
+    id: 'mision-9-una-imagen-tres-oraciones',
+    title: 'Misión 9: Una imagen, tres oraciones',
+    description: 'Mirá el dibujo, contá en voz alta qué pasa y armá tres oraciones.',
     emoji: '✏️',
     inOrder: true,
     upper: true,
@@ -474,7 +475,7 @@ export const grade1PdlMisionesPractices: Practice[] = [
         id: 'm8a1',
         kind: 'sentence-mix',
         image: 'pdl-nena-riega-flores',
-        prompt: 'Mirá el dibujo y armá tres oraciones con las fichas.',
+        prompt: 'Armá tres oraciones: llevá las fichas a cada renglón.',
         sentences: [
           ['La nena', 'riega', 'las flores'],
           ['El perro', 'ladra'],
@@ -511,9 +512,9 @@ export const grade1PdlMisionesPractices: Practice[] = [
     ],
   },
 
-  // ==================== MISIÓN 9: MISIÓN FINAL ==============================
+  // ==================== MISIÓN FINAL ==============================
   {
-    id: 'mision-9-mision-final',
+    id: 'mision-final',
     title: 'Misión final',
     description: 'Repaso cortito de todo. ¡Probá hacerlo sin ayuda!',
     emoji: '🚀',
