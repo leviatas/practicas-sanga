@@ -370,6 +370,48 @@ export interface Term {
   newUntil?: string
   /** Prácticas de este período. */
   practices: Practice[]
+  /**
+   * Menús de minijuegos dentro del período (ej: «REPASO» en el Alto en el
+   * camino III de Matemática de 1er grado). Se muestran como tarjetas arriba
+   * de las prácticas y abren su propio menú visual de juegos.
+   */
+  hubs?: GameHub[]
+}
+
+/**
+ * Un juego de un menú de minijuegos. El `id` se usa en la URL y es la clave
+ * del componente en src/games/registry.ts.
+ */
+export interface HubGame {
+  id: string
+  /** Nombre del juego, ej: «El kiosco». */
+  title: string
+  /** Bajada corta de la tarjeta, ej: «Problemas con dinero». */
+  subtitle: string
+  /** Lo que se lee en voz alta al tocar el megáfono de la tarjeta. */
+  speech: string
+  /** Dibujo de la tarjeta (emojis, de izquierda a derecha). */
+  art: string[]
+  /** Colores del degradé de la tarjeta (de arriba a abajo). */
+  colors: [string, string]
+}
+
+/**
+ * Menú de minijuegos (ej: «REPASO»). Pensado para sumar más juegos con solo
+ * agregar entradas en `games` y su componente en src/games/registry.ts.
+ */
+export interface GameHub {
+  /** Identificador (se usa en la URL: …/juegos/<id>). */
+  id: string
+  /** Nombre visible, ej: «REPASO». */
+  name: string
+  emoji: string
+  description?: string
+  /** Hasta qué día se muestra la etiqueta "NEW" ('AAAA-MM-DD', inclusive). */
+  newUntil?: string
+  /** Consigna hablada al entrar al menú. */
+  speech: string
+  games: HubGame[]
 }
 
 export interface Subject {
@@ -398,6 +440,12 @@ export interface Grade {
   color: string
   /** Hasta qué día se muestra la etiqueta "NEW" ('AAAA-MM-DD', inclusive). */
   newUntil?: string
+  /**
+   * Si es `true`, las páginas del grado (materias y períodos) muestran un
+   * botón «Volver» grande que sube un nivel en la jerarquía (pensado para los
+   * más chicos, que todavía no leen las migas de pan).
+   */
+  backButton?: boolean
   /** Materias del grado (ej: English). Cada una tiene sus períodos y prácticas. */
   subjects: Subject[]
 }

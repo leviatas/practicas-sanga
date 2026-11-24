@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { getTerm } from '../data/grades'
 import { loadMastered, resetManyMastered } from '../lib/progress'
+import { showsNewBadge } from '../lib/badges'
+import BackButton from '../components/BackButton'
 import NotFoundPage from './NotFoundPage'
 
 // Dentro de un período (ej: 1st Midterms) se listan todas las prácticas y hay
@@ -72,6 +74,10 @@ export default function TermPage() {
         <span aria-current="page">{term.name}</span>
       </nav>
 
+      {grade.backButton && (
+        <BackButton to={`/grado/${grade.id}/${subject.id}`} label={`Volver a ${subject.name}`} />
+      )}
+
       <div className="page-intro">
         <h1 className="page-title">
           <span aria-hidden="true">{term.emoji}</span> {term.name}
@@ -90,6 +96,39 @@ export default function TermPage() {
             </span>
           </div>
         </div>
+      )}
+
+      {/* Menús de minijuegos del período (ej: REPASO), arriba de las prácticas. */}
+      {term.hubs && term.hubs.length > 0 && (
+        <ul className="practice-list term-hubs" role="list">
+          {term.hubs.map((hub) => (
+            <li key={hub.id}>
+              <Link
+                to={`/grado/${grade.id}/${subject.id}/${term.id}/juegos/${hub.id}`}
+                className="practice-card practice-card--hub"
+              >
+                <span className="practice-card__emoji" aria-hidden="true">
+                  {hub.emoji}
+                </span>
+                <span className="practice-card__body">
+                  <span className="practice-card__title-row">
+                    <span className="practice-card__title">{hub.name}</span>
+                    {showsNewBadge(hub.newUntil) && <span className="badge-new">NEW</span>}
+                  </span>
+                  {hub.description && (
+                    <span className="practice-card__desc">{hub.description}</span>
+                  )}
+                  <span className="practice-card__meta">
+                    {hub.games.length} {hub.games.length === 1 ? 'juego' : 'juegos'}
+                  </span>
+                </span>
+                <span className="practice-card__arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
 
       <div className="term-toolbar">

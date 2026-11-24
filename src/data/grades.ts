@@ -12,6 +12,7 @@ import { grade1RepasoPractices } from './grade1Repaso'
 import { grade1PdlAlto3Practices } from './grade1PdlAlto3'
 import { grade1PdlMisionesPractices } from './grade1PdlMisiones'
 import { grade1MatematicaAlto3Practices } from './grade1MatematicaAlto3'
+import { grade1MatematicaRepasoHub } from './grade1MatematicaRepaso'
 import { grade4Practices } from './grade4'
 import { grade4Unit6Practices } from './grade4Unit6'
 import {
@@ -157,6 +158,8 @@ function grade1Subjects(): Subject[] {
           description:
             'Semana del 24/11: problemas de suma y resta con dinero, sumas que dan 10, suma de iguales y medida.',
           practices: grade1MatematicaAlto3Practices,
+          // «REPASO»: menú de minijuegos (arriba de las prácticas).
+          hubs: [grade1MatematicaRepasoHub],
         },
       ],
     },
@@ -406,6 +409,7 @@ export const grades: Grade[] = [
     emoji: '🐣',
     color: '#f59e0b', // ámbar
     newUntil: '2026-11-28',
+    backButton: true,
     subjects: grade1Subjects(),
   },
   {
@@ -434,6 +438,18 @@ export function getTerm(gradeId: string, subjectId: string, termId: string) {
   const term = found?.subject.terms.find((t) => t.id === termId)
   if (!found || !term) return undefined
   return { ...found, term }
+}
+
+export function getHub(
+  gradeId: string,
+  subjectId: string,
+  termId: string,
+  hubId: string,
+) {
+  const found = getTerm(gradeId, subjectId, termId)
+  const hub = found?.term.hubs?.find((h) => h.id === hubId)
+  if (!found || !hub) return undefined
+  return { ...found, hub }
 }
 
 export function getPractice(
