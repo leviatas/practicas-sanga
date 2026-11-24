@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getGrade } from '../data/grades'
 import { loadName, saveName } from '../lib/profile'
 import { showsNewBadge } from '../lib/badges'
+import BackButton from '../components/BackButton'
 import NotFoundPage from './NotFoundPage'
 
 // Dentro de un grado el alumno elige primero la MATERIA (ej: English).
@@ -35,6 +36,8 @@ export default function GradePage() {
         <span aria-hidden="true">›</span>
         <span aria-current="page">{grade.name}</span>
       </nav>
+
+      {grade.backButton && <BackButton to="/" label="Volver al inicio" />}
 
       <div className="page-intro">
         <h1 className="page-title">

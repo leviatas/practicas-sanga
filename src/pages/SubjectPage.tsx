@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getSubject } from '../data/grades'
 import { showsNewBadge } from '../lib/badges'
+import BackButton from '../components/BackButton'
 import NotFoundPage from './NotFoundPage'
 
 // Dentro de una materia el alumno elige el PERÍODO (ej: 1st Midterms).
@@ -21,6 +22,10 @@ export default function SubjectPage() {
         <span aria-hidden="true">›</span>
         <span aria-current="page">{subject.name}</span>
       </nav>
+
+      {grade.backButton && (
+        <BackButton to={`/grado/${grade.id}`} label={`Volver a ${grade.name}`} />
+      )}
 
       <div className="page-intro">
         <h1 className="page-title">

@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { logEvent } from './lib/usage'
 import UsageLogs from './components/UsageLogs'
 import ThemeToggle from './components/ThemeToggle'
+import { recordHistoryEntry } from './lib/backNav'
 
 export default function App() {
   const location = useLocation()
@@ -13,6 +14,12 @@ export default function App() {
   const isExercise = segments[0] === 'grado' && segments.length === 5
   const [logsPassword, setLogsPassword] = useState<string | null>(null)
   const openedRef = useRef(false)
+
+  // Anota qué ruta hay en cada entrada del historial (para el botón «Volver»
+  // jerárquico, ver lib/backNav).
+  useEffect(() => {
+    recordHistoryEntry(location.pathname)
+  }, [location])
 
   // Registra una "apertura" al cargar la app (una sola vez).
   useEffect(() => {

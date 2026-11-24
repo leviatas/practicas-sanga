@@ -8,6 +8,8 @@ import GradePage from './pages/GradePage'
 import SubjectPage from './pages/SubjectPage'
 import TermPage from './pages/TermPage'
 import PracticePage from './pages/PracticePage'
+import HubPage from './pages/HubPage'
+import HubGamePage from './pages/HubGamePage'
 import GameStartPage from './pages/GameStartPage'
 import GameMapPage from './pages/GameMapPage'
 import GameLevelPage from './pages/GameLevelPage'
@@ -27,6 +29,15 @@ const router = createBrowserRouter([
       {
         path: 'grado/:gradeId/:subjectId/:termId/:practiceId',
         element: <PracticePage />,
+      },
+      // Menú de minijuegos dentro de un período (ej: REPASO) y cada juego.
+      {
+        path: 'grado/:gradeId/:subjectId/:termId/juegos/:hubId',
+        element: <HubPage />,
+      },
+      {
+        path: 'grado/:gradeId/:subjectId/:termId/juegos/:hubId/:gameId',
+        element: <HubGamePage />,
       },
       // "En construcción": el juego de aprender a leer (elegir personaje,
       // mapa y niveles).
